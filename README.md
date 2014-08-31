@@ -1,3 +1,3 @@
-CS480/680 Graphics Class
+CS480 Graphics Class
 
 Programming Assignments by Chad Brown

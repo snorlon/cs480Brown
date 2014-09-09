@@ -10,6 +10,11 @@ Assignment explanation:
 
     Add in left-click event for reversing rotation direction
 
+========================================
+
+Dependencies:
+    freeglut
+    GLM
 
 ========================================
 

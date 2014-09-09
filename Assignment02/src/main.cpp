@@ -316,33 +316,11 @@ bool initialize()
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    //Shader Sources
-    // Put these into files and write a loader in the future
-    // Note the added uniform!
-    const char *vs =
-        "attribute vec3 v_position;"
-        "attribute vec3 v_color;"
-        "varying vec3 color;"
-        "uniform mat4 mvpMatrix;"
-        "void main(void){"
-        "   gl_Position = mvpMatrix * vec4(v_position, 1.0);"
-        "   color = v_color;"
-        "}";
-
-    const char *fs =
-        "varying vec3 color;"
-        "void main(void){"
-        "   gl_FragColor = vec4(color.rgb, 1.0);"
-        "}";
-
     //compile the shaders
     GLint shader_status;
 
     // Vertex shader first
-    if(simShaderManager.vertexShader!=NULL) //use provided shader if it is available
-        glShaderSource(vertex_shader, 1, (const char **)&(simShaderManager.vertexShader), NULL);
-    else
-        glShaderSource(vertex_shader, 1, &vs, NULL);
+    glShaderSource(vertex_shader, 1, (const char **)&(simShaderManager.vertexShader), NULL);
 
     glCompileShader(vertex_shader);
     //check the compile status
@@ -354,10 +332,7 @@ bool initialize()
     }
 
     // Now the Fragment shader
-    if(simShaderManager.fragmentShader!=NULL) //use provided shader if it is available
-        glShaderSource(fragment_shader, 1, (const char **)&(simShaderManager.fragmentShader), NULL);
-    else
-        glShaderSource(fragment_shader, 1, &fs, NULL);
+    glShaderSource(fragment_shader, 1, (const char **)&(simShaderManager.fragmentShader), NULL);
 
     glCompileShader(fragment_shader);
     //check the compile status

@@ -14,6 +14,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
+#include "shaderloader.h"
+
 
 //--Data types
 //This object will define the attributes of a vertex(position, color, etc...)
@@ -54,9 +56,7 @@ void shaderLoader(int argc, char **argv);
 bool initialize();
 void cleanUp();
 
-char* providedVertexShader = NULL;
-char* providedFragmentShader = NULL;
-
+shaderManager simShaderManager;
 
 
 void menu_test(int id);
@@ -74,7 +74,7 @@ std::chrono::time_point<std::chrono::high_resolution_clock> t1,t2;
 //--Main
 int main(int argc, char **argv)
 {
-    shaderLoader(argc,argv);
+    simShaderManager.loadShaders(argc,argv);
 
     // Initialize glut
     glutInit(&argc, argv);
@@ -135,58 +135,6 @@ void menu_test(int id)
             break;
     }
     glutPostRedisplay();
-}
-
-void shaderLoader(int argc, char **argv)
-{
-    //variables
-    std::ifstream input;
-    int fileLength = 0;
-
-    //first things first, try to load in the shader files if provided
-    //check if we have any execution arguements
-    if(argc > 1)
-    {
-        //iterate across all provided parameters
-        for(int i = 1; i < argc; i++)
-        {
-            //check if this parameter is a -v for vertex shader or -f for fragment shader
-            if(strcmp(argv[i], "-v")==0 || strcmp(argv[i], "-f")==0)
-            {
-                //check if we can get the next parameters
-                if(i+1<argc)
-                {
-                    char* tempFilename = new char[strlen(argv[i+1])+1];
-
-                    strcpy(tempFilename, argv[i+1]); //store the file name
-
-                    //load in the vertex shader if filename is good
-                    input.clear();
-                    input.open(tempFilename);
-
-                    if(input.good())
-                    {                        
-                        input.seekg(0, std::ios::end);
-                        fileLength = input.tellg(); //get file size to size string
-                        input.seekg(0, std::ios::beg);
-                        if(strcmp(argv[i], "-v")==0)
-                        {
-                            providedVertexShader = new char[fileLength];
-                            input.get(providedVertexShader, fileLength, '\0');
-                            std::cout<<"Vertex Shader Loaded!"<<std::endl;
-                        }
-                        else
-                        {
-                            providedFragmentShader = new char[fileLength];
-                            input.get(providedFragmentShader, fileLength, '\0');
-                            std::cout<<"Fragment Shader Loaded!"<<std::endl;
-                        }
-                    }
-                    input.close();
-                }
-            }
-        }
-    }
 }
 
 //--Implementations
@@ -281,12 +229,6 @@ void mouse(int button, int state, int x, int y)
     {
         //flip rotation direction
         rotationModifier *= -1;
-    }
-    else if(button == GLUT_RIGHT_BUTTON)//mouse right down
-    {
-        //lock exit
-        locked = true;
-        keepRunning = false;
     }
 }
 
@@ -397,8 +339,8 @@ bool initialize()
     GLint shader_status;
 
     // Vertex shader first
-    if(providedVertexShader!=NULL) //use provided shader if it is available
-        glShaderSource(vertex_shader, 1, (const char **)&providedVertexShader, NULL);
+    if(simShaderManager.vertexShader!=NULL) //use provided shader if it is available
+        glShaderSource(vertex_shader, 1, (const char **)&(simShaderManager.vertexShader), NULL);
     else
         glShaderSource(vertex_shader, 1, &vs, NULL);
 
@@ -412,8 +354,8 @@ bool initialize()
     }
 
     // Now the Fragment shader
-    if(providedFragmentShader!=NULL) //use provided shader if it is available
-        glShaderSource(fragment_shader, 1, (const char **)&providedFragmentShader, NULL);
+    if(simShaderManager.fragmentShader!=NULL) //use provided shader if it is available
+        glShaderSource(fragment_shader, 1, (const char **)&(simShaderManager.fragmentShader), NULL);
     else
         glShaderSource(fragment_shader, 1, &fs, NULL);
 

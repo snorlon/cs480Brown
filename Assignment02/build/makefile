@@ -10,8 +10,25 @@ LIBS= -lglut -lGLEW -lGL
 # Compiler flags
 CXXFLAGS= -g -Wall -std=c++0x
 
-all: ../bin/Matrix
 
-../bin/Matrix: ../src/main.cpp
-	$(CC) $(CXXFLAGS) ../src/main.cpp -o ../bin/Matrix $(LIBS)
+OUTPUT = ../bin/Project
+MAIN = ../src/main.cpp
+SHADERLOADER = ../src/shaderloader.cpp
+SHADERLOADERH = ../src/shaderloader.h
 
+all: main
+
+main: main.o shaderloader.o
+	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o shaderloader.o $(LIBS)
+
+main.o: $(MAIN) $(SHADERLOADERH)
+	$(CC) $(CXXFLAGS) -c $(MAIN) $(LIBS)
+
+shaderloader.o: $(SHADERLOADER) $(SHADERLOADERH)
+	$(CC) $(CXXFLAGS) -c $(SHADERLOADER)
+
+clean:
+	rm ../bin/Project *.o
+
+run:
+	./../bin/Project

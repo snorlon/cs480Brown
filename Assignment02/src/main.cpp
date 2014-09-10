@@ -61,7 +61,7 @@ shaderManager simShaderManager;
 
 void menu_test(int id);
 
-bool paused = false;
+bool recentlyPaused = false;
 bool keepRunning = true;
 int rotationModifier = 1;
 
@@ -128,10 +128,11 @@ void menu_test(int id)
             keepRunning = false;
             break;
         case 2:
-            paused = false;
+            glutIdleFunc(update);
             break;
         case 3:
-            paused = true;
+            glutIdleFunc(NULL);
+            recentlyPaused = true;
             break;
     }
     glutPostRedisplay();
@@ -197,14 +198,18 @@ void update()
     static float angle = 0.0;
     float dt = getDT();// if you have anything moving, use dt.
 
-    if(!paused)
+    //if we just exited a pause, just make the dt zero so no jerking when unpausing
+    if(recentlyPaused)
     {
-        angle += (dt * M_PI/2) * rotationModifier; //move through 90 degrees a second, direction determined by rotationModifier
-        model = glm::translate( glm::mat4(1.0f), glm::vec3(4.0 * sin(angle), 0.0, 4.0 * cos(angle)));
-
-	    //rotate the cube around the Y axis
-        model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+        dt = 0;
+        recentlyPaused = false;
     }
+
+    angle += (dt * M_PI/2) * rotationModifier; //move through 90 degrees a second, direction determined by rotationModifier
+    model = glm::translate( glm::mat4(1.0f), glm::vec3(4.0 * sin(angle), 0.0, 4.0 * cos(angle)));
+
+    //rotate the cube around the Y axis
+    model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Update the state of the scene
     glutPostRedisplay();//call the display callback
@@ -247,8 +252,14 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
     }
     else if(key == ' ')//space
     {
-        //pause toggle
-        paused = !paused;
+        //toggle pause
+        if(recentlyPaused)
+           glutIdleFunc(update);
+        else
+        {
+            recentlyPaused = true;
+            glutIdleFunc(NULL);
+        }
     }
 }
 

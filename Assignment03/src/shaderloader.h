@@ -1,3 +1,6 @@
+#ifndef SHADERLOADERH
+#define SHADERLOADERH
+
 #include <GL/glew.h> // glew must be included before the main gl libs
 #include <GL/glut.h> // doing otherwise causes compiler shouting
 #include <iostream>
@@ -29,3 +32,4 @@ class shaderManager
     void loadShaders(int argc, char **argv);
 };
 
+#endif

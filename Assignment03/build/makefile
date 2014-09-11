@@ -17,11 +17,13 @@ SHADERLOADER = ../src/shaderloader.cpp
 SHADERLOADERH = ../src/shaderloader.h
 RENDERER = ../src/renderer.cpp
 RENDERERH = ../src/renderer.h
+CONFIG = ../src/config.cpp
+CONFIGH = ../src/config.h
 
 all: main
 
-main: main.o shaderloader.o renderer.o
-	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o shaderloader.o renderer.o $(LIBS)
+main: main.o config.o shaderloader.o renderer.o
+	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o shaderloader.o renderer.o $(LIBS)
 
 main.o: $(MAIN) $(SHADERLOADERH) $(RENDERERH)
 	$(CC) $(CXXFLAGS) -c $(MAIN) $(LIBS)
@@ -29,7 +31,10 @@ main.o: $(MAIN) $(SHADERLOADERH) $(RENDERERH)
 shaderloader.o: $(SHADERLOADER) $(SHADERLOADERH)
 	$(CC) $(CXXFLAGS) -c $(SHADERLOADER)
 
-renderer.o: $(RENDERER) $(RENDERERH)
+config.o: $(CONFIG) $(CONFIGH)
+	$(CC) $(CXXFLAGS) -c $(CONFIG)
+
+renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH)
 	$(CC) $(CXXFLAGS) -c $(RENDERER) $(LIBS)
 
 clean:

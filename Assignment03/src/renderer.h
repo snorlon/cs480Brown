@@ -10,10 +10,33 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
+#include "shaderloader.h"
+
 class Renderer
 {
     public:
+        shaderManager* simShaderManager;
+
+
         Renderer();
+        bool giveLinks(shaderManager* shaderMgr);
+        void render();
+        bool initialize();
 
+    private:
+        glm::mat4 model;//obj->world each object should have its own model matrix
+        glm::mat4 view;//world->eye
+        glm::mat4 projection;//eye->clip
+        glm::mat4 mvp;//premultiplied modelviewprojection
 
+        //uniform locations
+        GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader
+
+        //attribute locations
+        GLint loc_position;
+        GLint loc_color;
+
+        GLuint program;// The GLSL program handle
+        GLuint vbo_geometry;// VBO handle for our geometry
+int w; int h;// Window size
 };

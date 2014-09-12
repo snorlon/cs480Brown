@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "config.h"
 
 struct Vertex
 {
@@ -6,25 +7,24 @@ struct Vertex
     GLfloat color[3];
 };
 
-Renderer::Renderer()
+renderer::renderer()
 {
-    w = 640;
-    h = 480;// Window size
+
 }
 
-bool Renderer::giveLinks(shaderManager* shaderMgr)
+bool renderer::giveLinks(config* configData)
 {
     //abort if any provided links are bogus, we NEED them
-    if(shaderMgr == NULL)
+    if(configData == NULL)
         return false;
 
-    simShaderManager = shaderMgr;
+    simConfig = configData;
 
     //assumed success accessing links
     return true;
 }
 
-void Renderer::render()
+void renderer::render()
 {
     //--Render the scene
 
@@ -41,7 +41,7 @@ void Renderer::render()
     //set up the Vertex Buffer Object so it can be drawn
     glEnableVertexAttribArray(loc_position);
     glEnableVertexAttribArray(loc_color);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
+    glBindBuffer(GL_ARRAY_BUFFER, simConfig->vbo_geometry);
     //set pointers into the vbo for each of the attributes(position and color)
     glVertexAttribPointer( loc_position,//location of attribute
                            3,//number of elements
@@ -67,7 +67,7 @@ void Renderer::render()
     glutSwapBuffers();
 }
 
-bool Renderer::initialize()
+bool renderer::initialize()
 {
     // Initialize basic geometry and shaders for this example
 
@@ -122,8 +122,8 @@ bool Renderer::initialize()
                           {{1.0, -1.0, 1.0}, {1.0, 0.0, 1.0}}
                         };
     // Create a Vertex Buffer object to store this vertex info on the GPU
-    glGenBuffers(1, &vbo_geometry);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
+    glGenBuffers(1, &(simConfig->vbo_geometry));
+    glBindBuffer(GL_ARRAY_BUFFER, simConfig->vbo_geometry);
     glBufferData(GL_ARRAY_BUFFER, sizeof(geometry), geometry, GL_STATIC_DRAW);
 
     //--Geometry done
@@ -135,7 +135,7 @@ bool Renderer::initialize()
     GLint shader_status;
 
     // Vertex shader first
-    glShaderSource(vertex_shader, 1, (const char **)&(simShaderManager->vertexShader), NULL);
+    glShaderSource(vertex_shader, 1, (const char **)&(simConfig->simShaderManager->vertexShader), NULL);
 
     glCompileShader(vertex_shader);
     //check the compile status
@@ -147,7 +147,7 @@ bool Renderer::initialize()
     }
 
     // Now the Fragment shader
-    glShaderSource(fragment_shader, 1, (const char **)&(simShaderManager->fragmentShader), NULL);
+    glShaderSource(fragment_shader, 1, (const char **)&(simConfig->simShaderManager->fragmentShader), NULL);
 
     glCompileShader(fragment_shader);
     //check the compile status
@@ -160,12 +160,12 @@ bool Renderer::initialize()
 
     //Now we link the 2 shader objects into a program
     //This program is what is run on the GPU
-    program = glCreateProgram();
-    glAttachShader(program, vertex_shader);
-    glAttachShader(program, fragment_shader);
-    glLinkProgram(program);
+    simConfig->program = glCreateProgram();
+    glAttachShader(simConfig->program, vertex_shader);
+    glAttachShader(simConfig->program, fragment_shader);
+    glLinkProgram(simConfig->program);
     //check if everything linked ok
-    glGetProgramiv(program, GL_LINK_STATUS, &shader_status);
+    glGetProgramiv(simConfig->program, GL_LINK_STATUS, &shader_status);
     if(!shader_status)
     {
         std::cerr << "[F] THE SHADER PROGRAM FAILED TO LINK" << std::endl;
@@ -174,7 +174,7 @@ bool Renderer::initialize()
 
     //Now we set the locations of the attributes and uniforms
     //this allows us to access them easily while rendering
-    loc_position = glGetAttribLocation(program,
+    loc_position = glGetAttribLocation(simConfig->program,
                     const_cast<const char*>("v_position"));
     if(loc_position == -1)
     {
@@ -182,7 +182,7 @@ bool Renderer::initialize()
         return false;
     }
 
-    loc_color = glGetAttribLocation(program,
+    loc_color = glGetAttribLocation(simConfig->program,
                     const_cast<const char*>("v_color"));
     if(loc_color == -1)
     {
@@ -190,7 +190,7 @@ bool Renderer::initialize()
         return false;
     }
 
-    loc_mvpmat = glGetUniformLocation(program,
+    loc_mvpmat = glGetUniformLocation(simConfig->program,
                     const_cast<const char*>("mvpMatrix"));
     if(loc_mvpmat == -1)
     {
@@ -207,7 +207,7 @@ bool Renderer::initialize()
                         glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 
     projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
-                                   float(w)/float(h), //Aspect Ratio, so Circles stay Circular
+                                   float(simConfig->getWindowWidth())/float(simConfig->getWindowHeight()), //Aspect Ratio
                                    0.01f, //Distance to the near plane, normally a small value like this
                                    100.0f); //Distance to the far plane, 
 

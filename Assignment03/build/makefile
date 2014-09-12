@@ -17,24 +17,34 @@ SHADERLOADER = ../src/shaderloader.cpp
 SHADERLOADERH = ../src/shaderloader.h
 RENDERER = ../src/renderer.cpp
 RENDERERH = ../src/renderer.h
+ENTITYMANAGER = ../src/entitymanager.cpp
+ENTITYMANAGERH = ../src/entitymanager.h
+ENTITY = ../src/entity.cpp
+ENTITYH = ../src/entity.h
 CONFIG = ../src/config.cpp
 CONFIGH = ../src/config.h
 
 all: main
 
-main: main.o config.o shaderloader.o renderer.o
-	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o shaderloader.o renderer.o $(LIBS)
+main: main.o config.o entitymanager.o shaderloader.o renderer.o
+	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entitymanager.o shaderloader.o renderer.o $(LIBS)
 
-main.o: $(MAIN) $(SHADERLOADERH) $(RENDERERH)
+main.o: $(MAIN) $(CONFIGH) $(SHADERLOADERH) $(RENDERERH) $(ENTITYMANAGERH)
 	$(CC) $(CXXFLAGS) -c $(MAIN) $(LIBS)
+
+entitymanager.o: $(ENTITYMANAGER) $(ENTITYMANAGERH) $(ENTITYH)
+	$(CC) $(CXXFLAGS) -c $(ENTITYMANAGER)
+
+entity.o: $(ENTITY) $(ENTITYH)
+	$(CC) $(CXXFLAGS) -c $(ENTITY)
 
 shaderloader.o: $(SHADERLOADER) $(SHADERLOADERH)
 	$(CC) $(CXXFLAGS) -c $(SHADERLOADER)
 
-config.o: $(CONFIG) $(CONFIGH)
+config.o: $(CONFIG) $(CONFIGH) $(SHADERLOADERH)
 	$(CC) $(CXXFLAGS) -c $(CONFIG)
 
-renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH)
+renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(CONFIGH)
 	$(CC) $(CXXFLAGS) -c $(RENDERER) $(LIBS)
 
 clean:

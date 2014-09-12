@@ -15,7 +15,9 @@
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
 #include "shaderloader.h"
+#include "entitymanager.h"
 #include "renderer.h"
+#include "config.h"
 
 
 //--Data types
@@ -25,12 +27,6 @@ struct Vertex
     GLfloat position[3];
     GLfloat color[3];
 };
-
-//--Evil Global variables
-//Just for this example!
-int w = 640, h = 480;// Window size
-GLuint program;// The GLSL program handle
-GLuint vbo_geometry;// VBO handle for our geometry
 
 //uniform locations
 GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader
@@ -58,8 +54,9 @@ bool initialize();
 void cleanUp();
 
 shaderManager simShaderManager;
-Renderer simRenderer;
-
+renderer simRenderer;
+config simConfig;
+entityManager simEntities;
 
 void menu_test(int id);
 
@@ -78,10 +75,14 @@ int main(int argc, char **argv)
 {
     simShaderManager.loadShaders(argc,argv);
 
+    //set config data
+    simConfig.setWindow(480, 640);
+
     // Initialize glut
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
-    glutInitWindowSize(w, h);
+    glutInitWindowSize( simConfig.getWindowWidth(), simConfig.getWindowHeight());
+    glutInitWindowPosition( 100, 100);
     // Name and create the Window
     glutCreateWindow("Matrix Example");
 
@@ -151,7 +152,7 @@ void render()
     }
 
     //enable the shader program
-    glUseProgram(program);
+    glUseProgram(simConfig.program);
 
     //call renderer's render
     simRenderer.render();
@@ -159,9 +160,8 @@ void render()
 
 void update()
 {
-    //total time
-    static float angle = 0.0;
-    float dt = getDT();// if you have anything moving, use dt.
+    //time passed gets calculated
+    float dt = getDT();
 
     //if we just exited a pause, just make the dt zero so no jerking when unpausing
     if(recentlyPaused)
@@ -169,6 +169,11 @@ void update()
         dt = 0;
         recentlyPaused = false;
     }
+
+    simEntities.tick(dt);
+
+    //model movement/rotation stuff, move to entity class
+    static float angle = 0.0;
 
     angle += (dt * M_PI/2) * rotationModifier; //move through 90 degrees a second, direction determined by rotationModifier
     model = glm::translate( glm::mat4(1.0f), glm::vec3(4.0 * sin(angle), 0.0, 4.0 * cos(angle)));
@@ -183,13 +188,12 @@ void update()
 
 void reshape(int n_w, int n_h)
 {
-    w = n_w;
-    h = n_h;
+    simConfig.setWindow( n_h, n_w );
     //Change the viewport to be correct
-    glViewport( 0, 0, w, h);
+    glViewport( 0, 0, simConfig.getWindowWidth(), simConfig.getWindowHeight());
     //Update the projection matrix as well
     //See the init function for an explaination
-    projection = glm::perspective(45.0f, float(w)/float(h), 0.01f, 100.0f);
+    projection = glm::perspective(45.0f, float(simConfig.getWindowWidth())/float(simConfig.getWindowHeight()), 0.01f, 100.0f);
 
 }
 
@@ -233,8 +237,13 @@ bool initialize()
     bool returnVal = true;
 
     //initialize stuff
-    returnVal = returnVal && simRenderer.giveLinks(&simShaderManager);
+    //config needs links to everything so it can let everyone access modules from anywhere
+    returnVal = returnVal && simConfig.giveLinks(&simShaderManager);
 
+    //renderer needs config for access to it and other modules
+    returnVal = returnVal && simRenderer.giveLinks(&simConfig);
+
+    //separate init for old renderer stuff, replace/break down?
     returnVal = returnVal && simRenderer.initialize();
 
     return returnVal;
@@ -244,8 +253,8 @@ void cleanUp()
 {
     // Clean up, Clean up
     glutDestroyMenu( menuID );
-    glDeleteProgram(program);
-    glDeleteBuffers(1, &vbo_geometry);
+    glDeleteProgram( simConfig.program );
+    glDeleteBuffers(1, &(simConfig.vbo_geometry));
 }
 
 //returns the time delta

@@ -10,16 +10,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
+#include "config.h"
 #include "shaderloader.h"
 
-class Renderer
+class renderer
 {
     public:
-        shaderManager* simShaderManager;
+        config* simConfig;
 
 
-        Renderer();
-        bool giveLinks(shaderManager* shaderMgr);
+        renderer();
+        bool giveLinks(config* configData);
         void render();
         bool initialize();
 
@@ -35,8 +36,4 @@ class Renderer
         //attribute locations
         GLint loc_position;
         GLint loc_color;
-
-        GLuint program;// The GLSL program handle
-        GLuint vbo_geometry;// VBO handle for our geometry
-int w; int h;// Window size
 };

@@ -1,6 +1,19 @@
 #include "shaderloader.h"
+#include "config.h"
 
-void shaderManager::loadShaders(int argc, char **argv)
+bool shaderManager::giveLinks(config* configData)
+{
+    //abort if any provided links are bogus, we NEED them
+    if(configData == NULL)
+        return false;
+
+    simConfig = configData;
+
+    //assumed success accessing links
+    return true;
+}
+
+bool shaderManager::loadShaders(int argc, char **argv)
 {
     //variables
     std::ifstream input;
@@ -75,4 +88,51 @@ void shaderManager::loadShaders(int argc, char **argv)
         "   gl_FragColor = vec4(color.rgb, 1.0);"
         "}");
     }
+
+    //create the shaders
+    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    //compile the shaders
+    GLint shader_status;
+
+    // Vertex shader first
+    glShaderSource(vertex_shader, 1, (const char **)&vertexShader, NULL);
+
+    glCompileShader(vertex_shader);
+    //check the compile status
+    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &shader_status);
+    if(!shader_status)
+    {
+        std::cerr << "[F] FAILED TO COMPILE VERTEX SHADER!" << std::endl;
+        return false;
+    }
+
+    // Now the Fragment shader
+    glShaderSource(fragment_shader, 1, (const char **)&fragmentShader, NULL);
+
+    glCompileShader(fragment_shader);
+    //check the compile status
+    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &shader_status);
+    if(!shader_status)
+    {
+        std::cerr << "[F] FAILED TO COMPILE FRAGMENT SHADER!" << std::endl;
+        return false;
+    }
+
+    //Now we link the 2 shader objects into a program
+    //This program is what is run on the GPU
+    simConfig->program = glCreateProgram();
+    glAttachShader(simConfig->program, vertex_shader);
+    glAttachShader(simConfig->program, fragment_shader);
+    glLinkProgram(simConfig->program);
+    //check if everything linked ok
+    glGetProgramiv(simConfig->program, GL_LINK_STATUS, &shader_status);
+    if(!shader_status)
+    {
+        std::cerr << "[F] THE SHADER PROGRAM FAILED TO LINK" << std::endl;
+        return false;
+    }
+
+    return true;
 }

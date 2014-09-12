@@ -15,6 +15,11 @@ Assignment explanation:
 Dependencies:
     freeglut
     GLM
+    Assimp (not sure which in specific needed so I installed these). Wouldn't make until I installed the dev one
+        libassimp-dev
+        assimp-utils
+        libassimp-doc
+        libassimp3
 
 ========================================
 

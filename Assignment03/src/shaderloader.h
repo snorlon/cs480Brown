@@ -17,11 +17,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
+class config;
 class shaderManager
 {
     public:
         char* vertexShader;
         char* fragmentShader;
+
+        GLuint vertex_shader;
+        GLuint fragment_shader;
+        config* simConfig;
 
         shaderManager()
         {
@@ -29,7 +34,8 @@ class shaderManager
             fragmentShader = NULL;
         }
 
-    void loadShaders(int argc, char **argv);
+        bool giveLinks(config* configData);
+        bool loadShaders(int argc, char **argv);
 };
 
 #endif

@@ -59,6 +59,10 @@ float timeRate = 86400.0f;
 
 int menuID = -1;
 
+//ASSIMP TESTS
+// Create an instance of the Importer class
+Assimp::Importer importer;
+
 //--Random time things
 float getDT();
 std::chrono::time_point<std::chrono::high_resolution_clock> t1,t2;
@@ -113,6 +117,23 @@ int main(int argc, char **argv)
 
     //call some other resources to initialize after the shader, separately
     init = init && postInitialize();
+
+    //MORE ASSIMP TESTS
+    // And have it read the given file with some example postprocessing
+    // Usually - if speed is not the most important aspect for you - you'll 
+    // propably to request more postprocessing than we do in this example.
+    /*const aiScene* scene = importer.ReadFile( pFile, 
+        aiProcess_CalcTangentSpace       | 
+        aiProcess_Triangulate            |
+        aiProcess_JoinIdenticalVertices  |
+        aiProcess_SortByPType);
+
+    // If the import failed, report it
+    if( !scene)
+    {
+        std::cerr<< importer.GetErrorString();
+        return false;
+    }*/
 
     if(init)
     {

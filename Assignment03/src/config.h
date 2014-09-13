@@ -24,7 +24,7 @@ class config
         shaderManager* simShaderManager;
         entityManager* simEntityManager;
         GLuint program; //program id
-        int rotationModifier;
+        float rotationModifier;
 
         //transform matrices
         //move later to camera object

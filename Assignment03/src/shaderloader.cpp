@@ -108,6 +108,7 @@ bool shaderManager::loadShaders(int argc, char **argv)
         return false;
     }
 
+
     // Now the Fragment shader
     glShaderSource(fragment_shader, 1, (const char **)&fragmentShader, NULL);
 

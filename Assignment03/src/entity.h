@@ -27,6 +27,7 @@ class entity
         double rotationPeriod;//how many days for a full rotation
         double rotationAngle;//degrees into its rotation
         double semimajorAxis;//diameter of orbit at most distant points
+        float diameter;//Also in AU
 
         //uniform locations
         GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader

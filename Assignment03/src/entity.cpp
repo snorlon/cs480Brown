@@ -10,6 +10,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
+#define AU 149597871
+
 entity::entity(config* nConfig)
 {
     next = NULL;
@@ -18,9 +20,11 @@ entity::entity(config* nConfig)
     orbitalAngle = 0.0;
     rotationAngle = 0.0;
 
-    orbitalPeriod = 365.256363004; //default to earths rate for now
+    //1 AU = 149,597,871 KM
+    orbitalPeriod = 365.256363004 / 100; //default to earths rate for now
     rotationPeriod = 0.99726968; //default to earths rate for now
-    semimajorAxis = 1.00000261; //AU, earths for now
+    semimajorAxis = 1.00000261 * 6; //AU, earths for now
+    diameter = 25000* 12742 / AU;
 
     // Initialize basic geometry and shaders for this example
 
@@ -116,7 +120,6 @@ void entity::init()
 
 void entity::tick(float dt)
 {
-    //do nothing for now with the tick
 
     //model movement stuff
     orbitalAngle += dt * (M_PI * 2) * simConfig->rotationModifier //move in a direction determined by rotationModifier, with an amount based on
@@ -128,6 +131,9 @@ void entity::tick(float dt)
     rotationAngle += dt * (M_PI * 2) * simConfig->rotationModifier //move in a direction determined by rotationModifier, with an amount based on
         * (1 / ( rotationPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
     model = glm::rotate(model,(float) rotationAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    //apply the scale
+    model = glm::scale( model, glm::vec3(diameter));
 }
 
 void entity::render()

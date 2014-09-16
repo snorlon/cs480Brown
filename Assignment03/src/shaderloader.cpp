@@ -64,31 +64,6 @@ bool shaderManager::loadShaders(int argc, char **argv)
         }
     }
 
-    //attempt to use some default shaders if none are given to us
-    if(vertexShader == NULL)
-    {
-        vertexShader = new char[300];
-        strcpy( vertexShader, 
-        "attribute vec3 v_position;"
-        "attribute vec3 v_color;"
-        "varying vec3 color;"
-        "uniform mat4 mvpMatrix;"
-        "void main(void){"
-        "   gl_Position = mvpMatrix * vec4(v_position, 1.0);"
-        "   color = v_color;"
-        "}");
-    }
-
-    if(fragmentShader == NULL)
-    {
-        fragmentShader = new char[100];
-        strcpy( fragmentShader, 
-        "varying vec3 color;"
-        "void main(void){"
-        "   gl_FragColor = vec4(color.rgb, 1.0);"
-        "}");
-    }
-
     //create the shaders
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);

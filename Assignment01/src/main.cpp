@@ -325,34 +325,18 @@ bool initialize()
     GLint shader_status;
 
     // Vertex shader first
-    if(providedVertexShader!=NULL) //use provided shader if it is available
-        glShaderSource(vertex_shader, 1, (const char **)&providedVertexShader, NULL);
-    else
-        glShaderSource(vertex_shader, 1, &vs, NULL);
+    glShaderSource(vertex_shader, 1, &vs, NULL);
 
     glCompileShader(vertex_shader);
     //check the compile status
     glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &shader_status);
-    if(!shader_status)
-    {
-        std::cerr << "[F] FAILED TO COMPILE VERTEX SHADER!" << std::endl;
-        return false;
-    }
 
     // Now the Fragment shader
-    if(providedFragmentShader!=NULL) //use provided shader if it is available
-        glShaderSource(fragment_shader, 1, (const char **)&providedFragmentShader, NULL);
-    else
-        glShaderSource(fragment_shader, 1, &fs, NULL);
+    glShaderSource(fragment_shader, 1, &fs, NULL);
 
     glCompileShader(fragment_shader);
     //check the compile status
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &shader_status);
-    if(!shader_status)
-    {
-        std::cerr << "[F] FAILED TO COMPILE FRAGMENT SHADER!" << std::endl;
-        return false;
-    }
 
     //Now we link the 2 shader objects into a program
     //This program is what is run on the GPU
@@ -362,11 +346,6 @@ bool initialize()
     glLinkProgram(program);
     //check if everything linked ok
     glGetProgramiv(program, GL_LINK_STATUS, &shader_status);
-    if(!shader_status)
-    {
-        std::cerr << "[F] THE SHADER PROGRAM FAILED TO LINK" << std::endl;
-        return false;
-    }
 
     //Now we set the locations of the attributes and uniforms
     //this allows us to access them easily while rendering

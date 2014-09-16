@@ -14,14 +14,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing flags
+//#include <assimp/Importer.hpp>      // C++ importer interface
+//#include <assimp/scene.h>           // Output data structure
+//#include <assimp/postprocess.h>     // Post processing flags
 
 #include "shaderloader.h"
 #include "renderer.h"
 #include "config.h"
-
+#include "entity.h"
 
 //--Data types
 
@@ -38,6 +38,7 @@ void update();
 void reshape(int n_w, int n_h);
 void mouse(int button, int state, int x, int y);
 void keyboard(unsigned char key, int x_pos, int y_pos);
+void keyboardPlus(int key, int x_pos, int y_pos);
 
 //--Resource management
 void shaderLoader(int argc, char **argv);
@@ -61,7 +62,7 @@ int menuID = -1;
 
 //ASSIMP TESTS
 // Create an instance of the Importer class
-Assimp::Importer importer;
+//Assimp::Importer importer;
 
 //--Random time things
 float getDT();
@@ -92,11 +93,13 @@ int main(int argc, char **argv)
     }
 
     // Set all of the callbacks to GLUT that we need
+    glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF); //disable key spamming for now
     glutDisplayFunc(render);// Called when its time to display
     glutReshapeFunc(reshape);// Called if the window is resized
     glutIdleFunc(update);// Called if there is nothing else to do
     glutMouseFunc(mouse);// Called if there is mouse input
     glutKeyboardFunc(keyboard);// Called if there is keyboard input
+    glutSpecialFunc(keyboardPlus);// for stuff without ascii access characters like arrow keys
 
     //setup inputs
     menuID = glutCreateMenu(menu_test);
@@ -210,7 +213,7 @@ void mouse(int button, int state, int x, int y)
     if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)//mouse left down
     {
         //flip rotation direction
-        simConfig.rotationModifier *= -1;
+        simEntities.head->rotationModifier *= -1;
     }
 }
 
@@ -225,7 +228,7 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
     else if(key == 'a')//a
     {
         //flip rotation direction
-        simConfig.rotationModifier *= -1;
+        simEntities.head->rotationModifier *= -1;
     }
     else if(key == 61)//=
     {
@@ -251,6 +254,21 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
             recentlyPaused = true;
             glutIdleFunc(NULL);
         }
+    }
+}
+
+void keyboardPlus(int key, int x_pos, int y_pos)
+{
+    // Handle keyboard input
+    if(key == GLUT_KEY_LEFT)//left arrow key
+    {
+        //turn counter clockwise
+        simEntities.head->rotationModifier = 1;
+    }
+    else if(key == GLUT_KEY_RIGHT)//left arrow key
+    {
+        //turn clockwise
+        simEntities.head->rotationModifier = -1;
     }
 }
 

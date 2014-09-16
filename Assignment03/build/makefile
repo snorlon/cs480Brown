@@ -1,6 +1,6 @@
 # Linux
 CC=g++
-LIBS= -lglut -lGLEW -lGL -lassimp
+LIBS= -lglut -lGLEW -lGL# -lassimp
 
 # For Macs uncomment the next line and comment out the previous one
 #CC=clang++
@@ -23,13 +23,15 @@ ENTITY = ../src/entity.cpp
 ENTITYH = ../src/entity.h
 CONFIG = ../src/config.cpp
 CONFIGH = ../src/config.h
+CAMERA = ../src/camera.cpp
+CAMERAH = ../src/camera.h
 
 all: main
 
-main: main.o config.o entitymanager.o shaderloader.o renderer.o
-	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entitymanager.o shaderloader.o renderer.o $(LIBS)
+main: main.o config.o entitymanager.o shaderloader.o camera.o renderer.o
+	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entitymanager.o shaderloader.o camera.o renderer.o $(LIBS)
 
-main.o: $(MAIN) $(CONFIGH) $(SHADERLOADERH) $(RENDERERH) $(ENTITYMANAGERH)
+main.o: $(MAIN) $(CONFIGH) $(SHADERLOADERH) $(RENDERERH) $(ENTITYH) $(ENTITYMANAGERH)
 	$(CC) $(CXXFLAGS) -c $(MAIN) $(LIBS)
 
 entitymanager.o: $(ENTITYMANAGER) $(ENTITYMANAGERH) $(CONFIGH) $(ENTITYH)
@@ -41,14 +43,14 @@ entity.o: $(ENTITY) $(ENTITYH) $(CONFIGH) $(LIBS)
 shaderloader.o: $(SHADERLOADER) $(SHADERLOADERH) $(CONFIGH)
 	$(CC) $(CXXFLAGS) -c $(SHADERLOADER)
 
-config.o: $(CONFIG) $(CONFIGH) $(ENTITYMANAGERH) $(SHADERLOADERH) $(LIBS)
+config.o: $(CONFIG) $(CONFIGH) $(ENTITYMANAGERH) $(SHADERLOADERH) $(CAMERAH) $(LIBS)
 	$(CC) $(CXXFLAGS) -c $(CONFIG)
 
-renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(CONFIGH)
+renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(ENTITYH) $(CONFIGH)
 	$(CC) $(CXXFLAGS) -c $(RENDERER) $(LIBS)
+
+camera.o: $(CAMERA) $(CAMERAH)
+	$(CC) $(CXXFLAGS) -c $(CAMERA)
 
 clean:
 	rm ../bin/Project *.o
-
-run:
-	./../bin/Project

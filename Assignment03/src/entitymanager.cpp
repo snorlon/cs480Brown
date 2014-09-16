@@ -52,6 +52,8 @@ bool entityManager::createEntity(config* simConfig)
     {
         //push new entity to front of list
         entity* temp = new entity(simConfig);
+        temp->createMoon();//give it a moon, temporary till we load it in
+        //temp->satellites->createMoon();//give the moon a moon, also temporary
         temp->next = head;
         head = temp;
 

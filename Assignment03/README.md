@@ -4,18 +4,16 @@ Chad Brown's Assignment 02
 
 Assignment explanation:
 
-    Add in keyboard events for reversing rotation direction.
-
-    Add in right-click menu for pausing and unpausing the rotation, as well as to quit
-
-    Add in left-click event for reversing rotation direction
+    Render two cubes onto the screen.
+    One of the cubes will move around in a circle while the other cube orbits around it.
+    The user, through keyboard inputs, can change the direction of rotation of the first cube, while the second continuously orbits it.
 
 ========================================
 
 Dependencies:
     freeglut
     GLM
-    Assimp (not sure which in specific needed so I installed these). Wouldn't make until I installed the dev one
+    (UNUSED) Assimp (not sure which in specific needed so I installed all of these).
         libassimp-dev
         assimp-utils
         libassimp-doc
@@ -45,26 +43,33 @@ How to run:
 
 ========================================
 
-There is a small problem with hitting Escape while a menu is up that I have yet to resolve,
-     it ends erroring instead of exiting cleanly due to not being able to destroy a menu that is in use.
-    It works fine, however, exiting by hitting the Quit menu object.
+Bugs:
+
+    There is a small problem with hitting Escape while a menu is up that I have yet to resolve, it ends erroring instead of exiting cleanly due to not being able to destroy a menu that is in use.
+      It works fine, however, exiting by hitting the Quit menu object.
 
 ========================================
 
 Commands:
 
     Keyboard
-        A - Reverse direction
+        A - Reverse planet direction
         Space - Pause/Unpause
         Esc - Exit program
+        -  - Reduce time rate, divided by 2, it starts out trying to run things much faster than real time because real orbit period
+        =  - Increase time rate, multiplied by 2
+        Left Arrow - Rotate Planet Counter-clockwise
+        Right Arrow - Rotate Planet clockwise
 
     Mouse
-        Left - Reverse Direction
+        Left - Reverse planet Direction
         Right - Open menu
 
 ========================================
 
-Extra Credit: N/A
+Extra Credit: Present
+
+Add text to indicate which direction the planet is rotating. This should change when the direction changes.
 
 ========================================
 

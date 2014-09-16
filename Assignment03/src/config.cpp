@@ -1,19 +1,19 @@
 #include "config.h"
 
-
 config::config()
 {
     program = 0;
     
-    rotationModifier = 1.0f;
+    objectCount = 1;
 
     //--Init the view (camera)
     //  if you will be having a moving camera the view matrix will need to more dynamic
     //  ...Like you should update it before you render more dynamic 
     //  for this project having them static will be fine
-    view = glm::lookAt( glm::vec3(0.0, 16.0, -32.0), //Eye Position
-                        glm::vec3(0.0, 0.0, 0.0), //Focus point
-                        glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+    eyeCamera.Position(0,70,-12);
+
+    //update the camera
+    recalcCamera();
 }
 
 
@@ -30,6 +30,13 @@ bool config::giveLinks(shaderManager* shaderMgr, entityManager* entMgr)
 
     //assumed success accessing links
     return true;
+}
+
+void config::recalcCamera()
+{
+    view = glm::lookAt( glm::vec3(eyeCamera.x, eyeCamera.y, eyeCamera.z), //Eye Position
+                        glm::vec3(targetCamera.x, targetCamera.y, targetCamera.z), //Focus point
+                        glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 }
 
 void config::setWindow( int wHeight, int wWidth)

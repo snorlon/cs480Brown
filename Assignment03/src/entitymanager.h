@@ -7,6 +7,7 @@ class config;
 class entityManager
 {
     public:
+        entity* head;
         int entityCount;
 
         entityManager();
@@ -17,7 +18,6 @@ class entityManager
         void cleanup();
 
     private:
-        entity* head;
 };
 
 #endif

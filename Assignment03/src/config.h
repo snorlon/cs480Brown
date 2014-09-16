@@ -9,6 +9,7 @@
 
 #include "shaderloader.h"
 #include "entitymanager.h"
+#include "camera.h"
 
 //This object will define the attributes of a vertex(position, color, etc...)
 struct Vertex
@@ -24,8 +25,17 @@ class config
         shaderManager* simShaderManager;
         entityManager* simEntityManager;
         GLuint program; //program id
-        float rotationModifier;
 
+        Camera eyeCamera;
+        Camera targetCamera;
+
+        int objectCount;
+
+        //uniform locations
+        glm::mat4 mvp;//premultiplied modelviewprojection
+        GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader
+        GLint loc_color;
+        GLint loc_position;
         //transform matrices
         //move later to camera object
         glm::mat4 view;//world->eye
@@ -34,6 +44,7 @@ class config
         config();
         
         bool giveLinks(shaderManager* shaderMgr, entityManager* entMgr);
+        void recalcCamera();
 
         //window size config data
         void setWindow( int wHeight, int wWidth);

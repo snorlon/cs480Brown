@@ -15,11 +15,14 @@
 class entity
 {
     public:
+        int id;//TODO: Modify ID system to use a global object count
+
         entity* next;
         glm::mat4 model;
-        glm::mat4 mvp;//premultiplied modelviewprojection
         config* simConfig;
         GLuint vbo_geometry;// VBO handle for our geometry
+
+        int rotationModifier;//change into velocity, acceleration later?
 
         //planet specific stuff
         double orbitalPeriod;//how many (earth) days for a full orbit
@@ -29,16 +32,24 @@ class entity
         double semimajorAxis;//diameter of orbit at most distant points
         float diameter;//Also in AU
 
-        //uniform locations
-        GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader
+        glm::vec3 relativePosition;
+        glm::vec3 absolutePosition;
+
+        entity* satellites;
+        entity* parent;
+
         //attribute locations
-        GLint loc_position;
-        GLint loc_color;
 
         entity(config* nConfig);
+        entity(config* nConfig, entity* newparent);
         ~entity();
         void init();
         void tick(float dt);
+
+        float getX();
+        float getY();
+
+        bool createMoon();//temporary, replace with data loader
         void render();
 
     private:

@@ -1,4 +1,4 @@
-Chad Brown's Assignment 02
+Chad Brown's Assignment 03
 
 ========================================
 
@@ -34,12 +34,7 @@ How to run:
     For both shaders from file, enter './../bin/Matrix -f filename -v filename2' order does not matter
         All that matters is that file name follows the -f or -v command
 
-    Example is shown in screenshot.png
-
-    Entering custom vertex and fragment shaders is optional, and will use the pre-existing ones if they are not provided
-
-    If you enter a bad filename, it will ignore it and move on.
-    If the file name is good, it will say in the terminal that the corresponding shader has been loaded.
+    If the file name is good, it will say in the terminal that the corresponding shader has been loaded. If not, it will warn you. Shaders MUST be provided
 
 ========================================
 
@@ -67,9 +62,11 @@ Commands:
 
 ========================================
 
-Extra Credit: Present
+Extra Credit: COMPLETED
 
 Add text to indicate which direction the planet is rotating. This should change when the direction changes.
+
+I've done this and it should be obvious on the screen when you start it up. I lightened the background color so that it could be read easier.
 
 ========================================
 

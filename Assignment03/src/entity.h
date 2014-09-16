@@ -15,7 +15,7 @@
 class entity
 {
     public:
-        int id;//TODO: Modify ID system to use a global object count
+        int id;
 
         entity* next;
         glm::mat4 model;

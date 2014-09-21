@@ -21,7 +21,7 @@ Terminal commands in ''s
 
 How to run:
     'Make' as normal
-    enter './../bin/Matrix' to execute from build folder
+    enter './../bin/Project' to execute from build folder
 
     For loading vertex shader from file, enter './../bin/Project -v filename'
 

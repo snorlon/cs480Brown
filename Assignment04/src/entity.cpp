@@ -35,10 +35,10 @@ entity::entity(config* nConfig, char* filename) //load a model from a file
     rotationModifier = 1.0f;
 
     //1 AU = 149,597,871 KM
-    orbitalPeriod = 365.256363004 / 100; //default to earths rate for now
-    rotationPeriod = 0.99726968; //default to earths rate for now
-    semimajorAxis = 2.00000261 * 6; //AU, earths for now
-    diameter = 25000* 12742 / AU;
+    orbitalPeriod = 1; //default to earths rate for now
+    rotationPeriod = 5.0; //default to earths rate for now
+    semimajorAxis = 0.0; //AU, earths for now
+    diameter = 12000* 12742 / AU;
 
 
 
@@ -48,64 +48,47 @@ entity::entity(config* nConfig, char* filename) //load a model from a file
     //this is to store the vertices when they are defining faces
     std::vector< Vertex > vertices;
 
-    //this is the end Vertex storage that goes to the buffer
-    Vertex* verticesFinal;
-
     //open the file
-    FILE * file = fopen(filename, "r");
-    if( file == NULL ){
+    ifstream input;
+    input.clear();
+    input.open(filename);
+
+    if( !input.good()){
         cout<<"BAD FILE NAME FOR MODEL PROVIDED!"<<endl;
         id = -1; //set id so we know the model was a big failure
         return;
     }
 
-    while( 1 )
-    {
-        char lineHead[256];
-        //read the first word of the line, should be a v, vt, vn, f, etc
-        int fileReadCode = fscanf(file, "%s", lineHead);
-        if (fileReadCode == EOF)
-        {
-            //abort when we finish going through the file peacefully
-            break;
-        }
-     
+    char* lineHead = new char[256];
+    input >> std::ws;
+    input.getline(lineHead,256,' ');
+
+    while( input.good() )
+    {     
         //Check if this line is a vertex
         if ( strcmp( lineHead, "v" ) == 0 )
         {
             glm::vec3 vertex;
-            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+            //fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+            input>>vertex.x;
+            input>>vertex.y;
+            input>>vertex.z;
             temp_vertices.push_back(vertex);
-        }
-        //Check if this line is a vertex texture
-        else if ( strcmp( lineHead, "vt" ) == 0 )
-        {
-            //we don't want it so just pull it and skip over it
-            glm::vec2 uv;
-            fscanf(file, "%f %f\n", &uv.x, &uv.y );
-        }
-        //Check if this line is a vertex normal
-        else if ( strcmp( lineHead, "vn" ) == 0 )
-        {
-            //we don't want it so just pull it and skip over it
-            glm::vec3 normal;
-            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
         }
         //Otherwise, check if it's a face
         else if ( strcmp( lineHead, "f" ) == 0 )
         {
             //we're only going to use the vertexIndex, but we're pulling uvIndex and normalIndex out as well while at it
-            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+            unsigned int vertexIndex[3];
 
-            //grab data from it in the format v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
-            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
-            //if we don't like the format, abort and skip to next line
-            if (matches != 9)
-            {
-                //set id so we know this model got fucked up
-                id = -1;
-                continue;
-            }
+            input>>vertexIndex[0];
+            input.getline(lineHead,256,' ');
+
+            input>>vertexIndex[1];
+            input.getline(lineHead,256,' ');
+
+            input>>vertexIndex[2];
+            input.getline(lineHead,256,'\n');
 
             //push in each of the three vertices involved in the face onto a vertices stack to be copied later
             for(int i=0;i<3; i++)
@@ -114,25 +97,19 @@ entity::entity(config* nConfig, char* filename) //load a model from a file
                 v.position[0] = temp_vertices[ vertexIndex[i]-1 ].x;
                 v.position[1] = temp_vertices[ vertexIndex[i]-1 ].y;
                 v.position[2] = temp_vertices[ vertexIndex[i]-1 ].z;
-                v.color[0] = (rand() % 101)/100.0f;
-                v.color[1] = (rand() % 101)/100.0f;
-                v.color[2] = (rand() % 101)/100.0f;
+                float color = (rand() % 101)/100.0f;
+                v.color[0] = 0.0f;
+                v.color[1] = 0.0f;
+                v.color[2] = color;
                 vertices.push_back(v);
             }
         }
-    }
-
-    //create a regular Vertex array to store all of the vertices and faces in before handing it to the buffer for permanent storage
-    verticesFinal = new Vertex[vertices.size()];
-
-    for( unsigned int i=0; i<vertices.size(); i++ )
-    {
-        verticesFinal[i].position[0] = vertices[i].position[0];
-        verticesFinal[i].position[1] = vertices[i].position[1];
-        verticesFinal[i].position[2] = vertices[i].position[2];
-        verticesFinal[i].color[0] = vertices[i].color[0];
-        verticesFinal[i].color[1] = vertices[i].color[1];
-        verticesFinal[i].color[2] = vertices[i].color[2];
+        else
+        {
+            input.getline(lineHead,256);//finish off the line
+        }
+        input >> std::ws;
+        input.getline(lineHead,256,' ');
     }
 
     //save how much stuff is in the buffer for future rendering purposes
@@ -141,7 +118,7 @@ entity::entity(config* nConfig, char* filename) //load a model from a file
     // Create a Vertex Buffer object to store this vertex info on the GPU
     glGenBuffers(1, &vbo_geometry);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesFinal) * vertices.size() * 3, verticesFinal, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 }
 
 entity::~entity()
@@ -180,7 +157,28 @@ void entity::init()
 
 void entity::tick(float dt)
 {
-    //DO NOTHING IN TICK, WE ARE NOT A PLANET DO NOT BE REDICULOUS
+    //model movement stuff
+    orbitalAngle += dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
+        * (1 / ( orbitalPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
+
+
+    //update relative and absolute position
+    relativePosition.x = semimajorAxis * sin(orbitalAngle);
+    relativePosition.y = 0.0f;
+    relativePosition.z = semimajorAxis * cos(orbitalAngle);
+    absolutePosition = relativePosition;
+
+
+    //math specific to orbits, translate based on absolutePosition
+    model = glm::translate( glm::mat4(1.0f), absolutePosition);
+
+    //rotate the cube around the Y axis
+    rotationAngle += dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
+        * (1 / ( rotationPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
+    model = glm::rotate(model,(float) rotationAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    //apply the scale
+    model = glm::scale( model, glm::vec3(diameter));
 }
 
 float entity::getX()

@@ -7,7 +7,7 @@ Assignment explanation:
     Part 1: Create a model in Blender and export the OBJ file.
         Located in bin/models/board.obj
     Part 2: Model Loading: Write a model loader that can load your OBJ from Part 1 into your program.
-        Three other models also available in bin/models/
+        In bin/models/board.obj
 
 ========================================
 
@@ -36,13 +36,6 @@ How to run:
     Example terminal command:
         ./../bin/Project -f ../bin/shaders/fragmentshader -v ../bin/shaders/vertexshader -m ../bin/models/board.obj
 
-    WARNING: THIS MODEL LOADER REQUIRES MODELS WITH BOTH NORMALS AND UVS EXPORTED!!
-        As specified by http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
-        It does weird things when these are not provided!
-
-        All models in the bin/models folder should be fully compatible with the loader, including a modified dragon.obj adjusted to fit format
-            Dragon requires zooming out to see with arrow keys, others should not
-
     If the file name is good, it will say in the terminal that the corresponding shader has been loaded. If not, it will warn you. Shaders MUST be provided
     If it doesn't like the model given, it will not count it in the X Models Loaded printout
 
@@ -56,7 +49,7 @@ Bugs:
 ========================================
 
 Commands:
-    All planet related movement has been disabled for this assignment
+    All planet related keys has been disabled for this assignment
 
     Keyboard
 
@@ -67,8 +60,6 @@ Commands:
             Up Arrow - Move up 1 Y unit
             Down Arrow - Move down 1 Y unit
 
-
-
         Space - Pause/Unpause
         Esc - Exit program
 
@@ -78,6 +69,7 @@ Commands:
 ========================================
 
 Extra Credit: NONE
+    I don't imagine making everything glittery counts as texturing.
 
 ========================================
 

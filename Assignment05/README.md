@@ -67,7 +67,6 @@ Commands:
 ========================================
 
 Extra Credit: NONE
-    I don't imagine making everything glittery counts as texturing.
 
 ========================================
 

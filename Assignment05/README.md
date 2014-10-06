@@ -11,7 +11,10 @@ Assignment explanation:
 Dependencies:
     freeglut
     GLM
-    assimp3
+    assimp-utils
+    libassimp-doc
+    libassimp-dev
+    libassimp3
 
 ========================================
 

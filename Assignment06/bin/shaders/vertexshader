@@ -1,0 +1,12 @@
+attribute vec3 v_position;
+uniform mat4 mvpMatrix;
+
+layout (location = 1) in vec2 TexCoord;
+
+out vec2 TexCoord0;
+
+void main()
+{
+   gl_Position = mvpMatrix * vec4(v_position, 1.0);
+   TexCoord0 = TexCoord;
+};

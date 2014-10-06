@@ -8,7 +8,7 @@ LIBS= -lglut -lGLEW -lGL -lassimp
 # Assuming you want to use a recent compiler
 
 # Compiler flags
-CXXFLAGS= -g -Wall -std=c++0x
+CXXFLAGS= -g -Wall -Wextra -std=c++0x
 
 
 OUTPUT = ../bin/Project

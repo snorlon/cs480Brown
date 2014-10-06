@@ -12,7 +12,6 @@ Dependencies:
     freeglut
     GLM
     assimp-utils
-    libassimp-doc
     libassimp-dev
     libassimp3
 

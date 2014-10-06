@@ -174,7 +174,7 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                std::cout<<"Failed to load model "<<attemptCount<<"!"<<std::endl;
+                    std::cout<<"Failed to load model "<<attemptCount<<"!"<<std::endl;
                 }
 
             }
@@ -264,6 +264,9 @@ void reshape(int n_w, int n_h)
 
 void mouse(int button, int state, int x, int y)
 {
+    x = y;
+    y = x;
+
     if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)//mouse left down
     {
         //flip rotation direction
@@ -273,6 +276,9 @@ void mouse(int button, int state, int x, int y)
 
 void keyboard(unsigned char key, int x_pos, int y_pos)
 {
+    x_pos = y_pos;
+    y_pos = x_pos;
+
     // Handle keyboard input
     if(key == 27)//ESC
     {
@@ -313,6 +319,9 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
 
 void keyboardPlus(int key, int x_pos, int y_pos)
 {
+    x_pos = y_pos;
+    y_pos = x_pos;
+
     // Handle keyboard input
     if(key == GLUT_KEY_LEFT)//left arrow key
     {

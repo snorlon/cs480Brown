@@ -23,6 +23,8 @@ Terminal commands in ''s
 
 How to run:
     'Make' as normal
+        For assimp2, type 'make DEFS=-DASSIMP_2'
+
     enter './../bin/Project' to execute from build folder
 
     For loading vertex shader from file, enter './../bin/Project -v filename'

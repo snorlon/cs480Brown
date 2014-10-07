@@ -1,5 +1,8 @@
 #include "shaderloader.h"
 #include "config.h"
+#include <iostream>
+
+using namespace std;
 
 bool shaderManager::giveLinks(config* configData)
 {
@@ -68,8 +71,12 @@ bool shaderManager::loadShaders(int argc, char **argv)
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
+    char buffer[512];
+    int errLength = 0;
+
     //compile the shaders
     GLint shader_status;
+
 
     // Vertex shader first
     glShaderSource(vertex_shader, 1, (const char **)&vertexShader, NULL);
@@ -77,12 +84,15 @@ bool shaderManager::loadShaders(int argc, char **argv)
     glCompileShader(vertex_shader);
     //check the compile status
     glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &shader_status);
+
     if(!shader_status)
     {
+        glGetShaderInfoLog(fragment_shader, 512, &errLength, buffer);
         std::cerr << "[F] FAILED TO COMPILE VERTEX SHADER!" << std::endl;
+        fprintf(stderr, "Compilation error in Vertex Shader: %s %d\n", buffer, errLength);
+
         return false;
     }
-
 
     // Now the Fragment shader
     glShaderSource(fragment_shader, 1, (const char **)&fragmentShader, NULL);
@@ -90,9 +100,13 @@ bool shaderManager::loadShaders(int argc, char **argv)
     glCompileShader(fragment_shader);
     //check the compile status
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &shader_status);
+
     if(!shader_status)
     {
         std::cerr << "[F] FAILED TO COMPILE FRAGMENT SHADER!" << std::endl;
+        glGetShaderInfoLog(fragment_shader, 512, &errLength, buffer);
+        fprintf(stderr, "Compilation error in Fragment Shader: %s\n", buffer);
+    
         return false;
     }
 

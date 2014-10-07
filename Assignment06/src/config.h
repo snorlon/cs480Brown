@@ -30,11 +30,11 @@ class config
         Camera targetCamera;
 
         int objectCount;
+        int texCount;
 
         //uniform locations
         glm::mat4 mvp;//premultiplied modelviewprojection
         GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader
-        GLint loc_position;
         //transform matrices
         //move later to camera object
         glm::mat4 view;//world->eye

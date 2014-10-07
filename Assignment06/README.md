@@ -14,7 +14,8 @@ Dependencies:
     assimp-utils
     libassimp-dev
     libassimp3
-    imagemagick
+    libfreeimage3
+    libfreeimage-dev
 
 ========================================
 
@@ -40,12 +41,17 @@ How to run:
     If the file name is good, it will say in the terminal that the corresponding shader has been loaded. If not, it will warn you. Shaders MUST be provided
     If it doesn't like the model given, it will not count it in the X Models Loaded printout
 
+    The terminal will tell you if your texture or model sucks, but this only supports a single texture and a single obj and a single material file, all in the same location
+
 ========================================
 
 Bugs:
 
     There is a small problem with hitting Escape while a menu is up that I have yet to resolve, it ends erroring instead of exiting cleanly due to not being able to destroy a menu that is in use.
       It works fine, however, exiting by hitting the Quit menu object.
+
+    Occasionally when loading a model, the path name gets jarbled and something extra gets thrown in. I think this is freeimageplus's fault
+        Re-running should resolve this, no changes necessary to anything
 
 ========================================
 

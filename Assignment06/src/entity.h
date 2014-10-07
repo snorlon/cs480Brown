@@ -27,6 +27,11 @@ class entity
         GLuint vbo_geometry;// VBO handle for our geometry
         GLuint vbo_texture;// VBO handle for our geometry
         GLint loc_texture;
+        GLint loc_position;
+
+        int texWidth;
+        int texHeight;
+        GLuint texID;
 
         std::vector< Vertex > vertices;
 

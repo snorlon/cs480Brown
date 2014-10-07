@@ -14,10 +14,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
-#include <assimp/Importer.hpp> //includes the importer, which is used to read our obj file
-#include <assimp/scene.h> //includes the aiScene object
-#include <assimp/postprocess.h> //includes the postprocessing variables for the importer
-#include <assimp/color4.h> //includes the aiColor4 object, which is used to handle the colors from the mesh objects
+#ifdef ASSIMP_2
+#include <assimp/assimp.hpp>
+#include <assimp/aiScene.h>
+#include <assimp/aiPostProcess.h>
+#else
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
+#endif
 
 #include <FreeImagePlus.h>
 
@@ -176,37 +181,73 @@ int main(int argc, char **argv)
 
                                 temp->vertices.push_back(v);
                             }
-
-                            //get texture file name
-                            aiString fname;
-                            scene->mMaterials[m->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &fname);
-
-                            
-
-                            //give it its texture
-                            // load a regular file
-                            FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(fname.C_Str());
-                            FIBITMAP *dib = FreeImage_Load(fif, fname.C_Str(), 0);
-
-                            // open and allocate a memory stream
-                            fipMemoryIO memIO;
-
-                            // save the file to memory
-                            memIO.save(FIF_PNG, dib, PNG_DEFAULT);
-
-                            // get the buffer from the memory stream
-                            BYTE *mem_buffer = NULL;
-                            DWORD size_in_bytes = 0;
-
-                            memIO.acquire(&mem_buffer, &size_in_bytes);
-
-                            // save the buffer in a file stream
-                            /*FILE *stream = fopen(fname.C_Str(), "wb");
-                            if(stream) {
-                                fwrite(mem_buffer, sizeof(BYTE), size_in_bytes, stream);
-                                fclose(stream);
-                            }*/
                         }
+
+                        //get texture file name
+                        aiString fname;
+                        char newname[512];
+
+                        strcpy(newname, argv[i+1]);
+                        
+                        scene->mMaterials[m->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &fname);
+
+                        //strip name after last / to get directory
+                        for(int i=510; i>=0; i--)
+                        {
+                            if(newname[i] == '\\' || newname[i] == '/')
+                            {
+                                newname[i+1] = '\0';
+                                break;
+                            }
+                            else if(i == 0)
+                                newname[0] = '\0';
+                        }
+
+                        //add mat name to end of it
+                        strcat(newname, fname.C_Str());
+
+                        //give it its texture
+                        temp->texID = simConfig.texCount;
+                        simConfig.texCount++;
+
+                        FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
+
+                        BYTE * bits(0);
+                        FIBITMAP * dib(0);
+                        fif = FreeImage_GetFileType(newname, 0);
+                        //if still unknown, try to guess the file format from the file extension
+                        if(fif == FIF_UNKNOWN)
+                            fif = FreeImage_GetFIFFromFilename(newname);
+                        //if still unkown, return failure
+                        if(fif == FIF_UNKNOWN)
+                            return false;
+
+                        if(FreeImage_FIFSupportsReading(fif))
+                            dib = FreeImage_Load(fif, newname, 0);
+                        else
+                            cout<<"Bad texture file format!"<<endl;
+
+                        if(!dib)
+                        {
+                            cout<<"Dib failed to load! Are your file paths set up properly?? "<<newname<<endl;
+                            return false;
+                        }
+
+                        bits = FreeImage_GetBits(dib);
+                        //get the image width and height
+                        temp->texWidth = FreeImage_GetWidth(dib);
+                        temp->texHeight = FreeImage_GetHeight(dib);
+                        cout<<"Texture "<<newname<<" image size: "<<temp->texWidth<<"px by "<<temp->texHeight<<"px"<<endl;
+                        //if this somehow one of these failed (they shouldn't), return failure
+
+                        //generate an OpenGL texture ID for this texture
+                        glGenTextures(1, &temp->texID);
+                        glBindTexture( GL_TEXTURE_2D, temp->texID);
+                        //store the texture data for OpenGL use
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, temp->texWidth, temp->texHeight, 0, GL_BGR, GL_UNSIGNED_BYTE, bits);
+
+                        FreeImage_Unload(dib);
                     }
                     
                     //add it to the entity manager as normal entity

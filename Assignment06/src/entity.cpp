@@ -26,6 +26,11 @@ entity::entity(config* nConfig) //load a model from a file
     next = NULL;
     simConfig = nConfig;
 
+    texWidth = 0;
+    texHeight = 0;
+
+    texID = 0;
+
     //mem_buffer = NULL;
 
     id = simConfig->objectCount;
@@ -62,22 +67,20 @@ void entity::init()
 
     //Now we set the locations of the attributes and uniforms
     //this allows us to access them easily while rendering
-    simConfig->loc_position = glGetAttribLocation(simConfig->program,
-                    const_cast<const char*>("v_position"));
-    if(simConfig->loc_position == -1)
+    loc_position = glGetAttribLocation(simConfig->program, "v_position");
+    if(loc_position == -1)
     {
-        //std::cerr << "[F] VPOSITION NOT FOUND" << std::endl;
+        std::cerr << "[F] VPOSITION NOT FOUND" << std::endl;
     }
 
     loc_texture = glGetAttribLocation(simConfig->program, "v_tex");
     if(loc_texture == -1)
     {
-        //std::cerr << "[F] VTEX NOT FOUND" << std::endl;
+        std::cerr << "[F] VTEX NOT FOUND" << std::endl;
     }
 
     //renderer stuff
-    simConfig->loc_mvpmat = glGetUniformLocation(simConfig->program,
-                    const_cast<const char*>("mvpMatrix"));
+    simConfig->loc_mvpmat = glGetUniformLocation(simConfig->program, "mvpMatrix");
     if(simConfig->loc_mvpmat == -1)
     {
         std::cerr << "[F] MVPMATRIX NOT FOUND" << std::endl;
@@ -132,20 +135,19 @@ void entity::render()
     //premultiply the matrix for this example
     simConfig->mvp = simConfig->projection * simConfig->view * model;
 
-    glBindTexture(GL_TEXTURE_2D, GL_TEXTURE0);
-    //glActiveTexture(GL_TEXTURE0);
-
 //replace 640s with real image width & height
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 640, 640, 0, GL_RGB, GL_UNSIGNED_BYTE, mem_buffer );
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texID);
 
     //upload the matrix to the shader
     glUniformMatrix4fv(simConfig->loc_mvpmat, 1, GL_FALSE, glm::value_ptr(simConfig->mvp));
 
     //set up the Vertex Buffer Object so it can be drawn
-    glEnableVertexAttribArray(simConfig->loc_position);
+    glEnableVertexAttribArray(loc_position);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
     //set pointers into the vbo for each of the attributes(position and color)
-    glVertexAttribPointer( simConfig->loc_position,//location of attribute
+    glVertexAttribPointer( loc_position,//location of attribute
                            3,//number of elements
                            GL_FLOAT,//type
                            GL_FALSE,//normalized?
@@ -153,6 +155,7 @@ void entity::render()
                            0);//offset
 
     glEnableVertexAttribArray(loc_texture);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
     glVertexAttribPointer( loc_texture,
                            2,
                            GL_FLOAT,
@@ -163,6 +166,6 @@ void entity::render()
     glDrawArrays(GL_TRIANGLES, 0, vertexCount);//mode, starting index, count
 
     //clean up
-    glDisableVertexAttribArray(simConfig->loc_position);
+    glDisableVertexAttribArray(loc_position);
     glDisableVertexAttribArray(loc_texture);
 }

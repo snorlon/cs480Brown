@@ -6,6 +6,7 @@ config::config()
     program = 0;
     
     objectCount = 1;
+    texCount = 0;
 
     //--Init the view (camera)
     //  if you will be having a moving camera the view matrix will need to more dynamic

@@ -35,7 +35,7 @@ How to run:
         All that matters is that file name follows the -f or -v command
 
     For loading models from file, enter './../bin/Project -m filename'
-        There is no limit to the number of models able to be loaded this way, but they are not moved as a result
+        I do not recommend adding more than one model in total this way, it gets weird and I need to fix this later
 
     Example terminal command:
         ./../bin/Project -f ../bin/shaders/fragmentshader -v ../bin/shaders/vertexshader -m ../bin/models/board.obj
@@ -43,7 +43,8 @@ How to run:
     If the file name is good, it will say in the terminal that the corresponding shader has been loaded. If not, it will warn you. Shaders MUST be provided
     If it doesn't like the model given, it will not count it in the X Models Loaded printout
 
-    The terminal will tell you if your texture or model sucks, but this only supports a single texture and a single obj and a single material file, all in the same location
+    The terminal will tell you if your texture or model sucks
+        this program only supports a single texture and a single obj and a single material file, all in the same location
 
 ========================================
 

@@ -56,6 +56,7 @@ entity::entity(config* nConfig) //load a model from a file
 entity::~entity()
 {
     glDeleteBuffers(1, &vbo_geometry);
+    glDeleteBuffers(1, &vbo_texture);
 }
 
 void entity::init()
@@ -137,8 +138,6 @@ void entity::render()
     //premultiply the matrix for this example
     simConfig->mvp = simConfig->projection * simConfig->view * model;
 
-//replace 640s with real image width & height
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texID);
 
@@ -168,6 +167,6 @@ void entity::render()
     glDrawArrays(GL_TRIANGLES, 0, vertexCount);//mode, starting index, count
 
     //clean up
-    glDisableVertexAttribArray(loc_position);
-    glDisableVertexAttribArray(loc_texture);
+    //glDisableVertexAttribArray(loc_position);
+    //glDisableVertexAttribArray(loc_texture);
 }

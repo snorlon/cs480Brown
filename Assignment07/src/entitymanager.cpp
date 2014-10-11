@@ -75,6 +75,7 @@ void entityManager::loadData( string loadlistFileName )
         //add them to the object list, we don't care if they're visible - yet
         newObj->next = head;//add entity to list
         head = newObj;
+        head->semimajorAxis = entityCount;
         entityCount++;
 
         while(objectFile.good())

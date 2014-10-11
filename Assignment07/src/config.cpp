@@ -12,7 +12,7 @@ config::config()
     //  if you will be having a moving camera the view matrix will need to more dynamic
     //  ...Like you should update it before you render more dynamic 
     //  for this project having them static will be fine
-    eyeCamera.Position(2,2,-4);
+    eyeCamera.Position(3,3,-6);
 
     //update the camera
     recalcCamera();

@@ -27,7 +27,7 @@ class entity
         glm::mat4 model;
         config* simConfig;
         GLuint vbo_geometry;// VBO handle for our geometry
-        GLuint vbo_texture;// VBO handle for our geometry
+        GLuint vbo_texture;// VBO handle for our texture
         GLint loc_texture;
         GLint loc_position;
 

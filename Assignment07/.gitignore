@@ -1,0 +1,4 @@
+bin/models
+*.o
+*.sh
+Project

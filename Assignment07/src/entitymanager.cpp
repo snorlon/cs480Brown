@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 entityManager::entityManager()
 {
@@ -41,6 +42,7 @@ void entityManager::loadData( string loadlistFileName )
     string data;
 
     ifstream input;
+    stringstream ss;
     input.open(loadlistFileName);
 
     input>>data;
@@ -99,10 +101,12 @@ void entityManager::loadData( string loadlistFileName )
                     break;
                 case 6:
                     newObj->tilt = atof(data.c_str());
-                    cout<<"Diameter: "<<data<<endl;
+                    break;
+                case 7:
+                    newObj->rotationPeriod *= atoi(data.c_str());
                     break;
                 case 1:
-                    cout<<"Model filename: "<<data<<endl;
+                    cout<<"Model file path: "<<data<<endl;
 
                     //oh god monster code section//open the file
                     const aiScene* scene = import.ReadFile("../bin/models/"+data+newObj->name+".obj", aiProcess_Triangulate);

@@ -87,8 +87,6 @@ void entity::init()
     {
         std::cerr << "[F] MVPMATRIX NOT FOUND" << std::endl;
     }
-
-    std::cout << "Object initialized." << std::endl;
 }
 
 void entity::tick(float dt)
@@ -109,9 +107,17 @@ void entity::tick(float dt)
     model = glm::translate( glm::mat4(1.0f), absolutePosition);
 
     //rotate the cube around the Y axis
-    rotationAngle += dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
-        * (1 / ( rotationPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
+    double rotationChange = dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
+        * (1 / ( abs(rotationPeriod) * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
+
+    if(rotationPeriod>0)
+        rotationAngle += rotationChange;
+    else
+        rotationAngle -= rotationChange;
+
     model = glm::rotate(model,(float) rotationAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+//cout<<name<<" "<<rotationChange<<"|"<<(( abs(rotationPeriod) * 24 * 60 * 60) )<<endl;
 
     //apply the scale
     model = glm::scale( model, glm::vec3(diameter*simConfig->scale / AU));

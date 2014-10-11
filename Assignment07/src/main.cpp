@@ -64,7 +64,7 @@ void menu_test(int id);
 bool recentlyPaused = false;
 bool keepRunning = true;
 
-float timeRate = 86400.0f;
+float timeRate = 8640.0f;
 
 int menuID = -1;
 

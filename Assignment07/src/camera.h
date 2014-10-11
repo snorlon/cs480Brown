@@ -17,12 +17,12 @@ class Camera
         void MoveX(double amount);
         void MoveY(double amount);
         void MoveZ(double amount);
-        void UpX(){x = x + 1;};
-        void UpY(){y = y + 1;};
-        void UpZ(){z = z + 1;};
-        void DownX(){x = x - 1;};
-        void DownY(){y = y - 1;};
-        void DownZ(){z = z - 1;};
+        void UpX(){x = x + 0.05;};
+        void UpY(){y = y + 0.05;};
+        void UpZ(){z = z + 0.05;};
+        void DownX(){x = x - 0.05;};
+        void DownY(){y = y - 0.05;};
+        void DownZ(){z = z - 0.05;};
 
         void tick(float dt);
 

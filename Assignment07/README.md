@@ -1,10 +1,18 @@
-Chad Brown's Assignment 06
+GROUP PROJECT's Assignment 07
+
+Chad Brown
+Alexander Falconi
+Molly Headland
 
 ========================================
 
 Assignment explanation:
 
-    The objective of this project is use Assimp to load models and textures for those models.
+    The objective of this project is to build an interactive solar system.
+
+    Use Assimp to load models and textures for the planets/moons
+
+    Use a data file for info on each object (size, orbit radius, rotation,...)
 
 ========================================
 
@@ -53,20 +61,21 @@ Bugs:
     There is a small problem with hitting Escape while a menu is up that I have yet to resolve, it ends erroring instead of exiting cleanly due to not being able to destroy a menu that is in use.
       It works fine, however, exiting by hitting the Quit menu object.
 
-    Occasionally when loading a model, the path name gets jarbled and something extra gets thrown in. I think this is freeimageplus's fault
-        Re-running should resolve this, no changes necessary to anything
+========================================
+
+NOTES:
+    Sun is significantly downscaled to hit a balance between planet size and distance between planets. Despite this, it is still not too small to be seen as anything but the sun.
 
 ========================================
 
 Commands:
-    All planet related keys has been disabled for this assignment
-
     Keyboard
 
         Arrow Keys - Camera movement
 
-            Up Arrow - Move up 1 Y unit
-            Down Arrow - Move down 1 Y unit
+            Up & Down Arrow - Rotate Along the Z and X axis
+            Left & Right Arrow - Rotate Along the Y axis
+            Pg Up & Pg Down - Zooming in & out of current object
 
         Number keys 1-9
             Switch between each of the 9 planets
@@ -85,4 +94,4 @@ Extra Credit: NONE
 
 CS480 Graphics Class
 
-Programming Assignments by Chad Brown
+Programming Assignments by GROUP

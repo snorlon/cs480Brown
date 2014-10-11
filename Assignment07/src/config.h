@@ -35,6 +35,10 @@ class config
         int objectCount;
         int texCount;
 
+        int azimuthAngle;
+        int altitudeAngle;
+        double viewDistance;
+    
         Camera* currentFocalCamera;
 
         double scale;

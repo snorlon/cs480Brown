@@ -275,6 +275,10 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
     {
         simConfig.switchCamera(9);
     }
+    else if(key == '0')
+    {
+        simConfig.switchCamera(0);
+    }
     else if(key == ' ')//space
     {
         //toggle pause
@@ -292,16 +296,31 @@ void keyboardPlus(int key, int x_pos, int y_pos)
 {
     x_pos = y_pos;
     y_pos = x_pos;
+    int rate = 1;
     // Handle keyboard input
     if(key == GLUT_KEY_UP)//up arrow key
     {
-        simConfig.currentFocalCamera->UpY();
-        simConfig.recalcCamera();
+        simConfig.altitudeAngle += rate;
     }
-    else if(key == GLUT_KEY_DOWN)//down arrow key
+    else if(key == GLUT_KEY_DOWN)
     {
-        simConfig.currentFocalCamera->DownY();
-        simConfig.recalcCamera();
+        simConfig.altitudeAngle -= rate;
+    }
+    else if(key == GLUT_KEY_LEFT)
+    {
+        simConfig.azimuthAngle -= rate;
+    }
+    else if(key == GLUT_KEY_RIGHT)
+    {
+        simConfig.azimuthAngle += rate;
+    }
+    else if(key == GLUT_KEY_PAGE_UP)
+    {
+        simConfig.viewDistance -= rate/100.0;
+    }
+    else if(key == GLUT_KEY_PAGE_DOWN)
+    {
+        simConfig.viewDistance += rate/100.0;
     }
 }
 

@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 
+#define pi 3.14159265
+
 config::config()
 {
     program = 0;
@@ -19,6 +21,10 @@ config::config()
     presetCameras = NULL;
 
     currentCamera = -1;
+
+    azimuthAngle = 0;
+    altitudeAngle = 0;
+    viewDistance = 1.0;
 
     currentFocalCamera = &targetCamera;
 
@@ -83,7 +89,7 @@ Camera* config::switchCamera(int camID)
 
     Camera* iterator = presetCameras;
 
-    while(camID>1 && iterator!=NULL)
+    while(camID>0 && iterator!=NULL)
     {
         if(iterator->next!=NULL)
         {
@@ -114,10 +120,32 @@ void config::tick(float dt)
         iterator = iterator->next;
     }
 
+    //prevent a negative view distance, it gets weird.
+    if(viewDistance<0.01)
+        viewDistance = 0.01;
 
-    if(currentFocalCamera!=NULL)
-        view = glm::lookAt( glm::vec3(eyeCamera.x, eyeCamera.y, eyeCamera.z), glm::vec3(currentFocalCamera->x,currentFocalCamera->y,currentFocalCamera->z), glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+    while(altitudeAngle<1)
+        altitudeAngle+=360;
+    while(altitudeAngle>360)
+        altitudeAngle-=360;
+    while(azimuthAngle<1)
+        azimuthAngle+=360;
+    while(azimuthAngle>360)
+        azimuthAngle-=360;
 
+
+
+    double eyeY = viewDistance*cos(altitudeAngle * 2 * pi / 360) + currentFocalCamera->y;
+
+    double eyeX = viewDistance*sin(altitudeAngle * 2 * pi / 360)*cos(azimuthAngle * 0.0174532925) + currentFocalCamera->x;
+
+    double eyeZ = viewDistance*sin(altitudeAngle * 2 * pi / 360)*sin(azimuthAngle * 0.0174532925) + currentFocalCamera->z;
+
+//cout<<altitudeAngle<<"|"<<eyeX-currentFocalCamera->x<<"|"<<eyeZ-currentFocalCamera->z<<endl;
+
+    view = glm::lookAt( glm::vec3(eyeX, eyeY, eyeZ), //Eye Position
+                        glm::vec3(currentFocalCamera->x, currentFocalCamera->y, currentFocalCamera->z), //camera aim
+                        glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 }
 
 void config::setWindow( int wHeight, int wWidth)

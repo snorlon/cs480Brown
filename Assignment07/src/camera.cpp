@@ -1,11 +1,24 @@
 #include "camera.h"
-
+#include "entity.h"
 
 Camera::Camera()
 {
     x = 0;
     y = 0;
     z = 0;
+
+    target = NULL;
+    next = NULL;
+}
+
+Camera::Camera(entity* ntarget)
+{
+    x = 0;
+    y = 0;
+    z = 0;
+
+    target = ntarget;
+    next = NULL;
 }
 
 void Camera::Position(double nx, double ny, double nz)
@@ -28,4 +41,16 @@ void Camera::MoveY(double amount)
 void Camera::MoveZ(double amount)
 {
     z += amount;
+}
+
+void Camera::tick(float dt)
+{
+    if(target!=NULL)
+    {
+        //update ourselves to where we are pointing at
+        x = target->absolutePosition.x;
+        y = target->absolutePosition.y;//to make sure dt is used and as a y placeholder
+        z = target->absolutePosition.z;
+        x+= (dt*0.0);
+    }
 }

@@ -65,10 +65,11 @@ Commands:
 
         Arrow Keys - Camera movement
 
-            Left Arrow - Move down 1 X unit
-            Right Arrow - Move up 1 X unit
             Up Arrow - Move up 1 Y unit
             Down Arrow - Move down 1 Y unit
+
+        Number keys 1-9
+            Switch between each of the 9 planets
 
         Space - Pause/Unpause
         Esc - Exit program

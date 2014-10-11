@@ -184,6 +184,8 @@ void update()
 
     simEntities.tick(dt);
 
+    simConfig.tick(dt);
+
     // Update the state of the scene
     glutPostRedisplay();//call the display callback
 }
@@ -237,6 +239,42 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
         if(timeRate < 1)
             timeRate = 1;
     }
+    else if(key == '1')
+    {
+        simConfig.switchCamera(1);
+    }
+    else if(key == '2')
+    {
+        simConfig.switchCamera(2);
+    }
+    else if(key == '3')
+    {
+        simConfig.switchCamera(3);
+    }
+    else if(key == '4')
+    {
+        simConfig.switchCamera(4);
+    }
+    else if(key == '5')
+    {
+        simConfig.switchCamera(5);
+    }
+    else if(key == '6')
+    {
+        simConfig.switchCamera(6);
+    }
+    else if(key == '7')
+    {
+        simConfig.switchCamera(7);
+    }
+    else if(key == '8')
+    {
+        simConfig.switchCamera(8);
+    }
+    else if(key == '9')
+    {
+        simConfig.switchCamera(9);
+    }
     else if(key == ' ')//space
     {
         //toggle pause
@@ -255,24 +293,14 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     x_pos = y_pos;
     y_pos = x_pos;
     // Handle keyboard input
-    if(key == GLUT_KEY_LEFT)//left arrow key
+    if(key == GLUT_KEY_UP)//up arrow key
     {
-        simConfig.eyeCamera.DownX();
-        simConfig.recalcCamera();
-    }
-    else if(key == GLUT_KEY_RIGHT)//left arrow key
-    {
-        simConfig.eyeCamera.UpX();
-        simConfig.recalcCamera();
-    }
-    else if(key == GLUT_KEY_UP)//up arrow key
-    {
-        simConfig.eyeCamera.UpY();
+        simConfig.currentFocalCamera->UpY();
         simConfig.recalcCamera();
     }
     else if(key == GLUT_KEY_DOWN)//down arrow key
     {
-        simConfig.eyeCamera.DownY();
+        simConfig.currentFocalCamera->DownY();
         simConfig.recalcCamera();
     }
 }

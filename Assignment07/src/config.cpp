@@ -16,6 +16,12 @@ config::config()
     input.open("../bin/data/config");
     int line = 0;
 
+    presetCameras = NULL;
+
+    currentCamera = -1;
+
+    currentFocalCamera = &targetCamera;
+
     input>>data;
 
     while(input.good())
@@ -66,6 +72,52 @@ void config::recalcCamera()
     view = glm::lookAt( glm::vec3(eyeCamera.x, eyeCamera.y, eyeCamera.z), //Eye Position
                         glm::vec3(targetCamera.x, targetCamera.y, targetCamera.z), //Focus point
                         glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+}
+
+
+Camera* config::switchCamera(int camID)
+{
+    //abort if we don't have any preset cameras
+    if(presetCameras == NULL)
+        return NULL;
+
+    Camera* iterator = presetCameras;
+
+    while(camID>1 && iterator!=NULL)
+    {
+        if(iterator->next!=NULL)
+        {
+            iterator = iterator->next;
+        }
+        camID--;
+    }
+
+    view = glm::lookAt( glm::vec3(eyeCamera.x, eyeCamera.y, eyeCamera.z), //Eye Position
+                        glm::vec3(iterator->x, iterator->y, iterator->z), //camera aim
+                        glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+
+    currentFocalCamera = iterator;
+
+    return iterator;
+}
+
+void config::tick(float dt)
+{
+    eyeCamera.tick(dt);
+    targetCamera.tick(dt);
+
+    Camera* iterator = presetCameras;
+    while(iterator!=NULL)
+    {
+        iterator->tick(dt);
+
+        iterator = iterator->next;
+    }
+
+
+    if(currentFocalCamera!=NULL)
+        view = glm::lookAt( glm::vec3(eyeCamera.x, eyeCamera.y, eyeCamera.z), glm::vec3(currentFocalCamera->x,currentFocalCamera->y,currentFocalCamera->z), glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+
 }
 
 void config::setWindow( int wHeight, int wWidth)

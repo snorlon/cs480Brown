@@ -105,6 +105,23 @@ void entityManager::loadData( string loadlistFileName )
                 case 7:
                     newObj->rotationPeriod *= atoi(data.c_str());
                     break;
+                case 8://check if we need a camera of this object
+                    if(atoi(data.c_str()) == 1)
+                    {
+                        Camera* newCamera = new Camera(newObj);
+                        if(simConfig->presetCameras == NULL)
+                            simConfig->presetCameras = newCamera;
+                        else
+                        {
+                            Camera* iterator = simConfig->presetCameras;
+                            while(iterator->next!=NULL)
+                                iterator = iterator->next;
+
+                            iterator->next = newCamera;
+                        }
+                        cout<<"New camera created for "<<newObj->name<<"!"<<endl;
+                    }
+                    break;
                 case 1:
                     cout<<"Model file path: "<<data<<endl;
 

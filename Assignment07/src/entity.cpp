@@ -132,6 +132,13 @@ float entity::getX()
 
 float entity::getY()
 {
+    float returnValue = 0.0;//OBJECTS HAVE NO HEIGHT YET
+
+    return returnValue;
+}
+
+float entity::getZ()
+{
     float returnValue = semimajorAxis * cos(orbitalAngle) / diameter;
 
     return returnValue;

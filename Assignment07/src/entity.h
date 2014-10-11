@@ -61,6 +61,7 @@ class entity
 
         float getX();
         float getY();
+        float getZ();
 
         void render();
 

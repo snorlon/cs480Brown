@@ -29,8 +29,13 @@ class config
         Camera eyeCamera;
         Camera targetCamera;
 
+        Camera* presetCameras;
+        int currentCamera;
+
         int objectCount;
         int texCount;
+
+        Camera* currentFocalCamera;
 
         double scale;
 
@@ -46,6 +51,10 @@ class config
         
         bool giveLinks(shaderManager* shaderMgr, entityManager* entMgr);
         void recalcCamera();
+
+        Camera* switchCamera(int camID);
+
+        void tick(float dt);
 
         //window size config data
         void setWindow( int wHeight, int wWidth);

@@ -49,7 +49,7 @@ config.o: $(CONFIG) $(CONFIGH) $(ENTITYMANAGERH) $(SHADERLOADERH) $(CAMERAH) $(L
 renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(ENTITYH) $(CONFIGH)
 	$(CC) $(CXXFLAGS) -c $(RENDERER) $(LIBS)
 
-camera.o: $(CAMERA) $(CAMERAH)
+camera.o: $(CAMERA) $(CAMERAH) $(ENTITYH)
 	$(CC) $(CXXFLAGS) -c $(CAMERA)
 
 clean:

@@ -32,6 +32,8 @@ class config
         int objectCount;
         int texCount;
 
+        double scale;
+
         //uniform locations
         glm::mat4 mvp;//premultiplied modelviewprojection
         GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader

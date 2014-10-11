@@ -33,8 +33,6 @@ entity::entity(config* nConfig) //load a model from a file
 
     name = "Error";
 
-    //mem_buffer = NULL;
-
     id = simConfig->objectCount;
     simConfig->objectCount++;
 
@@ -47,7 +45,8 @@ entity::entity(config* nConfig) //load a model from a file
     orbitalPeriod = 1; //default to earths rate for now
     rotationPeriod = 5.0; //default to earths rate for now
     semimajorAxis = 0.0; //AU, earths for now
-    diameter = 12000* 12742 / AU;
+    diameter = 12742.0;
+    tilt = 0;
 
     glGenBuffers(1, &vbo_geometry);
     glGenTextures(1, &vbo_texture);
@@ -115,7 +114,7 @@ void entity::tick(float dt)
     model = glm::rotate(model,(float) rotationAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 
     //apply the scale
-    model = glm::scale( model, glm::vec3(diameter));
+    model = glm::scale( model, glm::vec3(diameter*simConfig->scale / AU));
 }
 
 float entity::getX()

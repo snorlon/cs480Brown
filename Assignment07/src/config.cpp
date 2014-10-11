@@ -1,5 +1,6 @@
 #include "config.h"
 #include <iostream>
+#include <fstream>
 
 config::config()
 {
@@ -8,11 +9,35 @@ config::config()
     objectCount = 1;
     texCount = 0;
 
+    scale = 1.0;
+
+    ifstream input;
+    string data;
+    input.open("../bin/data/config");
+    int line = 0;
+
+    input>>data;
+
+    while(input.good())
+    {
+        switch(line)
+        {
+            case 0:
+                scale = atof(data.c_str());
+                break;
+        }
+
+        input>>data;
+    }
+
+    input.close();
+    
+
     //--Init the view (camera)
     //  if you will be having a moving camera the view matrix will need to more dynamic
     //  ...Like you should update it before you render more dynamic 
     //  for this project having them static will be fine
-    eyeCamera.Position(3,3,-6);
+    eyeCamera.Position(2,2,-4);
 
     //update the camera
     recalcCamera();

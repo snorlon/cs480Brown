@@ -45,7 +45,8 @@ class entity
         double rotationPeriod;//how many days for a full rotation
         double rotationAngle;//degrees into its rotation
         double semimajorAxis;//diameter of orbit at most distant points
-        float diameter;//Also in AU
+        double diameter;//Also in AU
+        double tilt;//in degrees, convert to radians when rotating
         int vertexCount;
 
         glm::vec3 relativePosition;

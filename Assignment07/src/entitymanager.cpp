@@ -75,7 +75,6 @@ void entityManager::loadData( string loadlistFileName )
         //add them to the object list, we don't care if they're visible - yet
         newObj->next = head;//add entity to list
         head = newObj;
-        head->semimajorAxis = entityCount;
         entityCount++;
 
         while(objectFile.good())
@@ -85,6 +84,22 @@ void entityManager::loadData( string loadlistFileName )
                 case 0:
                     newObj->name = data;
                     cout<<"Object name: "<<data<<endl;
+                    break;
+                case 2:
+                    newObj->orbitalPeriod = atof(data.c_str());
+                    break;
+                case 3:
+                    newObj->rotationPeriod = atof(data.c_str());
+                    break;
+                case 4:
+                    newObj->semimajorAxis = atof(data.c_str());
+                    break;
+                case 5:
+                    newObj->diameter = atof(data.c_str());
+                    break;
+                case 6:
+                    newObj->tilt = atof(data.c_str());
+                    cout<<"Diameter: "<<data<<endl;
                     break;
                 case 1:
                     cout<<"Model filename: "<<data<<endl;
@@ -200,9 +215,12 @@ void entityManager::loadData( string loadlistFileName )
 
             objectFile>>data;
         }
+        objectFile.close();
 
         input>>data;
     }
+
+    input.close();
 
     cout<<"Successfully loaded data from "<<loadlistFileName<<"!"<<endl;
 

@@ -52,7 +52,7 @@ class entity
         glm::vec3 relativePosition;
         glm::vec3 absolutePosition;
 
-        entity* children;
+        //entity* children;
         entity* parent;
 
         //attribute locations

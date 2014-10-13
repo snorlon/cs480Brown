@@ -41,7 +41,7 @@ entity::entity(config* nConfig) //load a model from a file
 
     rotationModifier = 1.0f;
 
-    children = NULL;
+    //children = NULL;
     parent = NULL;
 
     //1 AU = 149,597,871 KM
@@ -59,26 +59,26 @@ entity::~entity()
 {
     //glDeleteBuffers(1, &vbo_texture);
 
-    while(children!=NULL)
+    /*while(children!=NULL)
     {
         entity* temp = children;
         children = children->next;
         delete temp;
-    }
+    }*/
 }
 
 void entity::cleanup()
 {
     glDeleteBuffers(1, &vbo_geometry);
 
-    entity* iterator = children;
+    /*entity* iterator = children;
 
     while(iterator!=NULL)
     {
         iterator->cleanup();
 
         iterator = iterator->next;
-    }
+    }*/
 }
 
 void entity::init()
@@ -151,14 +151,14 @@ void entity::tick(float dt)
     model = glm::scale( model, glm::vec3(diameter*simConfig->scale / AU));
 
 
-    entity* iterator = children;
+    /*entity* iterator = children;
 
     //tick each child
     while(iterator!=NULL)
     {
         iterator->tick(dt);
         iterator = iterator->next;
-    }
+    }*/
 }
 
 float entity::getX()
@@ -219,12 +219,12 @@ void entity::render()
     glDisableVertexAttribArray(loc_position);
     glDisableVertexAttribArray(loc_texture);
 
-    entity* iterator = children;
+    /*entity* iterator = children;
 
     //draw each child
     while(iterator!=NULL)
     {
-        //iterator->render();
+        iterator->render();
         iterator = iterator->next;
-    }
+    }*/
 }

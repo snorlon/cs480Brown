@@ -94,6 +94,8 @@ entity* entityManager::loadEntity(string fileName)
     if(!objectFile.good())
     {
         cout<<"Failed to load object! "<<fileName<<endl;
+        delete newObj;
+
         return NULL;
     }
 
@@ -107,8 +109,11 @@ entity* entityManager::loadEntity(string fileName)
             if(newMoon!=NULL)
             {
                 //add them to the object list
-                newMoon->next = newObj->children;
-                newObj->children = newMoon;
+                newMoon->next = head;
+                head = newMoon;
+                entityCount++; 
+                //newMoon->next = newObj->children;
+                //newObj->children = newMoon;
 
                 newMoon->parent = newObj;
             }      

@@ -247,8 +247,8 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
     {
         //increase time rate
         timeRate *= 2;
-        if(timeRate > 10000000000)
-            timeRate = 10000000000;
+        if(timeRate > 65792)
+            timeRate = 65792;
     }
     else if(key == 45)//-
     {

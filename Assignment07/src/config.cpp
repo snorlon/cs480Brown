@@ -133,21 +133,24 @@ void config::tick(float dt)
         viewDistance = 0.01;
 
     while(altitudeAngle<1)
-        altitudeAngle+=180;
-    while(altitudeAngle>180)
-        altitudeAngle-=180;
+        altitudeAngle+=360;
+    while(altitudeAngle>360)
+        altitudeAngle-=360;
     while(azimuthAngle<1)
         azimuthAngle+=360;
     while(azimuthAngle>360)
         azimuthAngle-=360;
 
 
+    int usableAltitude = altitudeAngle;
+    if(altitudeAngle > 180)
+        usableAltitude = -altitudeAngle;
 
-    double eyeY = viewDistance*cos(altitudeAngle * 2 * pi / 360) + currentFocalCamera->y;
+    double eyeY = viewDistance*cos(usableAltitude * 2 * pi / 360) + currentFocalCamera->y;
 
-    double eyeX = viewDistance*sin(altitudeAngle * 2 * pi / 360)*cos(azimuthAngle * 2 * pi / 360) + currentFocalCamera->x;
+    double eyeX = viewDistance*sin(usableAltitude * 2 * pi / 360)*cos(azimuthAngle * 2 * pi / 360) + currentFocalCamera->x;
 
-    double eyeZ = viewDistance*sin(altitudeAngle * 2 * pi / 360)*sin(azimuthAngle * 2 * pi / 360) + currentFocalCamera->z;
+    double eyeZ = viewDistance*sin(usableAltitude * 2 * pi / 360)*sin(azimuthAngle * 2 * pi / 360) + currentFocalCamera->z;
 
 //cout<<altitudeAngle<<"|"<<eyeX-currentFocalCamera->x<<"|"<<eyeY-currentFocalCamera->y<<"|"<<eyeZ-currentFocalCamera->z<<endl;
 

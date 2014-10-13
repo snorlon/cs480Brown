@@ -200,6 +200,8 @@ void update()
         }
 
         simEntities.tick(dt);
+
+        simConfig.tick(dt);
     }
 
     // Update the state of the scene

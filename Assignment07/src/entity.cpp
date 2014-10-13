@@ -224,7 +224,7 @@ void entity::render()
     //draw each child
     while(iterator!=NULL)
     {
-        iterator->render();
+        //iterator->render();
         iterator = iterator->next;
     }
 }

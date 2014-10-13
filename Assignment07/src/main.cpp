@@ -238,11 +238,6 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
         cleanUp();
         exit(0);
     }
-    else if(key == 'a')//a
-    {
-        //flip rotation direction
-        //simEntities.head->rotationModifier *= -1;
-    }
     else if(key == 61)//=
     {
         //increase time rate

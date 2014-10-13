@@ -66,6 +66,8 @@ Bugs:
 NOTES:
     Sun is significantly downscaled to hit a balance between planet size and distance between planets. Despite this, it is still not too small to be seen as anything but the sun.
 
+    Some orbits have been rescaled, such as Earth's moon, so that they are still visible and not overlapping with the larger model scaling.
+
 ========================================
 
 Commands:
@@ -73,18 +75,24 @@ Commands:
 
         Arrow Keys - Camera movement
 
-            Up & Down Arrow - Rotate Along the Z and X axis
+            Up & Down Arrow - Rotate Along the Y plane
             Left & Right Arrow - Rotate Along the Y axis
-            Pg Up & Pg Down - Zooming in & out of current object
+            Pg Up & Pg Down - Zooming in & out on current camera
 
         Number keys 1-9
-            Switch between each of the 9 planets
+            Switch between each of the 9 planets as camera focus
+        Number ky 0
+            Re-center back on the sun
+
+        + and - : controlling speed of program
+        
 
         Space - Pause/Unpause
         Esc - Exit program
 
     Mouse
         Right - Open menu
+            Can pause or resume simulation or exit
 
 ========================================
 

@@ -34,6 +34,8 @@ void renderer::render()
                            
     //swap the buffers
     glutSwapBuffers();
+
+    glFlush();
 }
 
 bool renderer::initialize()

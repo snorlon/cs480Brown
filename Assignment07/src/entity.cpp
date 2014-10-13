@@ -52,19 +52,32 @@ entity::entity(config* nConfig) //load a model from a file
     tilt = 0;
 
     glGenBuffers(1, &vbo_geometry);
-    glGenTextures(1, &vbo_texture);
+    //glGenTextures(1, &vbo_texture);
 }
 
 entity::~entity()
 {
-    glDeleteBuffers(1, &vbo_geometry);
-    glDeleteBuffers(1, &vbo_texture);
+    //glDeleteBuffers(1, &vbo_texture);
 
     while(children!=NULL)
     {
         entity* temp = children;
         children = children->next;
         delete temp;
+    }
+}
+
+void entity::cleanup()
+{
+    glDeleteBuffers(1, &vbo_geometry);
+
+    entity* iterator = children;
+
+    while(iterator!=NULL)
+    {
+        iterator->cleanup();
+
+        iterator = iterator->next;
     }
 }
 
@@ -183,7 +196,7 @@ void entity::render()
 
     //set up the Vertex Buffer Object so it can be drawn
     glEnableVertexAttribArray(loc_position);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
+    //glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
     //set pointers into the vbo for each of the attributes(position and color)
     glVertexAttribPointer( loc_position,//location of attribute
                            3,//number of elements
@@ -193,7 +206,6 @@ void entity::render()
                            0);//offset
 
     glEnableVertexAttribArray(loc_texture);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
     glVertexAttribPointer( loc_texture,
                            2,
                            GL_FLOAT,
@@ -204,8 +216,8 @@ void entity::render()
     glDrawArrays(GL_TRIANGLES, 0, vertexCount);//mode, starting index, count
 
     //clean up
-    //glDisableVertexAttribArray(loc_position);
-    //glDisableVertexAttribArray(loc_texture);
+    glDisableVertexAttribArray(loc_position);
+    glDisableVertexAttribArray(loc_texture);
 
     entity* iterator = children;
 

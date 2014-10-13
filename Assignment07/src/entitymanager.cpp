@@ -232,6 +232,9 @@ entity* entityManager::loadEntity(string fileName)
                         if(fif == FIF_UNKNOWN)
                             fif = FreeImage_GetFIFFromFilename(newname);
 
+                        if(fif == FIF_UNKNOWN)
+                            cout<<"WE DON'T KNOW WHAT FIF THIS IS!"<<endl;
+
                         if(FreeImage_FIFSupportsReading(fif))
                             dib = FreeImage_Load(fif, newname, 0);
                         else
@@ -292,6 +295,9 @@ void entityManager::cleanup()
     {
         entity* temp = head;
         head = head->next;
+
+        temp->cleanup();
+
         delete temp;
     }
 }

@@ -68,9 +68,11 @@ float timeRate = 1280.0f;
 
 int menuID = -1;
 
+int frame = 0;
+
 //--Random time things
 float getDT();
-std::chrono::time_point<std::chrono::high_resolution_clock> t1,t2;
+std::chrono::time_point<std::chrono::high_resolution_clock> t1,t2,t3,t4;
 
 //--Main
 int main(int argc, char **argv)
@@ -172,19 +174,33 @@ void render()
 
 void update()
 {
-    //time passed gets calculated
-    float dt = getDT() * timeRate;
+    //rough fps handling
+    frame++;
+    t4 = std::chrono::high_resolution_clock::now();
 
-    //if we just exited a pause, just make the dt zero so no jerking when unpausing
-    if(recentlyPaused)
+    int ret = std::chrono::duration_cast< std::chrono::duration<float> >(t4-t3).count();
+
+    if(ret >= 1)
     {
-        dt = 0;
-        recentlyPaused = false;
+        cout<<frame<<" FPS"<<endl;
+        frame = 0;
+        t3 = std::chrono::high_resolution_clock::now();
     }
 
-    simEntities.tick(dt);
+    if(frame % 3 == 0 || frame != 0)
+    {
+        //time passed gets calculated
+        float dt = getDT() * timeRate;
 
-    simConfig.tick(dt);
+        //if we just exited a pause, just make the dt zero so no jerking when unpausing
+        if(recentlyPaused)
+        {
+            dt = 0;
+            recentlyPaused = false;
+        }
+
+        simEntities.tick(dt);
+    }
 
     // Update the state of the scene
     glutPostRedisplay();//call the display callback

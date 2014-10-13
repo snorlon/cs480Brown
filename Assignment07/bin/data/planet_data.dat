@@ -1,7 +1,7 @@
 ../bin/data/PlanetData/sun
 ../bin/data/PlanetData/mercury
 ../bin/data/PlanetData/venus
-../bin/data/PlanetData/earth
+../bin/data/PlanetData/Earth/earth
 ../bin/data/PlanetData/mars
 ../bin/data/PlanetData/jupiter
 ../bin/data/PlanetData/saturn

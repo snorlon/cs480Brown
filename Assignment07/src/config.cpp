@@ -1,8 +1,11 @@
 #include "config.h"
 #include <iostream>
 #include <fstream>
+#include "entity.h"
 
 #define pi 3.14159265
+
+#define AU 149597871
 
 config::config()
 {
@@ -23,7 +26,7 @@ config::config()
     currentCamera = -1;
 
     azimuthAngle = 0;
-    altitudeAngle = 0;
+    altitudeAngle = 1;
     viewDistance = 1.0;
 
     currentFocalCamera = &targetCamera;
@@ -104,6 +107,9 @@ Camera* config::switchCamera(int camID)
 
     currentFocalCamera = iterator;
 
+    if(currentFocalCamera!=NULL && currentFocalCamera->target!=NULL)
+        viewDistance = currentFocalCamera->target->diameter * 1.5 * scale / AU;
+
     return iterator;
 }
 
@@ -125,9 +131,9 @@ void config::tick(float dt)
         viewDistance = 0.01;
 
     while(altitudeAngle<1)
-        altitudeAngle+=360;
-    while(altitudeAngle>360)
-        altitudeAngle-=360;
+        altitudeAngle+=180;
+    while(altitudeAngle>180)
+        altitudeAngle-=180;
     while(azimuthAngle<1)
         azimuthAngle+=360;
     while(azimuthAngle>360)
@@ -137,15 +143,24 @@ void config::tick(float dt)
 
     double eyeY = viewDistance*cos(altitudeAngle * 2 * pi / 360) + currentFocalCamera->y;
 
-    double eyeX = viewDistance*sin(altitudeAngle * 2 * pi / 360)*cos(azimuthAngle * 0.0174532925) + currentFocalCamera->x;
+    double eyeX = viewDistance*sin(altitudeAngle * 2 * pi / 360)*cos(azimuthAngle * 2 * pi / 360) + currentFocalCamera->x;
 
-    double eyeZ = viewDistance*sin(altitudeAngle * 2 * pi / 360)*sin(azimuthAngle * 0.0174532925) + currentFocalCamera->z;
+    double eyeZ = viewDistance*sin(altitudeAngle * 2 * pi / 360)*sin(azimuthAngle * 2 * pi / 360) + currentFocalCamera->z;
 
-//cout<<altitudeAngle<<"|"<<eyeX-currentFocalCamera->x<<"|"<<eyeZ-currentFocalCamera->z<<endl;
+//cout<<altitudeAngle<<"|"<<eyeX-currentFocalCamera->x<<"|"<<eyeY-currentFocalCamera->y<<"|"<<eyeZ-currentFocalCamera->z<<endl;
 
     view = glm::lookAt( glm::vec3(eyeX, eyeY, eyeZ), //Eye Position
                         glm::vec3(currentFocalCamera->x, currentFocalCamera->y, currentFocalCamera->z), //camera aim
                         glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+/*
+        cout<<endl;
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+            cout<< view[i][j]<<"|";
+        cout<<endl;
+    }
+        cout<<endl;*/
 }
 
 void config::setWindow( int wHeight, int wWidth)

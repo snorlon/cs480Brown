@@ -64,7 +64,7 @@ void menu_test(int id);
 bool recentlyPaused = false;
 bool keepRunning = true;
 
-float timeRate = 8640.0f;
+float timeRate = 1280.0f;
 
 int menuID = -1;
 
@@ -115,11 +115,11 @@ int main(int argc, char **argv)
     //misc setup
     simEntities.simConfig = &simConfig;
 
-    //load model data
-    simEntities.loadData("../bin/data/planet_data.dat");
-
     // Initialize all of our resources(config, geometry)
     bool init = initialize();
+
+    //load model data
+    simEntities.loadData("../bin/data/planet_data.dat");
 
     //run our shader loader now
     init = init && simShaderManager.loadShaders(argc,argv);

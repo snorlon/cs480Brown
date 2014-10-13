@@ -40,6 +40,7 @@ class entityManager
         void initialize();
         void tick(float dt);
         void loadData( string loadlistFileName );
+        entity* loadEntity(string fileName);
         void render();
         void cleanup();
 

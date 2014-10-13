@@ -133,9 +133,9 @@ void config::tick(float dt)
         viewDistance = 0.01;
 
     while(altitudeAngle<1)
-        altitudeAngle+=360;
-    while(altitudeAngle>360)
-        altitudeAngle-=360;
+        altitudeAngle+=359;
+    while(altitudeAngle>=360)
+        altitudeAngle-=359;
     while(azimuthAngle<1)
         azimuthAngle+=360;
     while(azimuthAngle>360)

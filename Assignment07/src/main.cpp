@@ -319,10 +319,14 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     if(key == GLUT_KEY_UP)//up arrow key
     {
         simConfig.altitudeAngle += rate;
+        if(simConfig.altitudeAngle == 180)//restrictions to avoid camera bugs at 180 degrees
+            simConfig.altitudeAngle += rate;
     }
     else if(key == GLUT_KEY_DOWN)
     {
         simConfig.altitudeAngle -= rate;
+        if(simConfig.altitudeAngle == 180)//restrictions to avoid camera bugs at 180 degrees
+            simConfig.altitudeAngle -= rate;
     }
     else if(key == GLUT_KEY_LEFT)
     {

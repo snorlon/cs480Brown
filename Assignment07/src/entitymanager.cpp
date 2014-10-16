@@ -222,7 +222,7 @@ entity* entityManager::loadEntity(string fileName)
                         scene->mMaterials[m->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &fname);
 
                         //add mat name to end of it
-                        strcat(newname, fname.C_Str());
+                        strcat(newname, fname.data);
 
                         //give it its texture
                         newObj->texID = simConfig->texCount;

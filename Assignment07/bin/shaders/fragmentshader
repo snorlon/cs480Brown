@@ -10,4 +10,4 @@ uniform sampler2D gSampler;
 void main()
 {
     color = texture(gSampler, tex_coords.xy);
-};
+}

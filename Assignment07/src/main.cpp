@@ -182,7 +182,7 @@ void update()
 
     if(ret >= 1)
     {
-        cout<<frame<<" FPS"<<endl;
+        simConfig.lastFPS = frame;
         frame = 0;
         t3 = std::chrono::high_resolution_clock::now();
     }
@@ -251,6 +251,10 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
         timeRate /= 2;
         if(timeRate < 1)
             timeRate = 1;
+    }
+    else if(key == 'h')
+    {
+        simConfig.showDetails = !simConfig.showDetails;
     }
     else if(key == '1')
     {

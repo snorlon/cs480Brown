@@ -29,6 +29,10 @@ config::config()
     altitudeAngle = 1;
     viewDistance = 1.0;
 
+    lastFPS = 0;
+
+    showDetails = true;
+
     currentFocalCamera = &targetCamera;
 
     input>>data;

@@ -38,8 +38,12 @@ class config
         int azimuthAngle;
         int altitudeAngle;
         double viewDistance;
+
+        int lastFPS;
     
         Camera* currentFocalCamera;
+
+        bool showDetails;
 
         double scale;
 

@@ -40,7 +40,7 @@ class entity
         int rotationModifier;//change into velocity, acceleration later?
 
         //planet specific stuff
-        double orbitalPeriod;//how many (earth) days for a full orbit
+        double orbitalPeriod;//how many (earth) years for a full orbit
         double orbitalAngle;//degrees into orbit
         double rotationPeriod;//how many days for a full rotation
         double rotationAngle;//degrees into its rotation

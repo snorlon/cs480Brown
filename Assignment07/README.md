@@ -85,6 +85,8 @@ Commands:
             Re-center back on the sun
 
         + and - : controlling speed of program
+
+        H - hide/unhide additional information about current planet
         
 
         Space - Pause/Unpause

@@ -31,6 +31,51 @@ void renderer::render()
 
     //throw in entity manager rendering
     simConfig->simEntityManager->render();
+
+    
+    glDisable( GL_DEPTH_TEST ) ; // also disable the depth test so renders on top
+
+	glWindowPos2i( 20, 10 );
+    char buf[300];
+
+    //FPS
+    sprintf( buf, "%s: %d", "FPS", simConfig->lastFPS ) ;
+    const char * p = buf ;
+    do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *p ); while( *(++p) ) ;
+
+    //Current planetary object info
+    if(simConfig->currentFocalCamera != NULL && simConfig->currentFocalCamera->target != NULL && simConfig->showDetails)
+    {
+        entity* currentObject = simConfig->currentFocalCamera->target;
+
+	    glWindowPos2i( 20, 400 );
+        sprintf( buf, "Radius: %.1f AU", currentObject->diameter / 2.0 ) ;
+        const char * d = buf ;
+        do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *d ); while( *(++d) ) ;
+
+	    glWindowPos2i( 20, 375 );
+        sprintf( buf, "Orbit Radius: %.4f AU", currentObject->semimajorAxis ) ;
+        const char * o = buf ;
+        do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *o ); while( *(++o) ) ;
+
+	    glWindowPos2i( 20, 350 );
+        sprintf( buf, "Tilt: %.4f Degrees", currentObject->tilt ) ;
+        const char * t = buf ;
+        do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *t ); while( *(++t) ) ;
+
+	    glWindowPos2i( 20, 325 );
+        sprintf( buf, "Year Duration: %.1f Days", abs(currentObject->orbitalPeriod) * 365 ) ;
+        const char * r = buf ;
+        do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *r ); while( *(++r) ) ;
+
+	    glWindowPos2i( 20, 300 );
+        sprintf( buf, "Day Duration: %.1f Hours", abs(currentObject->rotationPeriod) * 24 ) ;
+        const char * a = buf ;
+        do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *a ); while( *(++a) ) ;
+    }
+
+
+    glEnable( GL_DEPTH_TEST ) ; // Turn depth testing back on
                            
     //swap the buffers
     glutSwapBuffers();

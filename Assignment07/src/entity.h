@@ -49,6 +49,7 @@ class entity
         double tilt;//in degrees, convert to radians when rotating
         int vertexCount;
 
+        glm::mat4 mvp;//premultiplied modelviewprojection
         glm::vec3 relativePosition;
         glm::vec3 absolutePosition;
 

@@ -173,11 +173,11 @@ entity* entityManager::loadEntity(string fileName)
                     //iterate across the meshes in the scene
                     for(unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
                     {
-                        const aiMesh* m = scene->mMeshes[mIndex];
+                        aiMesh* m = scene->mMeshes[mIndex];
                         //iterate across faces in the mesh
                         for(unsigned int fIndex = 0; fIndex < m->mNumFaces; fIndex++)
                         {
-                            const aiFace* f = &(m->mFaces[fIndex]);
+                            aiFace* f = &(m->mFaces[fIndex]);
                             //iterate across indices in the face
                             for(unsigned int iIndex = 0; iIndex < f->mNumIndices; iIndex++)
                             {
@@ -190,7 +190,7 @@ entity* entityManager::loadEntity(string fileName)
                                 v.position[2] = m->mVertices[index].z;
 
                                 //get the material
-                                const aiMaterial* material = scene->mMaterials[m->mMaterialIndex];
+                                aiMaterial* material = scene->mMaterials[m->mMaterialIndex];
                                 aiColor3D color (0.f,0.f,0.f);
                                 material->Get(AI_MATKEY_COLOR_DIFFUSE,color);
 

@@ -186,13 +186,13 @@ void entity::render()
 {
 
     //premultiply the matrix for this example
-    simConfig->mvp = simConfig->projection * simConfig->view * model;
+    mvp = simConfig->projection * simConfig->view * model;
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texID);
 
     //upload the matrix to the shader
-    glUniformMatrix4fv(simConfig->loc_mvpmat, 1, GL_FALSE, glm::value_ptr(simConfig->mvp));
+    glUniformMatrix4fv(simConfig->loc_mvpmat, 1, GL_FALSE, glm::value_ptr(mvp));
 
     //set up the Vertex Buffer Object so it can be drawn
     glEnableVertexAttribArray(loc_position);

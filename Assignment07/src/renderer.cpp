@@ -48,6 +48,11 @@ void renderer::render()
     {
         entity* currentObject = simConfig->currentFocalCamera->target;
 
+	    glWindowPos2i( 20, 425 );
+        sprintf( buf, "%s AU", currentObject->name.c_str() ) ;
+        const char * y = buf ;
+        do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *y ); while( *(++y) ) ;
+
 	    glWindowPos2i( 20, 400 );
         sprintf( buf, "Radius: %.1f AU", currentObject->diameter / 2.0 ) ;
         const char * d = buf ;

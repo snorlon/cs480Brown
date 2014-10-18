@@ -3,7 +3,7 @@
 ../bin/data/PlanetData/venus
 ../bin/data/PlanetData/Earth/earth
 ../bin/data/PlanetData/Mars/mars
-../bin/data/PlanetData/jupiter
+../bin/data/PlanetData/Jupiter/jupiter
 ../bin/data/PlanetData/Saturn/saturn
 ../bin/data/PlanetData/Uranus/uranus
 ../bin/data/PlanetData/neptune

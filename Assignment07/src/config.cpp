@@ -21,6 +21,8 @@ config::config()
     input.open("../bin/data/config");
     int line = 0;
 
+    timeRate = 1280.0f;
+
     presetCameras = NULL;
 
     currentCamera = -1;
@@ -133,8 +135,8 @@ void config::tick(float dt)
     }
 
     //prevent a negative view distance, it gets weird.
-    if(viewDistance<0.01)
-        viewDistance = 0.01;
+    if(viewDistance<0.0001)
+        viewDistance = 0.0001;
 
     while(altitudeAngle<1)
         altitudeAngle+=359;

@@ -45,6 +45,8 @@ class config
 
         bool showDetails;
 
+        float timeRate;
+
         double scale;
 
         //uniform locations

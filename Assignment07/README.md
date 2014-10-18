@@ -78,6 +78,7 @@ Commands:
             Up & Down Arrow - Rotate Along the Y plane
             Left & Right Arrow - Rotate Along the Y axis
             Pg Up & Pg Down - Zooming in & out on current camera
+            End - Reset zoom
 
         Number keys 1-9
             Switch between each of the 9 planets as camera focus
@@ -87,6 +88,10 @@ Commands:
         + and - : controlling speed of program
 
         H - hide/unhide additional information about current planet
+
+        Z - Divide scale by 10
+        X - Reset scale to 1
+        C - Multiply scale by 10
         
 
         Space - Pause/Unpause

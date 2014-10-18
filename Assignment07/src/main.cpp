@@ -64,8 +64,6 @@ void menu_test(int id);
 bool recentlyPaused = false;
 bool keepRunning = true;
 
-float timeRate = 1280.0f;
-
 int menuID = -1;
 
 int frame = 0;
@@ -190,7 +188,7 @@ void update()
     if(frame % 3 == 0 || frame != 0)
     {
         //time passed gets calculated
-        float dt = getDT() * timeRate;
+        float dt = getDT() * simConfig.timeRate;
 
         //if we just exited a pause, just make the dt zero so no jerking when unpausing
         if(recentlyPaused)
@@ -241,16 +239,28 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
     else if(key == 61)//=
     {
         //increase time rate
-        timeRate *= 2;
-        if(timeRate > 65792)
-            timeRate = 65792;
+        simConfig.timeRate *= 2;
+        if(simConfig.timeRate > 65792)
+            simConfig.timeRate = 65792;
     }
     else if(key == 45)//-
     {
         //decrease time rate
-        timeRate /= 2;
-        if(timeRate < 1)
-            timeRate = 1;
+        simConfig.timeRate /= 2.0;
+        if(simConfig.timeRate < 1)
+            simConfig.timeRate = 1;
+    }
+    else if(key == 'z')
+    {
+        simConfig.scale /= 2.0;
+    }
+    else if(key == 'x')
+    {
+        simConfig.scale = 1.0;
+    }
+    else if(key == 'c')
+    {
+        simConfig.scale *= 2.0;
     }
     else if(key == 'h')
     {
@@ -337,11 +347,15 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     }
     else if(key == GLUT_KEY_PAGE_UP)
     {
-        simConfig.viewDistance -= rate/100.0;
+        simConfig.viewDistance /= 1.5;
     }
     else if(key == GLUT_KEY_PAGE_DOWN)
     {
-        simConfig.viewDistance += rate/100.0;
+        simConfig.viewDistance *= 1.5;
+    }
+    else if(key == GLUT_KEY_END)
+    {
+        simConfig.viewDistance = 0.1;
     }
 }
 

@@ -49,7 +49,7 @@ void Camera::tick(float dt)
     {
         //update ourselves to where we are pointing at
         x = target->absolutePosition.x;
-        //y = target->absolutePosition.y;//do not use y for right now, things don't move vertically!
+        y = target->absolutePosition.y;
         z = target->absolutePosition.z;
         x+= (dt*0.0);
     }

@@ -101,7 +101,7 @@ entity* entityManager::loadEntity(string fileName)
 
     while(objectFile.good())
     {
-        if(line>=9) // all objects past number 8 should be moons
+        if(line>=10) // all objects past number 8 should be moons
         {
             //create a new entity for our shiny new object
             entity* newMoon = loadEntity(data);
@@ -142,9 +142,12 @@ entity* entityManager::loadEntity(string fileName)
                     newObj->tilt = atof(data.c_str());
                     break;
                 case 7:
+                    newObj->orbitTilt = atof(data.c_str());
+                    break;
+                case 8:
                     newObj->rotationPeriod *= atoi(data.c_str());
                     break;
-                case 8://check if we need a camera of this object
+                case 9://check if we need a camera of this object
                     if(atoi(data.c_str()) == 1)
                     {
                     Camera* newCamera = new Camera(newObj);

@@ -47,6 +47,7 @@ class entity
         double semimajorAxis;//diameter of orbit at most distant points
         double diameter;//Also in AU
         double tilt;//in degrees, convert to radians when rotating
+        double orbitTilt;//in degrees, convert to radians
         int vertexCount;
 
         glm::mat4 mvp;//premultiplied modelviewprojection

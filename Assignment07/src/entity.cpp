@@ -52,6 +52,7 @@ entity::entity(config* nConfig) //load a model from a file
     tilt = 0;
 
     glGenBuffers(1, &vbo_geometry);
+cout<<vbo_geometry<<endl;
     //glGenTextures(1, &vbo_texture);
 }
 
@@ -196,7 +197,7 @@ void entity::render()
 
     //set up the Vertex Buffer Object so it can be drawn
     glEnableVertexAttribArray(loc_position);
-    //glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
     //set pointers into the vbo for each of the attributes(position and color)
     glVertexAttribPointer( loc_position,//location of attribute
                            3,//number of elements

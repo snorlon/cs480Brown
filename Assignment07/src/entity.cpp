@@ -121,9 +121,9 @@ void entity::tick(float dt)
 
 
     //update relative and absolute position
-    relativePosition.x = semimajorAxis * sin(orbitalAngle);
-    relativePosition.y = 0.0f;
-    relativePosition.z = semimajorAxis * cos(orbitalAngle);
+    relativePosition.x = simConfig->orbitScale * semimajorAxis * sin(orbitalAngle);
+    relativePosition.y = simConfig->orbitScale * 0.0f;
+    relativePosition.z = simConfig->orbitScale * semimajorAxis * cos(orbitalAngle);
     if(parent!=NULL)
     {
         relativePosition += parent->absolutePosition;

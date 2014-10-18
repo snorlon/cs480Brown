@@ -79,11 +79,16 @@ void renderer::render()
         do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *s ); while( *(++s) ) ;
 
 	    glWindowPos2i( 420, 375 );
+        sprintf( buf, "Distance Scale: %.1fx", simConfig->orbitScale ) ;
+        const char * z = buf ;
+        do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *z ); while( *(++z) ) ;
+
+	    glWindowPos2i( 420, 350 );
         sprintf( buf, "Zoom: %.1fx", simConfig->viewDistance*100 ) ;
         const char * v = buf ;
         do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *v ); while( *(++v) ) ;
 
-	    glWindowPos2i( 420, 350 );
+	    glWindowPos2i( 420, 325 );
         sprintf( buf, "Time Scale: %.1fx", simConfig->timeRate ) ;
         const char * e = buf ;
         do glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, *e ); while( *(++e) ) ;

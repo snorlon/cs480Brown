@@ -89,9 +89,13 @@ Commands:
 
         H - hide/unhide additional information about current planet
 
-        Z - Divide scale by 10
-        X - Reset scale to 1
-        C - Multiply scale by 10
+        Z - Divide planet scale by 10
+        X - Reset planet scale to 1
+        C - Multiply planet scale by 10
+
+        A - Divide distance scale by 10
+        S - Reset distance scale to 1
+        D - Multiply distance scale by 10
         
 
         Space - Pause/Unpause

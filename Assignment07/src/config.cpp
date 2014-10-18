@@ -31,6 +31,8 @@ config::config()
     altitudeAngle = 1;
     viewDistance = 1.0;
 
+    orbitScale = 1.0;
+
     lastFPS = 0;
 
     showDetails = true;

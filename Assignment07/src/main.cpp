@@ -250,6 +250,18 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
         if(simConfig.timeRate < 1)
             simConfig.timeRate = 1;
     }
+    else if(key == 'a')
+    {
+        simConfig.orbitScale /= 2.0;
+    }
+    else if(key == 's')
+    {
+        simConfig.orbitScale = 1.0;
+    }
+    else if(key == 'd')
+    {
+        simConfig.orbitScale *= 2.0;
+    }
     else if(key == 'z')
     {
         simConfig.scale /= 2.0;

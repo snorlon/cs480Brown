@@ -48,6 +48,7 @@ class config
         float timeRate;
 
         double scale;
+        double orbitScale;
 
         //uniform locations
         GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader

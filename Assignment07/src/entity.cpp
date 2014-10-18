@@ -144,9 +144,10 @@ void entity::tick(float dt)
     else
         rotationAngle -= rotationChange;
 
-    model = glm::rotate(model,(float) rotationAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+    //apply the slight tilt to our planet
+    model = glm::rotate(model,(float) (tilt * M_PI * 2 / 360), glm::vec3(0.0f, 0.0f, 1.0f));
 
-//cout<<name<<" "<<rotationChange<<"|"<<(( abs(rotationPeriod) * 24 * 60 * 60) )<<endl;
+    model = glm::rotate(model,(float) rotationAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 
     //apply the scale
     model = glm::scale( model, glm::vec3(diameter*simConfig->scale / AU));

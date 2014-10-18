@@ -93,9 +93,9 @@ Commands:
         X - Reset planet scale to 1
         C - Multiply planet scale by 10
 
-        A - Divide distance scale by 10
+        A - Add distance scale by 2
         S - Reset distance scale to 1
-        D - Multiply distance scale by 10
+        D - Subtract distance scale by 2
         
 
         Space - Pause/Unpause

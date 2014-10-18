@@ -21,7 +21,7 @@ config::config()
     input.open("../bin/data/config");
     int line = 0;
 
-    timeRate = 1280.0f;
+    timeRate = 40.0f;
 
     presetCameras = NULL;
 

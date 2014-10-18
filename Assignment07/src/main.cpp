@@ -252,7 +252,7 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
     }
     else if(key == 'a')
     {
-        simConfig.orbitScale /= 2.0;
+        simConfig.orbitScale += 2.0;
     }
     else if(key == 's')
     {
@@ -260,7 +260,7 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
     }
     else if(key == 'd')
     {
-        simConfig.orbitScale *= 2.0;
+        simConfig.orbitScale -= 2.0;
     }
     else if(key == 'z')
     {

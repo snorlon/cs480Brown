@@ -3,7 +3,7 @@ model path, NOT including actual file name
 orbital period (ratio to earth year)
 rotationPeriod (ratio to earth day)
 semimajor axis (in AU)
-diameter (in AU)
+diameter (in km)
 axial tilt (degrees)
 orbit tilt (degrees)
 rotation direction

@@ -1,13 +1,6 @@
-#version 330
-
-in vec2 tex_coords;
-
-out vec4 color;
-
-uniform mat4 mvpMatrix;
 uniform sampler2D gSampler;
 
 void main()
 {
-    color = texture(gSampler, tex_coords.xy);
+    gl_FragColor = texture2D(gSampler, gl_TexCoord[0].st);
 }

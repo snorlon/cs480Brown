@@ -1,12 +1,9 @@
-#version 330
-
-in vec2 v_tex;
+attribute vec2 v_tex;
 attribute vec3 v_position;
-out vec2 tex_coords;
 uniform mat4 mvpMatrix;
 
 void main()
 {
    gl_Position = mvpMatrix * vec4(v_position, 1.0);
-   tex_coords = v_tex;
+   gl_TexCoord[0].st = v_tex;
 }

@@ -35,7 +35,7 @@ config::config()
 
     lastFPS = 0;
 
-    showDetails = true;
+    showDetails = false;
 
     currentFocalCamera = &targetCamera;
 

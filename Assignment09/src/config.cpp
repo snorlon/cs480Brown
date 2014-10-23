@@ -16,6 +16,8 @@ config::config()
 
     scale = 1.0;
 
+    physicsEnvironment = new physics();
+
     ifstream input;
     string data;
     input.open("../bin/data/config");
@@ -64,6 +66,11 @@ config::config()
 
     //update the camera
     recalcCamera();
+}
+
+config::~config()
+{
+    delete physicsEnvironment;
 }
 
 

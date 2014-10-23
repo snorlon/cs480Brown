@@ -1,4 +1,4 @@
-GROUP PROJECT's Assignment 07
+GROUP PROJECT's Assignment 00
 
 Chad Brown
 Alexander Falconi
@@ -8,11 +8,7 @@ Molly Headland
 
 Assignment explanation:
 
-    The objective of this project is to build an interactive solar system.
-
-    Use Assimp to load models and textures for the planets/moons
-
-    Use a data file for info on each object (size, orbit radius, rotation,...)
+    DO THIS LATER
 
 ========================================
 
@@ -24,6 +20,7 @@ Dependencies:
     libassimp3
     libfreeimage3
     libfreeimage-dev
+    libbullet-dev
 
 ========================================
 
@@ -42,14 +39,10 @@ How to run:
     For both shaders from file, enter './../bin/Project -f filename -v filename2' order does not matter
         All that matters is that file name follows the -f or -v command
 
-    For loading models from file, enter './../bin/Project -m filename'
-        I do not recommend adding more than one model in total this way, it gets weird and I need to fix this later
-
     Example terminal command:
-        ./../bin/Project -f ../bin/shaders/fragmentshader -v ../bin/shaders/vertexshader -m ../bin/models/board.obj
+        ./../bin/Project -f ../bin/shaders/fragmentshader -v ../bin/shaders/vertexshader
 
     If the file name is good, it will say in the terminal that the corresponding shader has been loaded. If not, it will warn you. Shaders MUST be provided
-    If it doesn't like the model given, it will not count it in the X Models Loaded printout
 
     The terminal will tell you if your texture or model sucks
         this program only supports a single texture and a single obj and a single material file, all in the same location
@@ -64,14 +57,13 @@ Bugs:
 ========================================
 
 NOTES:
-    Sun is significantly downscaled to hit a balance between planet size and distance between planets. Despite this, it is still not too small to be seen as anything but the sun.
-
-    Some orbits have been rescaled, such as Earth's moon, so that they are still visible and not overlapping with the larger model scaling.
+    N/A
 
 ========================================
 
 Commands:
     Keyboard
+        REWRITE
 
         Arrow Keys - Camera movement
 

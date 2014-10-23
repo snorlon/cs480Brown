@@ -10,6 +10,7 @@
 #include "shaderloader.h"
 #include "entitymanager.h"
 #include "camera.h"
+#include "physics.h"
 
 //This object will define the attributes of a vertex(position, color, etc...)
 struct Vertex
@@ -25,6 +26,7 @@ class config
         shaderManager* simShaderManager;
         entityManager* simEntityManager;
         GLuint program; //program id
+        physics* physicsEnvironment;
 
         Camera eyeCamera;
         Camera targetCamera;
@@ -58,6 +60,7 @@ class config
         glm::mat4 projection;//eye->clip
 
         config();
+        ~config();
         
         bool giveLinks(shaderManager* shaderMgr, entityManager* entMgr);
         void recalcCamera();

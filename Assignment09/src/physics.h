@@ -1,8 +1,8 @@
-#ifndef PHYSICSH
-#define PHYSICSH
-
 #include <bullet/LinearMath/btVector3.h>
 #include <bullet/btBulletDynamicsCommon.h>
+
+#ifndef PHYSICSH
+#define PHYSICSH
 
 class physics
 {

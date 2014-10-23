@@ -7,10 +7,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
+#include "physics.h"
 #include "shaderloader.h"
 #include "entitymanager.h"
 #include "camera.h"
-#include "physics.h"
 
 //This object will define the attributes of a vertex(position, color, etc...)
 struct Vertex

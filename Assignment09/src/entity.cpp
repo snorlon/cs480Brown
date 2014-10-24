@@ -122,13 +122,23 @@ void entity::init()
 
 void entity::tick(float dt)
 {
+    int a = dt;
+    a = a/1;
     //model movement stuff
     //orbitalAngle += dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
      //   * (1 / ( orbitalPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
 
-    //poll bullet for our position now
-    btTransform trans;
-    allRigidBody->getMotionState()->getWorldTransform(trans)
+    if(objPhysics.objRB!=NULL)
+    {
+        //poll bullet for our position now
+        btTransform trans;
+        objPhysics.objRB->getMotionState()->getWorldTransform(trans);
+
+        //update position
+        absolutePosition.x = trans.getOrigin().getX();
+        absolutePosition.y = trans.getOrigin().getZ();
+        absolutePosition.z = trans.getOrigin().getY();
+    }
 
     //update relative and absolute position
     /*relativePosition.x = simConfig->orbitScale * semimajorAxis * sin(orbitalAngle);
@@ -139,12 +149,12 @@ void entity::tick(float dt)
         relativePosition += parent->absolutePosition;
     }
 
-    absolutePosition = relativePosition;
+    absolutePosition = relativePosition;*/
 
 
     //math specific to orbits, translate based on absolutePosition
     model = glm::translate( glm::mat4(1.0f), absolutePosition);
-
+/*
     //rotate the cube around the Y axis
     double rotationChange = dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
         * (1 / ( abs(rotationPeriod) * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
@@ -199,7 +209,7 @@ float entity::getZ()
 void entity::render()
 {
     //abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
-    if(!visible || objPhysics->objRB == NULL)
+    if(!visible || objPhysics.objRB == NULL)
         return;
 
     //premultiply the matrix for this example

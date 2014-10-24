@@ -36,7 +36,7 @@ physics::~physics()
     delete physicsConfig;
     delete dispatcher;
     delete solver;
-    delete dynamicsWorld;
+   // delete dynamicsWorld; //THIS TOO. BAD. DON't DO IT. SERIOUSLY. PLS.
     delete ground;
 
     delete groundMotionState;

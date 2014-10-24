@@ -362,11 +362,11 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     }
     else if(key == GLUT_KEY_PAGE_UP)
     {
-        simConfig.viewDistance /= 1.5;
+        simConfig.viewDistance += 1.0;
     }
     else if(key == GLUT_KEY_PAGE_DOWN)
     {
-        simConfig.viewDistance *= 1.5;
+        simConfig.viewDistance -= 1.0;
     }
     else if(key == GLUT_KEY_END)
     {

@@ -30,8 +30,8 @@ config::config()
     currentCamera = -1;
 
     azimuthAngle = 0;
-    altitudeAngle = 1;
-    viewDistance = 1.0;
+    altitudeAngle = 15;
+    viewDistance = 70;
 
     orbitScale = 1.0;
 

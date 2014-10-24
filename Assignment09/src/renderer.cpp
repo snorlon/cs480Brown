@@ -44,6 +44,9 @@ void renderer::render()
     for(unsigned int i=0;i<strlen(buf);i++)
         glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
 
+    //bullet debug
+    simConfig->physicsEnvironment->dynamicsWorld->debugDrawWorld();
+
     //Current planetary object info
     if(simConfig->currentFocalCamera != NULL && simConfig->currentFocalCamera->target != NULL && simConfig->showDetails)
     {

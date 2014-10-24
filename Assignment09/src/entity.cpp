@@ -132,6 +132,9 @@ void entity::tick(float dt)
 
         model = glm::translate( glm::mat4(1.0f), absolutePosition);
 
+        cout<<name<<endl;
+        cout<<absolutePosition.x<<"|"<<absolutePosition.y<<"|"<<absolutePosition.z<<endl;
+
         btScalar newZ;
         btScalar newY;
         btScalar newX;

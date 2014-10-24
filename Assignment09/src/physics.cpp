@@ -17,17 +17,17 @@ physics::physics()
     dynamicsWorld->setGravity(btVector3(0, -9.81, 0));
 
     //it isn't the fall that kills you, it's the collision with the ground
-    ground = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
+    /*ground = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
 
     //add our ground to bullet
     //give it a position
-    groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+    groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1.0, 0)));
     //create rigid body construction information
     btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, ground, btVector3(0, 0, 0));
     //create the actual rigid body
     groundRigidBody = new btRigidBody(groundRigidBodyCI);
     //and shove that rigid body up into bullet for use
-    dynamicsWorld->addRigidBody(groundRigidBody);
+    dynamicsWorld->addRigidBody(groundRigidBody);*/
 }
 
 physics::~physics()

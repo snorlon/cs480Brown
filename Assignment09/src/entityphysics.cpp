@@ -21,7 +21,21 @@ void entityPhysics::init(entity* np)
 {
         parent = np;
         //create the entity's rigid body
-        shape = new btBoxShape(btVector3(parent->radius, parent->radius, parent->radius));
+        //mix things up based on how they're shaped
+        if(parent->shape == "Box")
+        {
+            double factor = 1.0;
+            shape = new btBoxShape(btVector3(parent->radius*factor, parent->radius*factor, parent->radius*factor));
+        }
+        else if(parent->shape == "Plane")
+        {
+            //use the velocity for a normal
+            shape = new btStaticPlaneShape(btVector3(parent->velocity.x,parent->velocity.y,parent->velocity.z),1);
+        }
+        else//catch all that does things so they shouldn't have any size nearly
+        {
+            shape = new btBoxShape(btVector3(0.0001,0.0001,0.0001));
+        }
 
         objMotion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(parent->absolutePosition.x, 
             parent->absolutePosition.y, parent->absolutePosition.z)));

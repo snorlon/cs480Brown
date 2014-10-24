@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "config.h"
+#include "entityphysics.h"
 
 using namespace std;
 
@@ -34,6 +35,8 @@ class entity
         int texWidth;
         int texHeight;
         GLuint texID;
+
+        entityPhysics objPhysics;
 
         std::vector< Vertex > vertices;
 

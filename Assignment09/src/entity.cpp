@@ -26,6 +26,9 @@ entity::entity(config* nConfig) //load a model from a file
     next = NULL;
     simConfig = nConfig;
 
+    //give the config to our physics ASAP, physics gotta phys
+    objPhysics.simConfig = simConfig;
+
     texWidth = 0;
     texHeight = 0;
 
@@ -88,6 +91,8 @@ void entity::init()
 {
     //save how much stuff is in the buffer for future rendering purposes
     vertexCount = vertices.size();
+
+    objPhysics.init();//init our bullet physics
     
     // Create a Vertex Buffer object to store this vertex info on the GPU
     glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
@@ -118,12 +123,15 @@ void entity::init()
 void entity::tick(float dt)
 {
     //model movement stuff
-    orbitalAngle += dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
-        * (1 / ( orbitalPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
+    //orbitalAngle += dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
+     //   * (1 / ( orbitalPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
 
+    //poll bullet for our position now
+    btTransform trans;
+    allRigidBody->getMotionState()->getWorldTransform(trans)
 
     //update relative and absolute position
-    relativePosition.x = simConfig->orbitScale * semimajorAxis * sin(orbitalAngle);
+    /*relativePosition.x = simConfig->orbitScale * semimajorAxis * sin(orbitalAngle);
     relativePosition.z = simConfig->orbitScale * semimajorAxis * cos(orbitalAngle);
     relativePosition.y = simConfig->orbitScale * sin(orbitTilt*M_PI*2/360) * relativePosition.x / (sin((90 - orbitTilt) * M_PI * 2 / 360));//solved using ASA
     if(parent!=NULL)
@@ -152,7 +160,9 @@ void entity::tick(float dt)
     model = glm::rotate(model,(float) rotationAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 
     //apply the scale
-    model = glm::scale( model, glm::vec3(diameter*simConfig->scale / AU));
+    model = glm::scale( model, glm::vec3(diameter*simConfig->scale / AU));*/
+
+    //poll physics for model data
 
 
     /*entity* iterator = children;
@@ -188,8 +198,8 @@ float entity::getZ()
 
 void entity::render()
 {
-    //abort if we aren't visible, we shouldn't be drawing!
-    if(!visible)
+    //abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
+    if(!visible || objPhysics->objRB == NULL)
         return;
 
     //premultiply the matrix for this example

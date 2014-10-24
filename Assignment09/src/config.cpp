@@ -23,7 +23,7 @@ config::config()
     input.open("../bin/data/config");
     int line = 0;
 
-    timeRate = 40.0f;
+    timeRate = 1.0f;
 
     presetCameras = NULL;
 
@@ -124,7 +124,7 @@ Camera* config::switchCamera(int camID)
 
     if(currentFocalCamera!=NULL && currentFocalCamera->target!=NULL)
     {
-        viewDistance = currentFocalCamera->target->diameter * 1.5 * scale / AU;
+        viewDistance = currentFocalCamera->target->diameter * 15 * scale / AU;
     }
 
     return iterator;
@@ -132,6 +132,9 @@ Camera* config::switchCamera(int camID)
 
 void config::tick(float dt)
 {
+    //tick the physics world
+    physicsEnvironment->tick(dt);
+
     eyeCamera.tick(dt);
     targetCamera.tick(dt);
 

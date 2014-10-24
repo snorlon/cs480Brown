@@ -15,8 +15,13 @@ class physics
 
         btCollisionShape* ground;
 
+        btDefaultMotionState* groundMotionState;
+        btRigidBody* groundRigidBody;
+
         physics();
         ~physics();
+
+        void tick(double dt);
     private:
 };
 

@@ -1,10 +1,1 @@
-../bin/data/PlanetData/sun
-../bin/data/PlanetData/mercury
-../bin/data/PlanetData/venus
 ../bin/data/PlanetData/Earth/earth
-../bin/data/PlanetData/Mars/mars
-../bin/data/PlanetData/Jupiter/jupiter
-../bin/data/PlanetData/Saturn/saturn
-../bin/data/PlanetData/Uranus/uranus
-../bin/data/PlanetData/Neptune/neptune
-../bin/data/PlanetData/Pluto/pluto

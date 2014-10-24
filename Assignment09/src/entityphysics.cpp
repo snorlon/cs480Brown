@@ -32,6 +32,11 @@ void entityPhysics::init(entity* np)
             //use the velocity for a normal
             shape = new btStaticPlaneShape(btVector3(parent->velocity.x,parent->velocity.y,parent->velocity.z),1);
         }
+        else if(parent->shape == "Sphere")
+        {
+            //ez sphere creation
+            shape = new btSphereShape(parent->radius*2);
+        }
         else//catch all that does things so they shouldn't have any size nearly
         {
             shape = new btBoxShape(btVector3(0.0001,0.0001,0.0001));
@@ -41,7 +46,11 @@ void entityPhysics::init(entity* np)
             parent->absolutePosition.y, parent->absolutePosition.z)));
         btVector3 fallInertia(0, 0, 0);
         shape->calculateLocalInertia(mass, fallInertia);
+
         btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, objMotion, shape, fallInertia);
         objRB = new btRigidBody(fallRigidBodyCI);
         simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
+
+        //set our velocity if we have one
+        objRB->setLinearVelocity(btVector3(parent->velocity.x,parent->velocity.y,parent->velocity.z));
 }

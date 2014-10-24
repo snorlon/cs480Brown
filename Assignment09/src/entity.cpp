@@ -130,7 +130,10 @@ void entity::tick(float dt)
         absolutePosition.y = trans.getOrigin().getY();
         absolutePosition.z = trans.getOrigin().getZ();
 
-        model = glm::translate( glm::mat4(1.0f), absolutePosition);
+        if(shape!="Plane")
+            model = glm::translate( glm::mat4(1.0f), absolutePosition);
+        else
+            model = glm::translate( glm::mat4(1.0f), glm::vec3(0,0,0));
 
         cout<<name<<endl;
         cout<<absolutePosition.x<<"|"<<absolutePosition.y<<"|"<<absolutePosition.z<<endl;
@@ -144,7 +147,7 @@ void entity::tick(float dt)
         model = glm::rotate( model, newY , glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate( model, newX , glm::vec3(1.0f, 0.0f, 0.0f));
 
-        model = glm::scale( model, glm::vec3(radius));
+        model = glm::scale( model, glm::vec3(radius*2));
     }
 
     //update relative and absolute position

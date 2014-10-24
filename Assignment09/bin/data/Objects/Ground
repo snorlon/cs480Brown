@@ -2,6 +2,6 @@ Name:       GroundPlane
 Model:      Floor/ Floor
 Shape:      Plane
 Mass:       0.0
-Scale:      10
+Scale:      50
 Location:   0, -1.0, 0
 Velocity:   0, 1.0, 0

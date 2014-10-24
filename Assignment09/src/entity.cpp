@@ -136,14 +136,24 @@ void entity::tick(float dt)
 
         //update position
         absolutePosition.x = trans.getOrigin().getX();
-        absolutePosition.y = trans.getOrigin().getZ();
-        absolutePosition.z = trans.getOrigin().getY();
+        absolutePosition.y = trans.getOrigin().getY();
+        absolutePosition.z = trans.getOrigin().getZ();
+
+        model = glm::translate( glm::mat4(1.0f), absolutePosition);
+
+        btScalar newZ;
+        btScalar newY;
+        btScalar newX;
+        trans.getBasis().getEulerZYX(newZ, newY, newX, 1);
+
+        model = glm::rotate( model, newZ , glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::rotate( model, newY , glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate( model, newX , glm::vec3(1.0f, 0.0f, 0.0f));
+
     }
 
     //update relative and absolute position
     /*relativePosition.x = simConfig->orbitScale * semimajorAxis * sin(orbitalAngle);
-    relativePosition.z = simConfig->orbitScale * semimajorAxis * cos(orbitalAngle);
-    relativePosition.y = simConfig->orbitScale * sin(orbitTilt*M_PI*2/360) * relativePosition.x / (sin((90 - orbitTilt) * M_PI * 2 / 360));//solved using ASA
     if(parent!=NULL)
     {
         relativePosition += parent->absolutePosition;
@@ -153,16 +163,10 @@ void entity::tick(float dt)
 
 
     //math specific to orbits, translate based on absolutePosition
-    model = glm::translate( glm::mat4(1.0f), absolutePosition);
 /*
     //rotate the cube around the Y axis
     double rotationChange = dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
         * (1 / ( abs(rotationPeriod) * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
-
-    if(rotationPeriod>0)
-        rotationAngle += rotationChange;
-    else
-        rotationAngle -= rotationChange;
 
     //apply the slight tilt to our planet
     model = glm::rotate(model,(float) (tilt * M_PI * 2 / 360), glm::vec3(0.0f, 0.0f, 1.0f));

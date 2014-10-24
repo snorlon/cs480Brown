@@ -24,8 +24,11 @@ void entityPhysics::init(entity* np)
         //mix things up based on how they're shaped
         if(parent->shape == "Box")
         {
-            double factor = 1.0;
-            shape = new btBoxShape(btVector3(parent->radius*factor, parent->radius*factor, parent->radius*factor));
+            shape = new btBoxShape(btVector3(parent->radius, parent->radius, parent->radius));
+        }
+        else if(parent->shape == "Cylinder")
+        {
+            shape = new btCylinderShape(btVector3(parent->radius, parent->radius, parent->radius));
         }
         else if(parent->shape == "Plane")
         {

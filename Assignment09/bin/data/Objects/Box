@@ -1,0 +1,7 @@
+Name:       TestCube
+Model:      Cube/ Cube
+Shape:      Box
+Mass:       10
+Scale:      0.5
+Location:   0, 50, 0
+Velocity:   -1, 10, 1

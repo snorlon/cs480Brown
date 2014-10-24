@@ -40,24 +40,17 @@ class entity
 
         std::vector< Vertex > vertices;
 
-        int rotationModifier;//change into velocity, acceleration later?
-
-        //planet specific stuff
-        double orbitalPeriod;//how many (earth) years for a full orbit
-        double orbitalAngle;//degrees into orbit
-        double rotationPeriod;//how many days for a full rotation
-        double rotationAngle;//degrees into its rotation
-        double semimajorAxis;//diameter of orbit at most distant points
-        double diameter;//Also in AU
-        double tilt;//in degrees, convert to radians when rotating
-        double orbitTilt;//in degrees, convert to radians
+        double radius;
         int vertexCount;
+
+        string shape;
 
         bool visible;
 
         glm::mat4 mvp;//premultiplied modelviewprojection
-        glm::vec3 relativePosition;
+        glm::vec3 relativePosition;//unused
         glm::vec3 absolutePosition;
+        glm::vec3 velocity;
 
         //entity* children;
         entity* parent;

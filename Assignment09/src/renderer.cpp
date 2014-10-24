@@ -55,37 +55,7 @@ void renderer::render()
             glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
 
 	    glWindowPos2i( 20, 400 );
-        sprintf( buf, "Radius: %.1f AU", currentObject->diameter / 2.0 ) ;
-        for(unsigned int i=0;i<strlen(buf);i++)
-            glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
-
-	    glWindowPos2i( 20, 375 );
-        sprintf( buf, "Orbit Radius: %.4f AU", currentObject->semimajorAxis ) ;
-        for(unsigned int i=0;i<strlen(buf);i++)
-            glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
-
-	    glWindowPos2i( 20, 350 );
-        sprintf( buf, "Tilt: %.4f Degrees", currentObject->tilt ) ;
-        for(unsigned int i=0;i<strlen(buf);i++)
-            glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
-
-	    glWindowPos2i( 20, 325 );
-        sprintf( buf, "Year Duration: %.1f Days", abs(currentObject->orbitalPeriod) * 365 ) ;
-        for(unsigned int i=0;i<strlen(buf);i++)
-            glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
-
-	    glWindowPos2i( 20, 300 );
-        sprintf( buf, "Day Duration: %.1f Hours", abs(currentObject->rotationPeriod) * 24 ) ;
-        for(unsigned int i=0;i<strlen(buf);i++)
-            glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
-
-	    glWindowPos2i( 420, 400 );
-        sprintf( buf, "Planet Scale: %.1fx", simConfig->scale ) ;
-        for(unsigned int i=0;i<strlen(buf);i++)
-            glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
-
-	    glWindowPos2i( 420, 375 );
-        sprintf( buf, "Distance Scale: %.1fx", simConfig->orbitScale ) ;
+        sprintf( buf, "Radius: %.1f AU", currentObject->radius ) ;
         for(unsigned int i=0;i<strlen(buf);i++)
             glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
 

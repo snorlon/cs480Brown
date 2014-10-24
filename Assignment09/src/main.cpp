@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     glutInitWindowSize( simConfig.getWindowWidth(), simConfig.getWindowHeight());
     glutInitWindowPosition( 100, 100);
     // Name and create the Window
-    glutCreateWindow("Matrix Example");
+    glutCreateWindow("Air Hockey");
 
     // Now that the window is created the GL context is fully set up
     // Because of that we can now initialize GLEW to prepare work with shaders
@@ -111,8 +111,6 @@ int main(int argc, char **argv)
     //setup inputs
     menuID = glutCreateMenu(menu_test);
     glutAddMenuEntry("quit", 1);
-    glutAddMenuEntry("start rotation", 2);
-    glutAddMenuEntry("stop rotation", 3);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     //misc setup
@@ -122,7 +120,7 @@ int main(int argc, char **argv)
     bool init = initialize();
 
     //load model data
-    simEntities.loadData("../bin/data/planet_data.dat");
+    simEntities.loadData("../bin/data/load_list.dat");
 
     //run our shader loader now
     init = init && simShaderManager.loadShaders(argc,argv);

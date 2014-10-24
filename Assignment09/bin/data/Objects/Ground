@@ -1,0 +1,7 @@
+Name:       GroundPlane
+Model:      Floor/ Floor
+Shape:      Plane
+Mass:       0.1
+Scale:      10
+Location:   0, 4, 0
+Velocity:   0, 0, 0

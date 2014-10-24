@@ -44,7 +44,7 @@ entitymanager.o: $(ENTITYMANAGER) $(ENTITYMANAGERH) $(CONFIGH) $(ENTITYH)
 entity.o: $(ENTITY) $(ENTITYH) $(CONFIGH) $(ENTPHYSICSH)
 	$(CC) $(CXXFLAGS) -c $(ENTITY) $(LIBS)
 
-entityphysics.o: $(ENTPHYSICS) $(ENTPHYSICSH) $(PHYSICSH)
+entityphysics.o: $(ENTPHYSICS) $(ENTPHYSICSH) $(PHYSICSH) $(ENTITYH)
 	$(CC) $(CXXFLAGS) -c $(ENTPHYSICS) $(LIBS)
 
 physics.o: $(PHYSICS) $(PHYSICSH)

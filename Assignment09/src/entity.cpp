@@ -41,20 +41,10 @@ entity::entity(config* nConfig) //load a model from a file
     id = simConfig->objectCount;
     simConfig->objectCount++;
 
-    orbitalAngle = (110*id/360)*(M_PI * 2);
-    rotationAngle = (140*id/360)*(M_PI * 2);
-
-    rotationModifier = 1.0f;
-
     //children = NULL;
     parent = NULL;
 
-    //1 AU = 149,597,871 KM
-    orbitalPeriod = 1; //default to earths rate for now
-    rotationPeriod = 5.0; //default to earths rate for now
-    semimajorAxis = 0.0; //AU, earths for now
-    diameter = 12742.0;
-    tilt = 0;
+    radius = 1.0;
 
     glGenBuffers(1, &vbo_geometry);
 cout<<vbo_geometry<<endl;
@@ -91,8 +81,9 @@ void entity::init()
 {
     //save how much stuff is in the buffer for future rendering purposes
     vertexCount = vertices.size();
+    entity* me = this;
 
-    objPhysics.init();//init our bullet physics
+    objPhysics.init( me );//init our bullet physics
     
     // Create a Vertex Buffer object to store this vertex info on the GPU
     glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
@@ -150,6 +141,7 @@ void entity::tick(float dt)
         model = glm::rotate( model, newY , glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate( model, newX , glm::vec3(1.0f, 0.0f, 0.0f));
 
+        model = glm::scale( model, glm::vec3(radius));
     }
 
     //update relative and absolute position
@@ -191,23 +183,32 @@ void entity::tick(float dt)
 
 float entity::getX()
 {
-    float returnValue = semimajorAxis * sin(orbitalAngle) / diameter;
+    //poll bullet for our position now
+    btTransform trans;
+    objPhysics.objRB->getMotionState()->getWorldTransform(trans);
 
-    return returnValue;
+    //update position
+    return trans.getOrigin().getX();
 }
 
 float entity::getY()
 {
-    float returnValue = 0.0;//OBJECTS HAVE NO HEIGHT YET
+    //poll bullet for our position now
+    btTransform trans;
+    objPhysics.objRB->getMotionState()->getWorldTransform(trans);
 
-    return returnValue;
+    //update position
+    return trans.getOrigin().getY();
 }
 
 float entity::getZ()
 {
-    float returnValue = semimajorAxis * cos(orbitalAngle) / diameter;
+    //poll bullet for our position now
+    btTransform trans;
+    objPhysics.objRB->getMotionState()->getWorldTransform(trans);
 
-    return returnValue;
+    //update position
+    return trans.getOrigin().getZ();
 }
 
 void entity::render()

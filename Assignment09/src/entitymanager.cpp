@@ -80,6 +80,8 @@ void entityManager::loadData( string loadlistFileName )
 entity* entityManager::loadEntity(string fileName)
 {
     string data;
+    string data2;
+    string data3;
     entity* newObj = new entity(simConfig);
 
     //now load each of THOSE files, this time creating an entity based on their data
@@ -87,8 +89,7 @@ entity* entityManager::loadEntity(string fileName)
     objectFile.open(fileName);
     int line = 0; //tracks what stage of file loading we are in
     
-    //objectFile>>data;
-    getline(objectFile, data);
+    objectFile>>data;
 
     //if it failed to open, skip over this file
     if(!objectFile.good())
@@ -101,78 +102,82 @@ entity* entityManager::loadEntity(string fileName)
 
     while(objectFile.good())
     {
-        if(line>=10) // all objects past number 8 should be moons
+        if(line>=8) // all objects past this point should be children
         {
             //create a new entity for our shiny new object
-            entity* newMoon = loadEntity(data);
+            entity* newEnt = loadEntity(data);
             
-            if(newMoon!=NULL)
+            if(newEnt!=NULL)
             {
                 //add them to the object list
-                newMoon->next = head;
-                head = newMoon;
+                newEnt->next = head;
+                head = newEnt;
                 entityCount++; 
-                //newMoon->next = newObj->children;
-                //newObj->children = newMoon;
 
-                newMoon->parent = newObj;
+                newEnt->parent = newObj;
             }      
         }
         else
         {
-            switch(line)
+            if(data == "Name:")//name loading
             {
-                case 0:
-                    newObj->name = data;
-                    cout<<"Object name: "<<data<<endl;
-                    break;
-                case 2:
-                    newObj->orbitalPeriod = atof(data.c_str());
-                    break;
-                case 3:
-                    newObj->rotationPeriod = atof(data.c_str());
-                    break;
-                case 4:
-                    newObj->semimajorAxis = atof(data.c_str());
-                    break;
-                case 5:
-                    newObj->diameter = atof(data.c_str());
-                    break;
-                case 6:
-                    newObj->tilt = atof(data.c_str());
-                    break;
-                case 7:
-                    newObj->orbitTilt = atof(data.c_str());
-                    break;
-                case 8:
-                    newObj->rotationPeriod *= atoi(data.c_str());
-                    break;
-                case 9://check if we need a camera of this object
-                    if(atoi(data.c_str()) == 1)
-                    {
-                    Camera* newCamera = new Camera(newObj);
-                    if(simConfig->presetCameras == NULL)
-                        simConfig->presetCameras = newCamera;
-                    else
-                    {
-                        Camera* iterator = simConfig->presetCameras;
-                        while(iterator->next!=NULL)
-                            iterator = iterator->next;
-
-                        iterator->next = newCamera;
-                    }
-                    cout<<"New camera created for "<<newObj->name<<"!"<<endl;
-                }
-                break;
-            case 1:
-                cout<<"Model file path: "<<data<<endl;
+                objectFile>>data2;
+                newObj->name = data2;
+            }
+            else if(data == "Shape:")//shape loading
+            {
+                objectFile>>data2;
+                newObj->shape = data2;
+            }
+            else if(data == "Scale:")//mass loading
+            {
+                double newR = 1;
+                objectFile>>newR;
+                newObj->radius = newR;
+            }
+            else if(data == "Mass:")//scale loading
+            {
+                double newR = 1;
+                objectFile>>newR;
+                newObj->objPhysics.mass = newR;
+            }
+            else if(data == "Location:")//Initial position loading
+            {
+                char dummy;
+                double newPos = 0;
+                objectFile>>newPos;
+                newObj->absolutePosition.x = newPos;
+                objectFile>>dummy;
+                objectFile>>newPos;
+                newObj->absolutePosition.y = newPos;
+                objectFile>>dummy;
+                objectFile>>newPos;
+                newObj->absolutePosition.z = newPos;
+            }
+            else if(data == "Velocity:")//Initial speed loading
+            {
+                char dummy;
+                double newPos = 0;
+                objectFile>>newPos;
+                newObj->velocity.x = newPos;
+                objectFile>>dummy;
+                objectFile>>newPos;
+                newObj->velocity.y = newPos;
+                objectFile>>dummy;
+                objectFile>>newPos;
+                newObj->velocity.z = newPos;
+            }
+            else if(data == "Model:")//model loading
+            {
+                objectFile>>data2;
+                objectFile>>data3;
+                cout<<"Model file path: "<<data2<<data3<<endl;
 
                 //oh god monster code section//open the file
-                const aiScene* scene = import.ReadFile("../bin/models/"+data+newObj->name+".obj", aiProcess_Triangulate);
+                const aiScene* scene = import.ReadFile("../bin/models/"+data2+data3+".obj", aiProcess_Triangulate);
 
                 if(scene != NULL)
                 {
-
                     //iterate across the meshes in the scene
                     for(unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
                     {
@@ -218,7 +223,7 @@ entity* entityManager::loadEntity(string fileName)
                         //get texture file name
                         aiString fname;
                         char newname[512];
-                        string textPath = "../bin/models/" + data;
+                        string textPath = "../bin/models/" + data2;
 
                         strcpy(newname, textPath.c_str());
                         
@@ -270,8 +275,30 @@ entity* entityManager::loadEntity(string fileName)
                         FreeImage_Unload(dib);
                     }
                 }
-                break;
+                else
+                    cout<<"Failed to create scene!"<<endl;
             }
+            /* REMOVED FOR PRESSING CEREMONIAL REASONS
+            switch(line)
+            {
+                case 9://check if we need a camera of this object
+                    if(atoi(data.c_str()) == 1)
+                    {
+                        Camera* newCamera = new Camera(newObj);
+                        if(simConfig->presetCameras == NULL)
+                            simConfig->presetCameras = newCamera;
+                        else
+                        {
+                            Camera* iterator = simConfig->presetCameras;
+                            while(iterator->next!=NULL)
+                                iterator = iterator->next;
+
+                            iterator->next = newCamera;
+                        }
+                        cout<<"New camera created for "<<newObj->name<<"!"<<endl;
+                    }
+                    break;
+            }*/
         }
 
         line++;

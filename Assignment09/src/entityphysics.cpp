@@ -1,8 +1,9 @@
 #include "entityphysics.h"
+#include "entity.h"
 
 entityPhysics::entityPhysics()
 {
-    shape = new btBoxShape(btVector3(0.25, 0.25, 0.25));
+    shape = NULL;
     simConfig = NULL;
 
     objMotion = NULL;
@@ -16,10 +17,14 @@ entityPhysics::~entityPhysics()
     delete shape;
 }
 
-void entityPhysics::init()
+void entityPhysics::init(entity* np)
 {
+        parent = np;
         //create the entity's rigid body
-        objMotion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0)));
+        shape = new btBoxShape(btVector3(parent->radius, parent->radius, parent->radius));
+
+        objMotion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(parent->absolutePosition.x, 
+            parent->absolutePosition.y, parent->absolutePosition.z)));
         btVector3 fallInertia(0, 0, 0);
         shape->calculateLocalInertia(mass, fallInertia);
         btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, objMotion, shape, fallInertia);

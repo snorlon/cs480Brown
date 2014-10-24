@@ -124,7 +124,7 @@ Camera* config::switchCamera(int camID)
 
     if(currentFocalCamera!=NULL && currentFocalCamera->target!=NULL)
     {
-        viewDistance = currentFocalCamera->target->diameter * 15 * scale / AU;
+        viewDistance = currentFocalCamera->target->radius * 15 * scale / AU;
     }
 
     return iterator;

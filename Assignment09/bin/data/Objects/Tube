@@ -1,7 +1,7 @@
 Name:       TestTube
 Model:      Tube/ Tube
 Shape:      Cylinder
-Mass:       3
-Scale:      3.0
-Location:   0, 10, 0
+Mass:       30
+Scale:      1.0
+Location:   0, 25, 0
 Velocity:   1, 0, 0

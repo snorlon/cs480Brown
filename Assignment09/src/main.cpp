@@ -173,6 +173,8 @@ void render()
 
 void update()
 {
+    float dt = 0;
+
     //rough fps handling
     frame++;
     t4 = std::chrono::high_resolution_clock::now();
@@ -189,7 +191,7 @@ void update()
     if(frame % 3 == 0 || frame != 0)
     {
         //time passed gets calculated
-        float dt = getDT() * simConfig.timeRate;
+        dt = getDT() * simConfig.timeRate;
 
         //if we just exited a pause, just make the dt zero so no jerking when unpausing
         if(recentlyPaused)
@@ -199,9 +201,9 @@ void update()
         }
 
         simEntities.tick(dt);
-
-        simConfig.tick(dt);
     }
+
+    simConfig.tick(dt);
 
     // Update the state of the scene
     glutPostRedisplay();//call the display callback
@@ -341,14 +343,18 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     if(key == GLUT_KEY_UP)//up arrow key
     {
         simConfig.altitudeAngle += rate;
-        if(simConfig.altitudeAngle == 180)//restrictions to avoid camera bugs at 180 degrees
-            simConfig.altitudeAngle += rate;
+
+        //artificial altitude cap, purely for airhockey, no need for more than 85
+        if(simConfig.altitudeAngle>85)
+            simConfig.altitudeAngle = 85;
     }
     else if(key == GLUT_KEY_DOWN)
     {
         simConfig.altitudeAngle -= rate;
-        if(simConfig.altitudeAngle == 180)//restrictions to avoid camera bugs at 180 degrees
-            simConfig.altitudeAngle -= rate;
+
+        //artificial altitude cap, purely for airhockey, no need for more than 85
+        if(simConfig.altitudeAngle<1)
+            simConfig.altitudeAngle = 1;
     }
     else if(key == GLUT_KEY_LEFT)
     {
@@ -360,11 +366,11 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     }
     else if(key == GLUT_KEY_PAGE_UP)
     {
-        simConfig.viewDistance += 1.0;
+        simConfig.viewDistance -= 1.0;
     }
     else if(key == GLUT_KEY_PAGE_DOWN)
     {
-        simConfig.viewDistance -= 1.0;
+        simConfig.viewDistance += 1.0;
     }
     else if(key == GLUT_KEY_END)
     {

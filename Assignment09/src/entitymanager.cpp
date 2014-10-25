@@ -88,6 +88,7 @@ entity* entityManager::loadEntity(string fileName)
     ifstream objectFile;
     objectFile.open(fileName);
     int line = 0; //tracks what stage of file loading we are in
+    bool good = true;
     
     objectFile>>data;
 
@@ -99,8 +100,10 @@ entity* entityManager::loadEntity(string fileName)
 
         return NULL;
     }
+    else
+        good = true;
 
-    while(objectFile.good())
+    while(objectFile.good() && good)
     {
         if(line>=8) // all objects past this point should be children
         {
@@ -257,16 +260,23 @@ entity* entityManager::loadEntity(string fileName)
                             fif = FreeImage_GetFIFFromFilename(newname);
 
                         if(fif == FIF_UNKNOWN)
+                        {
                             cout<<"WE DON'T KNOW WHAT FIF THIS IS!"<<endl;
+                            good = false;
+                        }
 
                         if(FreeImage_FIFSupportsReading(fif))
                             dib = FreeImage_Load(fif, newname, 0);
                         else
+                        {
                             cout<<"Bad texture file format!"<<endl;
+                            good = false;
+                        }
 
                         if(!dib)
                         {
                             cout<<"Dib failed to load! Are your file paths set up properly?? "<<newname<<endl;
+                            good = false;
                         }
 
                         bits = FreeImage_GetBits(dib);

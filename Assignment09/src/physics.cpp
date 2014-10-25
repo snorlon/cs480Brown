@@ -28,6 +28,9 @@ physics::physics()
     groundRigidBody = new btRigidBody(groundRigidBodyCI);
     //and shove that rigid body up into bullet for use
     dynamicsWorld->addRigidBody(groundRigidBody);*/
+
+    btCollisionDispatcher * disp = static_cast<btCollisionDispatcher *>(dynamicsWorld->getDispatcher());
+    btGImpactCollisionAlgorithm::registerAlgorithm(disp);
 }
 
 physics::~physics()

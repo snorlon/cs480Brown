@@ -68,10 +68,14 @@ void entityPhysics::init(entity* np)
             }
 
             //generate model depending on if static or not (check mass)
-            if(mass > 0)
-                shape = new btBvhTriangleMeshShape(triMesh, true);
-            else
-                shape = new btBvhTriangleMeshShape(triMesh, true, true);
+            btGImpactMeshShape* bshape = new btGImpactMeshShape(triMesh);
+            shape = bshape;
+
+            double diameter = parent->radius*2;
+            shape->setLocalScaling(btVector3(diameter,diameter,diameter));
+            
+            bshape->setMargin(0.07f);
+            bshape->updateBound();
         }
 
         if(shape == NULL)//catch all that does things so they shouldn't have any size nearly

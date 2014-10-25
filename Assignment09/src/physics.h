@@ -1,5 +1,6 @@
 #include <bullet/LinearMath/btVector3.h>
 #include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h>
 
 #ifndef PHYSICSH
 #define PHYSICSH

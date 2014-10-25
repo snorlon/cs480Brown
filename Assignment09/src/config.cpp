@@ -25,6 +25,8 @@ config::config()
 
     timeRate = 1.0f;
 
+    physicsLimit = 0;
+
     presetCameras = NULL;
 
     currentCamera = -1;
@@ -40,6 +42,7 @@ config::config()
     showDetails = false;
 
     currentFocalCamera = &targetCamera;
+    targetCamera.Position(0.0,11.0,0.0);
 
     input>>data;
 
@@ -124,7 +127,7 @@ Camera* config::switchCamera(int camID)
 
     if(currentFocalCamera!=NULL && currentFocalCamera->target!=NULL)
     {
-        viewDistance = currentFocalCamera->target->radius * 15 * scale / AU;
+        viewDistance = 15.0;
     }
 
     return iterator;
@@ -133,7 +136,12 @@ Camera* config::switchCamera(int camID)
 void config::tick(float dt)
 {
     //tick the physics world
-    physicsEnvironment->tick(dt);
+    if(physicsLimit == 0)
+        physicsEnvironment->tick(dt);
+
+    physicsLimit++;
+    if(physicsLimit>0)
+        physicsLimit = 0;
 
     eyeCamera.tick(dt);
     targetCamera.tick(dt);

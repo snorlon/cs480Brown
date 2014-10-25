@@ -37,11 +37,11 @@ void entityPhysics::init(entity* np)
         //mix things up based on how they're shaped
         if(parent->shape == "Box")
         {
-            shape = new btBoxShape(btVector3(parent->radius, parent->radius, parent->radius));
+            shape = new btBoxShape(btVector3(parent->size.x, parent->size.y, parent->size.z));
         }
         else if(parent->shape == "Cylinder")
         {
-            shape = new btCylinderShape(btVector3(parent->radius, parent->radius, parent->radius));
+            shape = new btCylinderShape(btVector3(parent->size.x, parent->size.y, parent->size.z));
         }
         else if(parent->shape == "Plane")
         {
@@ -51,7 +51,7 @@ void entityPhysics::init(entity* np)
         else if(parent->shape == "Sphere")
         {
             //ez sphere creation
-            shape = new btSphereShape(parent->radius*2);
+            shape = new btSphereShape(parent->size.x);
         }
         else if(parent->shape == "Custom")
         {
@@ -71,10 +71,9 @@ void entityPhysics::init(entity* np)
             btGImpactMeshShape* bshape = new btGImpactMeshShape(triMesh);
             shape = bshape;
 
-            double diameter = parent->radius*2;
-            shape->setLocalScaling(btVector3(diameter,diameter,diameter));
+            shape->setLocalScaling(btVector3(parent->size.x*parent->scale, parent->size.y*parent->scale, parent->size.z*parent->scale));
             
-            bshape->setMargin(0.07f);
+            bshape->setMargin(0.01f);
             bshape->updateBound();
         }
 

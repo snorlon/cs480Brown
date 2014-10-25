@@ -57,11 +57,6 @@ void renderer::render()
         for(unsigned int i=0;i<strlen(buf);i++)
             glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
 
-	    glWindowPos2i( 20, 400 );
-        sprintf( buf, "Radius: %.1f AU", currentObject->radius ) ;
-        for(unsigned int i=0;i<strlen(buf);i++)
-            glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18, buf[i] );
-
 	    glWindowPos2i( 420, 350 );
         sprintf( buf, "Zoom: %.1fx", simConfig->viewDistance*100 ) ;
         for(unsigned int i=0;i<strlen(buf);i++)

@@ -56,6 +56,8 @@ class config
         double scale;
         double orbitScale;
 
+        int physicsLimit;
+
         //uniform locations
         GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader
         //transform matrices

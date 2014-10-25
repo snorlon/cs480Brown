@@ -40,7 +40,6 @@ class entity
 
         std::vector< Vertex > vertices;
 
-        double radius;
         int vertexCount;
 
         string shape;
@@ -51,6 +50,9 @@ class entity
         glm::vec3 relativePosition;//unused
         glm::vec3 absolutePosition;
         glm::vec3 velocity;
+        glm::vec3 size;
+
+        double scale;
 
         //entity* children;
         entity* parent;

@@ -1,0 +1,9 @@
+Name:       Puck
+Model:      ToLoveRu/Puck/ puck
+Shape:      Cylinder
+Mass:       1
+Scale:      1.0
+Location:   0.1, 30, 0
+Size:       1, 0.2, 1
+Velocity:   0, 0, 0
+Type:       Moveable

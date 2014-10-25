@@ -44,7 +44,11 @@ entity::entity(config* nConfig) //load a model from a file
     //children = NULL;
     parent = NULL;
 
-    radius = 1.0;
+    scale = 1.0;
+
+    size.x = 1.0;
+    size.y = 1.0;
+    size.z = 1.0;
 
     glGenBuffers(1, &vbo_geometry);
 cout<<vbo_geometry<<endl;
@@ -147,7 +151,7 @@ void entity::tick(float dt)
         model = glm::rotate( model, newY , glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate( model, newX , glm::vec3(1.0f, 0.0f, 0.0f));
 
-        model = glm::scale( model, glm::vec3(radius*2));
+        model = glm::scale( model, glm::vec3(scale, scale, scale));
     }
 
     //update relative and absolute position

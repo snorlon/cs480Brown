@@ -141,7 +141,7 @@ entity* entityManager::loadEntity(string fileName)
             {
                 double newR = 1;
                 objectFile>>newR;
-                newObj->radius = newR;
+                newObj->scale = newR;
             }
             else if(data == "Visible:")//mass loading
             {
@@ -167,6 +167,19 @@ entity* entityManager::loadEntity(string fileName)
                 objectFile>>dummy;
                 objectFile>>newPos;
                 newObj->absolutePosition.z = newPos;
+            }
+            else if(data == "Size:")//Scale loading
+            {
+                char dummy;
+                double newPos = 0;
+                objectFile>>newPos;
+                newObj->size.x = newPos;
+                objectFile>>dummy;
+                objectFile>>newPos;
+                newObj->size.y = newPos;
+                objectFile>>dummy;
+                objectFile>>newPos;
+                newObj->size.z = newPos;
             }
             else if(data == "Velocity:")//Initial speed loading
             {

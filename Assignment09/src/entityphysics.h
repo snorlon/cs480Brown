@@ -17,6 +17,7 @@ class entityPhysics
         btCollisionShape* shape;
         config* simConfig;
         entity* parent;
+        string objType;
 
         btScalar mass;
         btDefaultMotionState* objMotion;

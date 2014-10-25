@@ -3,7 +3,7 @@ Model:      Barrier/ Barrier
 Shape:      Plane
 Mass:       0.0
 Scale:      50
-Location:   0, -1.0, 0
-Velocity:   0, 1.0, 0
+Location:   9, 0, 0
+Velocity:   -1.0, 0, 0
 Type:       Static
 Visible:    false

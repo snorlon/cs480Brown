@@ -124,6 +124,11 @@ entity* entityManager::loadEntity(string fileName)
                 objectFile>>data2;
                 newObj->name = data2;
             }
+            else if(data == "Type:")//type loading
+            {
+                objectFile>>data2;
+                newObj->objPhysics.objType = data2;
+            }
             else if(data == "Shape:")//shape loading
             {
                 objectFile>>data2;
@@ -134,6 +139,12 @@ entity* entityManager::loadEntity(string fileName)
                 double newR = 1;
                 objectFile>>newR;
                 newObj->radius = newR;
+            }
+            else if(data == "Visible:")//mass loading
+            {
+                objectFile>>data2;
+                if(data2 == "false")
+                    newObj->visible = false;
             }
             else if(data == "Mass:")//scale loading
             {

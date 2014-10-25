@@ -17,6 +17,10 @@ struct Vertex
 {
     GLfloat position[3];
     GLfloat uv[2];
+
+    float getX(){ return position[0]; }
+    float getY(){ return position[1]; }
+    float getZ(){ return position[2]; }
 };
 
 class config

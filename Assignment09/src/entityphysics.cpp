@@ -1,6 +1,18 @@
 #include "entityphysics.h"
 #include "entity.h"
 
+
+
+#define BIT(x) (1<<(x))
+enum collisiontypes {
+    COL_NOTHING = 0, //<Collide with nothing
+    COL_OBJ = BIT(0), //<Collide with ships
+    COL_WALL = BIT(1), //<Collide with walls
+};
+
+int objCollidesWith = COL_WALL | COL_OBJ;
+int wallCollidesWith = COL_OBJ;
+
 entityPhysics::entityPhysics()
 {
     shape = NULL;
@@ -20,6 +32,7 @@ entityPhysics::~entityPhysics()
 void entityPhysics::init(entity* np)
 {
         parent = np;
+
         //create the entity's rigid body
         //mix things up based on how they're shaped
         if(parent->shape == "Box")
@@ -40,7 +53,28 @@ void entityPhysics::init(entity* np)
             //ez sphere creation
             shape = new btSphereShape(parent->radius*2);
         }
-        else//catch all that does things so they shouldn't have any size nearly
+        else if(parent->shape == "Custom")
+        {
+            //add all triangles to the mesh
+            btTriangleMesh *triMesh = new btTriangleMesh();
+            
+            for(unsigned int i=0; i + 2 < parent->vertices.size(); i++)
+            {
+                triMesh->addTriangle(btVector3(parent->vertices[i].getX(),parent->vertices[i].getY(),parent->vertices[i].getZ()), 
+                    btVector3(parent->vertices[i+1].getX(),parent->vertices[i+1].getY(),parent->vertices[i+1].getZ()),
+                     btVector3(parent->vertices[i+2].getX(),parent->vertices[i+2].getY(),parent->vertices[i+2].getZ()));
+
+                i+=2;
+            }
+
+            //generate model depending on if static or not (check mass)
+            if(mass > 0)
+                shape = new btBvhTriangleMeshShape(triMesh, true);
+            else
+                shape = new btBvhTriangleMeshShape(triMesh, true, true);
+        }
+
+        if(shape == NULL)//catch all that does things so they shouldn't have any size nearly
         {
             shape = new btBoxShape(btVector3(0.0001,0.0001,0.0001));
         }
@@ -52,7 +86,21 @@ void entityPhysics::init(entity* np)
 
         btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, objMotion, shape, fallInertia);
         objRB = new btRigidBody(fallRigidBodyCI);
-        simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
+        //simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
+
+        //create types and add them if necessary
+        if(objType == " Static")
+        {
+            simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB, COL_WALL, wallCollidesWith);
+        }
+        else if(objType == " Moveable")
+        {
+            simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB, COL_OBJ, objCollidesWith);
+        }
+        else
+        {
+            simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
+        }
 
         //set our velocity if we have one
         objRB->setLinearVelocity(btVector3(parent->velocity.x,parent->velocity.y,parent->velocity.z));

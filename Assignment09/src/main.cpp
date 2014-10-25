@@ -372,10 +372,6 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     {
         simConfig.viewDistance += 1.0;
     }
-    else if(key == GLUT_KEY_END)
-    {
-        simConfig.viewDistance = 0.1;
-    }
 }
 
 bool initialize()

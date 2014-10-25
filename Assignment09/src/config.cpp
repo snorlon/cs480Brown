@@ -192,6 +192,6 @@ void config::setWindow( int wHeight, int wWidth)
     windowWidth = wWidth;
 
     //Update the projection matrix when we set the window size
-    //See the init function for an explaination
-    projection = glm::perspective(45.0f, float(windowWidth)/float(windowHeight), 0.01f, 100.0f);
+    //FOV, ratio, min distance, max distance
+    projection = glm::perspective(45.0f, float(windowWidth)/float(windowHeight), 0.001f, 10000.0f);
 }

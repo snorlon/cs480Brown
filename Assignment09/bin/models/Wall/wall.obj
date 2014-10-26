@@ -1,6 +1,6 @@
 # Blender v2.69 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib Barrier.mtl
+mtllib wall.mtl
 o Cube.002
 v 1.000000 -0.006759 -1.000000
 v 1.000000 -0.006759 1.000000

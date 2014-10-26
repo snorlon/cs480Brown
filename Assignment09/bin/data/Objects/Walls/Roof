@@ -1,0 +1,9 @@
+Name:       RoofPlane
+Model:      Roof/ Barrier
+Shape:      Cube
+Mass:       0.0
+Scale:      150
+Location:   0, 100.0, 0
+Velocity:   0, -1.0, 0
+Type:       Static
+Size:       150, 10, 150

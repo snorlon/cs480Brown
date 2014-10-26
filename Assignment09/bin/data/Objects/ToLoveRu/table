@@ -7,3 +7,4 @@ Location:   0, 0, 0
 Size:       1, 1.0, 1
 Velocity:   0, 0, 0
 Type:       Moveable
+Orientation: 0,0,0

@@ -50,6 +50,10 @@ entity::entity(config* nConfig) //load a model from a file
     size.y = 1.0;
     size.z = 1.0;
 
+    orientation.x = 0.0;
+    orientation.y = 0.0;
+    orientation.z = 0.0;
+
     glGenBuffers(1, &vbo_geometry);
 cout<<vbo_geometry<<endl;
     //glGenTextures(1, &vbo_texture);

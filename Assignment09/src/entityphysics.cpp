@@ -82,7 +82,7 @@ void entityPhysics::init(entity* np)
             shape = new btBoxShape(btVector3(0.0001,0.0001,0.0001));
         }
 
-        objMotion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(parent->absolutePosition.x, 
+        objMotion = new btDefaultMotionState(btTransform(btQuaternion(parent->orientation.x, parent->orientation.y, parent->orientation.z, 1), btVector3(parent->absolutePosition.x, 
             parent->absolutePosition.y, parent->absolutePosition.z)));
         btVector3 fallInertia(0, 0, 0);
         shape->calculateLocalInertia(mass, fallInertia);

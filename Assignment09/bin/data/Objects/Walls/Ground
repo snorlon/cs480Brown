@@ -2,8 +2,8 @@ Name:       GroundPlane
 Model:      Barrier/ Barrier
 Shape:      Plane
 Mass:       0.0
-Scale:      50
+Scale:      150
 Location:   0, -1.0, 0
 Velocity:   0, 1.0, 0
 Type:       Static
-Visible:    false
+Visible:    true

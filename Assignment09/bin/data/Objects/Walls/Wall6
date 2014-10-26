@@ -1,0 +1,10 @@
+Name:       Wall
+Model:      Wall/ wall
+Shape:      Cube
+Mass:       0.0
+Scale:      50
+Location:   -100, 49, -150
+Velocity:   0, 0.0, 0
+Type:       Static
+Size:       50, 10, 50
+Orientation: 1,0,0

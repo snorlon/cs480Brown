@@ -51,6 +51,7 @@ class entity
         glm::vec3 absolutePosition;
         glm::vec3 velocity;
         glm::vec3 size;
+        glm::vec3 orientation;
 
         double scale;
 

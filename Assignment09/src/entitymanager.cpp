@@ -105,7 +105,7 @@ entity* entityManager::loadEntity(string fileName)
 
     while(objectFile.good() && good)
     {
-        if(line>=8) // all objects past this point should be children
+        if(line>=15) // all objects past this point should be children
         {
             //create a new entity for our shiny new object
             entity* newEnt = loadEntity(data);
@@ -180,6 +180,19 @@ entity* entityManager::loadEntity(string fileName)
                 objectFile>>dummy;
                 objectFile>>newPos;
                 newObj->size.z = newPos;
+            }
+            else if(data == "Orientation:")//Rotation loading
+            {
+                char dummy;
+                double newPos = 0;
+                objectFile>>newPos;
+                newObj->orientation.x = newPos;
+                objectFile>>dummy;
+                objectFile>>newPos;
+                newObj->orientation.y = newPos;
+                objectFile>>dummy;
+                objectFile>>newPos;
+                newObj->orientation.z = newPos;
             }
             else if(data == "Velocity:")//Initial speed loading
             {

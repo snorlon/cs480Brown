@@ -188,7 +188,9 @@ void update()
         t3 = std::chrono::high_resolution_clock::now();
     }
 
-    if(frame % 3 == 0 || frame != 0)
+    //this can be modified later if we need to reduce entity tick rate. It can consume time is why this is here.
+    //frame % X where we skip every frame not divisible by X
+    if(frame % 1 == 0 || frame != 0)
     {
         //time passed gets calculated
         dt = getDT() * simConfig.timeRate;

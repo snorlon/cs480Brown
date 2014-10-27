@@ -1,9 +1,32 @@
 attribute vec2 v_tex;
+attribute vec3 v_normal;
 attribute vec3 v_position;
+
+uniform vec4 v_obj_emissive;
+uniform vec4 v_obj_ambient;
+uniform vec4 v_obj_diffuse;
+uniform vec4 v_obj_specular;
+uniform float v_obj_shine;
+
+uniform vec4 eyeVector;
+
+varying vec4 LightPosW;
+varying vec4 LightColor;
+
+varying vec4 normal;
+varying vec4 position;
+
 uniform mat4 mvpMatrix;
+uniform mat4 modelMatrix;
 
 void main()
 {
    gl_Position = mvpMatrix * vec4(v_position, 1.0);
    gl_TexCoord[0].st = v_tex;
+
+   LightPosW = vec4(-10,120,0,0);
+   LightColor = vec4(0.8,0.8,0.8,0);
+
+   normal = modelMatrix * vec4(v_normal, 0);
+   position = modelMatrix * vec4(v_position, 1);
 }

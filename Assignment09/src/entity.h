@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "config.h"
+#include "light.h"
 #include "entityphysics.h"
 
 using namespace std;
@@ -30,13 +31,25 @@ class entity
         GLuint vbo_geometry;// VBO handle for our geometry
         //GLuint vbo_texture;// VBO handle for our texture
         GLint loc_texture;
+        GLint loc_normal;
         GLint loc_position;
+
+        GLint loc_mvpmat;
+
+        GLint loc_model;
+
+        GLint loc_objEmissive;
+        GLint loc_objMatAmbient;
+        GLint loc_objMatDiffuse;
+        GLint loc_objMatSpecular;
+        GLint loc_objShine;
 
         int texWidth;
         int texHeight;
         GLuint texID;
 
         entityPhysics objPhysics;
+        entityLight objLight;
 
         std::vector< Vertex > vertices;
 

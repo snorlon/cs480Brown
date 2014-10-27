@@ -237,6 +237,13 @@ entity* entityManager::loadEntity(string fileName)
                                 v.position[1] = m->mVertices[index].y;
                                 v.position[2] = m->mVertices[index].z;
 
+                                if(m->HasNormals())
+                                {
+                                    v.normal[0] = m->mNormals[index].x;
+                                    v.normal[1] = m->mNormals[index].y;
+                                    v.normal[2] = m->mNormals[index].z;
+                                }
+
                                 //get the material
                                 aiMaterial* material = scene->mMaterials[m->mMaterialIndex];
                                 aiColor3D color (0.f,0.f,0.f);

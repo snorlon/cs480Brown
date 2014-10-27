@@ -16,6 +16,7 @@
 struct Vertex
 {
     GLfloat position[3];
+    GLfloat normal[3];
     GLfloat uv[2];
 
     float getX(){ return position[0]; }
@@ -60,6 +61,8 @@ class config
 
         //uniform locations
         GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader
+        GLint loc_eyeVector;
+
         //transform matrices
         //move later to camera object
         glm::mat4 view;//world->eye

@@ -90,6 +90,9 @@ bool config::giveLinks(shaderManager* shaderMgr, entityManager* entMgr)
 
     std::cout<<"Config loaded!"<<std::endl;
 
+    //set up our shader stuff
+    loc_eyeVector = glGetAttribLocation(program, "v_eyeVector");
+
     //assumed success accessing links
     return true;
 }

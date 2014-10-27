@@ -25,7 +25,7 @@ void main()
    gl_TexCoord[0].st = v_tex;
 
    LightPosW = vec4(-10,120,0,0);
-   LightColor = vec4(0.8,0.8,0.8,0);
+   LightColor = vec4(0.5,0.5,0.5,0);
 
    normal = modelMatrix * vec4(v_normal, 0);
    position = modelMatrix * vec4(v_position, 1);

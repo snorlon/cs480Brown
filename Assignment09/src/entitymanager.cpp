@@ -207,6 +207,76 @@ entity* entityManager::loadEntity(string fileName)
                 objectFile>>newPos;
                 newObj->velocity.z = newPos;
             }
+            else if(data == "Emissive:")//Light material loading
+            {
+                char dummy;
+                double newVal = 0;
+                objectFile>>newVal;
+                newObj->objLight.emissive[0] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.emissive[1] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.emissive[2] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.emissive[3] = newVal;
+            }
+            else if(data == "Ambient:")//Light material loading
+            {
+                char dummy;
+                double newVal = 0;
+                objectFile>>newVal;
+                newObj->objLight.materialAmbient[0] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialAmbient[1] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialAmbient[2] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialAmbient[3] = newVal;
+            }
+            else if(data == "Diffuse:")//Light material loading
+            {
+                char dummy;
+                double newVal = 0;
+                objectFile>>newVal;
+                newObj->objLight.materialDiffuse[0] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialDiffuse[1] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialDiffuse[2] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialDiffuse[3] = newVal;
+            }
+            else if(data == "Specular:")//Light material loading
+            {
+                char dummy;
+                double newVal = 0;
+                objectFile>>newVal;
+                newObj->objLight.materialSpecular[0] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialSpecular[1] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialSpecular[2] = newVal;
+                objectFile>>dummy;
+                objectFile>>newVal;
+                newObj->objLight.materialSpecular[3] = newVal;
+            }
+            else if(data == "Shine:")//Light material loading
+            {
+                double newVal = 0;
+                objectFile>>newVal;
+                newObj->objLight.shine = newVal;
+            }
             else if(data == "Model:")//model loading
             {
                 objectFile>>data2;

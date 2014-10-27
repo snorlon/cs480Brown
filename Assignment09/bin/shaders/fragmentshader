@@ -21,7 +21,6 @@ void main()
     //gl_FragColor = texture2D(gSampler, gl_TexCoord[0].st);
 
     vec4 Emissive = v_obj_emissive;
-    //Emissive = vec4(0.2,0.3,0.2,0.0);
     vec4 Ambient = v_obj_ambient; //temporarily, add in global and light source ambient later
  
     // Compute the diffuse term.

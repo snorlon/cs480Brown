@@ -19,16 +19,18 @@ class lightSource
 
         lightArray* lights;
 
+        int id;
+
         int type;
 
-        double position[4];
-        double sourceAmbient[4];
-        double sourceDiffuse[4];
-        double sourceSpecular[4];
+        double position[4] = {0.0,0.0,0.0,0.0};
+        double sourceAmbient[4] = {0.0,0.0,0.0,0.0};
+        double sourceDiffuse[4] = {0.0,0.0,0.0,0.0};
+        double sourceSpecular[4] = {0.0,0.0,0.0,0.0};
 
         bool stateOn;
 
-        lightSource();
+        lightSource( lightArray* l, entity* p = NULL);
         void on();
         void off();
 
@@ -47,6 +49,10 @@ class lightArray
 
         int lightCount;
 
+        lightArray();
+        ~lightArray();
+
+        void init();
         void on();
         void off();
 
@@ -70,22 +76,28 @@ class entityLightNode
 {
     public:
         lightSource* node;
-        lightSource* next;
+        entityLightNode* next;
 
+        entityLightNode( lightSource* newL);
+        ~entityLightNode();
     private:
 };
 
 class entityLight
 {
+    //aterial properties
     public:
 //emissive, ambient, diffuse, and specular
-        double emissive[4];
-        double materialAmbient[4];
-        double materialDiffuse[4];
-        double materialSpecular[4];
+        double emissive[4] = {0.1,0.1,0.1,0.0};
+        double materialAmbient[4] = {0.1,0.1,0.1,0.0};
+        double materialDiffuse[4] = {0.1,0.1,0.1,0.0};
+        double materialSpecular[4] = {0.1,0.1,0.1,0.0};
         float shine; //2-128
 
+        entityLightNode* lightNodes;
+
         entityLight();
+        ~entityLight();
 
         void on();
         void off();

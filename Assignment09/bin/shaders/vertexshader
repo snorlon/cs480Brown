@@ -39,7 +39,7 @@ void main()
     gl_TexCoord[0].st = v_tex;
 
     LightPosW = vec4(-100,140,-100,0);
-    EmissiveLightColor = vec4(0.5,0.5,0.5,0);
+    EmissiveLightColor = vec4(0.1,0.1,0.1,0);
     AmbientLightColor = vec4(0.5,0.5,1.0,0);
     DiffuseLightColor = vec4(0.5,1.0,0.5,0);
     SpecularLightColor = vec4(1.0,0.5,0.5,0);

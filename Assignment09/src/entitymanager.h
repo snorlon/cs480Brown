@@ -41,6 +41,7 @@ class entityManager
         void tick(float dt);
         void loadData( string loadlistFileName );
         entity* loadEntity(string fileName);
+        void prerender();//for shadows and shit
         void render();
         void cleanup();
 

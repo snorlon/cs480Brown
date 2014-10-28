@@ -85,6 +85,7 @@ class entity
         float getY();
         float getZ();
 
+        void prerender();
         void render();
 
     private:

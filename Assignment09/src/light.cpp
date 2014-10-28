@@ -1,8 +1,8 @@
 #include "light.h"
 
-lightSource::lightSource( int ntype )
+lightSource::lightSource()
 {
-    type = ntype;
+    
 }
 
 entityLight::entityLight()

@@ -55,8 +55,6 @@ entity::entity(config* nConfig) //load a model from a file
     orientation.z = 0.0;
 
     glGenBuffers(1, &vbo_geometry);
-cout<<vbo_geometry<<endl;
-    //glGenTextures(1, &vbo_texture);
 }
 
 entity::~entity()
@@ -212,6 +210,11 @@ float entity::getZ()
     return trans.getOrigin().getZ();
 }
 
+void entity::prerender()
+{
+
+}
+
 void entity::render()
 {
     //abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
@@ -221,14 +224,14 @@ void entity::render()
     //premultiply the matrix for this example
     mvp = simConfig->projection * simConfig->view * model;
 
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texID);
 
     //upload the matrix to the shader
     glUniformMatrix4fv(loc_mvpmat, 1, GL_FALSE, glm::value_ptr(mvp));
     glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(model));
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry);
 
     //set up the Vertex Buffer Object so it can be drawn
     glEnableVertexAttribArray(loc_position);

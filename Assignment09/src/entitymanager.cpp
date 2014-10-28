@@ -435,6 +435,18 @@ entity* entityManager::loadEntity(string fileName)
 }
 
 
+void entityManager::prerender()
+{
+    entity* iterator = head;
+
+    //have everyone perform their pre-rendering duties
+    while(iterator!=NULL)
+    {
+        iterator->prerender();
+        iterator = iterator->next;
+    }
+}
+
 void entityManager::render()
 {
     entity* iterator = head;

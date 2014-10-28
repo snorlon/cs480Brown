@@ -10,22 +10,49 @@ static const int POINTLIGHT = 2;
 static const int DISTANTLIGHT = 3;
 
 class entity;
+class lightArray;
 class lightSource
 {
     public:
         entity* parent;
         lightSource* next;
 
+        lightArray* lights;
+
         int type;
 
-        double sourceAmbient;
-        double sourceDiffuse;
-        double sourceSpecular;
+        double position[4];
+        double sourceAmbient[4];
+        double sourceDiffuse[4];
+        double sourceSpecular[4];
 
-        lightSource( int ntype = 2 );
+        bool stateOn;
+
+        lightSource();
+        void on();
+        void off();
 
     private:
 };
+
+class lightArray
+{
+    public:
+        lightSource* head;
+
+        double* position;
+        double* sourceAmbient;
+        double* sourceDiffuse;
+        double* sourceSpecular;
+
+        int lightCount;
+
+        void on();
+        void off();
+
+    private:
+};
+
 //Ambient
     //output is sourceAmbient * materialAmbient
 //Diffuse
@@ -39,6 +66,15 @@ class lightSource
         specular = materialSpecular * sourceSpecular * (surface normal DOT half vector)^shininess
     */
 
+class entityLightNode
+{
+    public:
+        lightSource* node;
+        lightSource* next;
+
+    private:
+};
+
 class entityLight
 {
     public:
@@ -50,5 +86,8 @@ class entityLight
         float shine; //2-128
 
         entityLight();
+
+        void on();
+        void off();
     private:
 };

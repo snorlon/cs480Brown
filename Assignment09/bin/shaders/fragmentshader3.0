@@ -1,0 +1,47 @@
+#version 300 es
+
+uniform sampler2D gSampler;
+
+uniform highp vec4 eyeVector;
+
+in mediump vec4 LightPosW;
+in mediump vec4 EmissiveLightColor;
+in mediump vec4 AmbientLightColor;
+in mediump vec4 DiffuseLightColor;
+in mediump vec4 SpecularLightColor;
+
+uniform mediump vec4 v_obj_emissive;
+uniform mediump vec4 v_obj_ambient;
+uniform mediump vec4 v_obj_diffuse;
+uniform mediump vec4 v_obj_specular;
+uniform mediump float v_obj_shine;
+
+in highp vec4 normal;
+in highp vec4 position;
+in mediump vec2 texturecoords;
+
+out highp vec4 color;
+
+void main()
+{
+    //gl_FragColor = texture2D(gSampler, gl_TexCoord[0].st);
+
+    highp vec4 Emissive = v_obj_emissive * EmissiveLightColor;
+    highp vec4 Ambient = v_obj_ambient * AmbientLightColor; //temporarily, add in global and light source ambient later
+ 
+    // Compute the diffuse term.
+    highp vec4 N = normalize( normal );
+    highp vec4 L = normalize( LightPosW - position );
+    highp float NdotL = max( dot( N, L ), 0 );
+    highp vec4 Diffuse =  NdotL * DiffuseLightColor * v_obj_diffuse;
+     
+    // Compute the specular term.
+    highp vec4 V = normalize( eyeVector - position );
+    highp vec4 H = normalize( L + V );
+    highp vec4 R = reflect( -L, N );
+    highp float RdotV = max( dot( R, V ), 0 );
+    highp float NdotH = max( dot( N, H ), 0 );
+    highp vec4 Specular = pow( RdotV, v_obj_shine ) * SpecularLightColor * v_obj_specular;
+     
+    color = ( Emissive + Ambient + Diffuse + Specular ) * texture2D( gSampler, texturecoords );
+}

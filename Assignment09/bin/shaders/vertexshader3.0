@@ -1,0 +1,59 @@
+#version 300 es
+
+struct lightSource
+{
+    vec4 position;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+    //give it direction later
+};
+
+in highp vec2 v_tex;
+in highp vec3 v_normal;
+in highp vec3 v_position;
+
+uniform highp vec4 v_obj_emissive;
+uniform highp vec4 v_obj_ambient;
+uniform highp vec4 v_obj_diffuse;
+uniform highp vec4 v_obj_specular;
+uniform highp float v_obj_shine;
+
+uniform highp vec4 eyeVector;
+
+out mediump vec4 LightPosW;
+out mediump vec4 EmissiveLightColor;
+out mediump vec4 AmbientLightColor;
+out mediump vec4 DiffuseLightColor;
+out mediump vec4 SpecularLightColor;
+
+out highp vec4 normal;
+out highp vec4 position;
+
+uniform highp mat4 mvpMatrix;
+uniform highp mat4 modelMatrix;
+
+out mediump vec2 texturecoords;
+
+void main()
+{
+    gl_Position = mvpMatrix * vec4(v_position, 1.0);
+    texturecoords = v_tex;
+
+    LightPosW = vec4(-100,140,-100,0);
+    EmissiveLightColor = vec4(0.5,0.5,0.5,0);
+    AmbientLightColor = vec4(0.0,0.0,1.0,0);
+    DiffuseLightColor = vec4(0.0,1.0,0.0,0);
+    SpecularLightColor = vec4(1.0,0.0,0.0,0);
+
+    normal = modelMatrix * vec4(v_normal, 0);
+    position = modelMatrix * vec4(v_position, 1);
+/*
+    objMaterial.emissive = v_obj_emissive;
+    objMaterial.ambient = v_obj_ambient;
+    objMaterial.diffuse = v_obj_diffuse;
+    objMaterial.specular = v_obj_specular;
+    objMaterial.shine = v_obj_shine;
+*/
+
+}

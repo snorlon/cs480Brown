@@ -27,6 +27,10 @@ void renderer::render()
     glClearColor(0.1, 0.1, 0.15, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    //perform pre-rendering
+    glUseProgram(simConfig->program);
+    simConfig->simEntityManager->prerender();
+
     glUseProgram(simConfig->program);
 
     //throw in entity manager rendering

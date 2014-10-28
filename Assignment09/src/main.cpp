@@ -48,6 +48,7 @@ void render();
 void update();
 void reshape(int n_w, int n_h);
 void mouse(int button, int state, int x, int y);
+void mouseChange(int x, int z);
 void keyboard(unsigned char key, int x_pos, int y_pos);
 void keyboardPlus(int key, int x_pos, int y_pos);
 
@@ -74,6 +75,9 @@ int frame = 0;
 //--Random time things
 float getDT();
 std::chrono::time_point<std::chrono::high_resolution_clock> t1,t2,t3,t4;
+
+int x01, x02, z01, z02;
+glm::vec2 change;
 
 //--Main
 int main(int argc, char **argv)
@@ -105,6 +109,7 @@ int main(int argc, char **argv)
     glutReshapeFunc(reshape);// Called if the window is resized
     glutIdleFunc(update);// Called if there is nothing else to do
     glutMouseFunc(mouse);// Called if there is mouse input
+    glutPassiveMotionFunc(mouseChange);
     glutKeyboardFunc(keyboard);// Called if there is keyboard input
     glutSpecialFunc(keyboardPlus);// for stuff without ascii access characters like arrow keys
 
@@ -202,7 +207,7 @@ void update()
             recentlyPaused = false;
         }
 
-        simEntities.tick(dt);
+        simEntities.tick(change);
     }
 
     simConfig.tick(dt);
@@ -421,4 +426,14 @@ float getDT()
     ret = std::chrono::duration_cast< std::chrono::duration<float> >(t2-t1).count();
     t1 = std::chrono::high_resolution_clock::now();
     return ret;
+}
+
+void mouseChange(int x, int z)
+{
+    x02 = x;
+    z02 = z;
+    change.x = x02 - x01;
+    change.y = z02 - z01;
+    x01 = x;
+    z01 = z;
 }

@@ -25,7 +25,7 @@ void entityManager::initialize()
     }
 }
 
-void entityManager::tick(float dt)
+void entityManager::tick(glm::vec2 dt)
 {
     entity* iterator = head;
 
@@ -105,7 +105,7 @@ entity* entityManager::loadEntity(string fileName)
 
     while(objectFile.good() && good)
     {
-        if(line>=15) // all objects past this point should be children
+        if(line>=16) // all objects past this point should be children
         {
             //create a new entity for our shiny new object
             entity* newEnt = loadEntity(data);
@@ -277,6 +277,15 @@ entity* entityManager::loadEntity(string fileName)
                 objectFile>>newVal;
                 newObj->objLight.shine = newVal;
             }
+	    else if( data == "Control:")//controlled by mouse
+	    {
+		int newVal = 0;
+		objectFile>>newVal;
+		std::cout << "newval: " << newVal << std::endl;
+		newObj->hasMouseControl = newVal;
+		if( newObj->hasMouseControl )
+		    std::cout << "has mouse control." << std::endl;
+	    }
             else if(data == "Model:")//model loading
             {
                 objectFile>>data2;

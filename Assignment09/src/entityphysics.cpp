@@ -92,6 +92,7 @@ void entityPhysics::init(entity* np)
         //simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
 
         //create types and add them if necessary
+	std::cout << "objType: " << objType << std::endl;
         if(objType == " Static")
         {
             simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB, COL_WALL, wallCollidesWith);
@@ -100,6 +101,13 @@ void entityPhysics::init(entity* np)
         {
             simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB, COL_OBJ, objCollidesWith);
         }
+	else if(objType == "Kinematic")
+	{
+	    objRB->setCollisionFlags(objRB->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	    objRB->setActivationState(DISABLE_DEACTIVATION);
+	    simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
+	    std::cout << "Added kinematic body: " << parent->name << std::endl;
+	}
         else
         {
             simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);

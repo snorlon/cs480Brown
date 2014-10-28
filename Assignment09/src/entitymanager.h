@@ -38,7 +38,7 @@ class entityManager
 
         entityManager();
         void initialize();
-        void tick(float dt);
+        void tick(glm::vec2);
         void loadData( string loadlistFileName );
         entity* loadEntity(string fileName);
         void prerender();//for shadows and shit

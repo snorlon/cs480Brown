@@ -35,6 +35,7 @@ entity::entity(config* nConfig) //load a model from a file
     texID = 0;
 
     visible = true;
+    hasMouseControl = 0;
 
     name = "Error";
 
@@ -131,10 +132,10 @@ void entity::init()
     loc_objShine = glGetUniformLocation(simConfig->program, "v_obj_shine");
 }
 
-void entity::tick(float dt)
+void entity::tick(glm::vec2 dt)
 {
-    int a = dt;
-    a = a/1;
+//    int a = dt;
+//    a = a/1;
     //model movement stuff
     //orbitalAngle += dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
      //   * (1 / ( orbitalPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
@@ -151,7 +152,16 @@ void entity::tick(float dt)
         absolutePosition.z = trans.getOrigin().getZ();
 
         if(shape!="Plane")
+	{
+	    if( hasMouseControl )
+	    {
+		absolutePosition.x -= dt.x/10.0;
+		absolutePosition.z -= dt.y/10.0;
+		std::cout << '(' << dt.x << ',' << dt.y << ')' << std::endl;
+	    }
+
             model = glm::translate( glm::mat4(1.0f), absolutePosition);
+	}
         else
             model = glm::translate( glm::mat4(1.0f), glm::vec3(0,0,0));
 

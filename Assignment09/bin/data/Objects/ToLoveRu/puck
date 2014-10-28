@@ -3,7 +3,7 @@ Model:      ToLoveRu/Puck/ puck
 Shape:      Cylinder
 Mass:       1
 Scale:      1.0
-Location:   0, 10, -6
+Location:   0, 10, 6
 Size:       1, 0.305, 1
 Velocity:   0, 0, 0
 Type:       Moveable

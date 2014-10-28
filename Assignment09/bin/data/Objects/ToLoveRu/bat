@@ -3,7 +3,7 @@ Model:      ToLoveRu/Bat1/ bat
 Shape:      Cylinder
 Mass:       0
 Scale:      1.0
-Location:   0, 10.18, -8
+Location:   0, 10.18, 7
 Size:       1, 0.6, 1
 Velocity:   0, 0, 0
 Type:       Kinematic

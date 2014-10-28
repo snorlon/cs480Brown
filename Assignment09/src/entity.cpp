@@ -167,9 +167,9 @@ void entity::tick(glm::vec2 dt)
 		{
 		    absolutePosition.x = 4.0;
 		}
-		if( absolutePosition.z < 0.5 )
+		if( absolutePosition.z < 1.0 )
 		{
-		    absolutePosition.z = 0.5;
+		    absolutePosition.z = 1.0;
 		}
 		else if( absolutePosition.z > 10.0 )
 		{
@@ -177,7 +177,6 @@ void entity::tick(glm::vec2 dt)
 		}
 
 		btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
-		std::cout << '(' << MyNewPosition.x() << ',' << MyNewPosition.z() << ')' << std::endl;
 		btVector3 vNewPos = MyNewPosition;
 		btTransform btt;
 		btt.setIdentity();

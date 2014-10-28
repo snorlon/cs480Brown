@@ -157,7 +157,16 @@ void entity::tick(glm::vec2 dt)
 	    {
 		absolutePosition.x -= dt.x/10.0;
 		absolutePosition.z -= dt.y/10.0;
-		std::cout << '(' << dt.x << ',' << dt.y << ')' << std::endl;
+		btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
+		std::cout << '(' << MyNewPosition.x() << ',' << MyNewPosition.z() << ')' << std::endl;
+		btVector3 vNewPos = MyNewPosition;
+		btTransform btt;
+		btt.setIdentity();
+		objPhysics.objRB->getMotionState()->getWorldTransform(btt);
+		btQuaternion cOri = btt.getRotation();
+		btt.setOrigin(vNewPos);
+		btt.setRotation(cOri);
+		objPhysics.objRB->getMotionState()->setWorldTransform(btt);
 	    }
 
             model = glm::translate( glm::mat4(1.0f), absolutePosition);

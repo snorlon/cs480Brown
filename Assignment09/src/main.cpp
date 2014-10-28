@@ -76,7 +76,7 @@ int frame = 0;
 float getDT();
 std::chrono::time_point<std::chrono::high_resolution_clock> t1,t2,t3,t4;
 
-int x01, x02, z01, z02;
+int x1, x2, z1, z2;
 glm::vec2 change;
 
 //--Main
@@ -428,12 +428,14 @@ float getDT()
     return ret;
 }
 
+
+
 void mouseChange(int x, int z)
 {
-    x02 = x;
-    z02 = z;
-    change.x = x02 - x01;
-    change.y = z02 - z01;
-    x01 = x;
-    z01 = z;
+    x2 = x;
+    z2 = z;
+    change.x = x2 - x1;
+    change.y = z2 - z1;
+    x1 = x;
+    z1 = z;
 }

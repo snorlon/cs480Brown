@@ -155,8 +155,27 @@ void entity::tick(glm::vec2 dt)
 	{
 	    if( hasMouseControl )
 	    {
-		absolutePosition.x -= dt.x/10.0;
-		absolutePosition.z -= dt.y/10.0;
+		
+		absolutePosition.x += dt.y/10.0;
+		absolutePosition.z += -dt.x/10.0;
+		
+		if( absolutePosition.x < -4.0 )
+		{
+		    absolutePosition.x = -4.0;
+		}
+		else if( absolutePosition.x > 4.0 )
+		{
+		    absolutePosition.x = 4.0;
+		}
+		if( absolutePosition.z < 0.0 )
+		{
+		    absolutePosition.z = 0.0;
+		}
+		else if( absolutePosition.z > 10.0 )
+		{
+		    absolutePosition.z = 10.0;
+		}
+
 		btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
 		std::cout << '(' << MyNewPosition.x() << ',' << MyNewPosition.z() << ')' << std::endl;
 		btVector3 vNewPos = MyNewPosition;

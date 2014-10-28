@@ -32,7 +32,7 @@ config::config()
 
     currentCamera = -1;
 
-    //worldLights = new lightArray();
+    worldLights = new lightArray();
 
     azimuthAngle = 0;
     altitudeAngle = 35;
@@ -65,7 +65,6 @@ config::config()
     //  ...Like you should update it before you render more dynamic 
     //  for this project having them static will be fine
     eyeCamera.Position(1,1,-2);
-/*
     //load in world lighting
     char dummy;
     double temp[4];
@@ -73,7 +72,7 @@ config::config()
     input.open("../bin/data/light_sources.dat");
     line = 0;
 
-    lightSource* newLight;
+    lightSource* newLight = NULL;
 
     input>>dummy;
 
@@ -94,12 +93,39 @@ config::config()
                 newLight->setPosition(temp);
                 line++;
                 break;
+            case 1:
+                input>>temp[0]>>dummy>>temp[1]>>dummy>>temp[2]>>dummy>>temp[3]>>dummy;
+
+                newLight->setAmbient(temp);
+                line++;
+                break;
+            case 2:
+                input>>temp[0]>>dummy>>temp[1]>>dummy>>temp[2]>>dummy>>temp[3]>>dummy;
+
+                newLight->setDiffuse(temp);
+                line++;
+                break;
+            case 3:
+                input>>temp[0]>>dummy>>temp[1]>>dummy>>temp[2]>>dummy>>temp[3]>>dummy;
+
+                newLight->setSpecular(temp);
+                line++;
+                break;
+        }
+
+        //call it a day with this light when we finish it
+        if(line >= 4)
+        {
+            line = 0;
+            newLight = NULL;
         }
 
         input>>dummy;
     }
 
-    input.close();*/
+    input.close();
+
+    cout<<"LIGHTS LOADED!"<<endl;
 
     //update the camera
     recalcCamera();

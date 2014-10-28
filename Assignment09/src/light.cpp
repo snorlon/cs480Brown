@@ -1,5 +1,5 @@
 #include "light.h"
-/*
+
 lightSource::lightSource( lightArray* l, entity* p )
 {
     parent = p;
@@ -172,8 +172,8 @@ void lightArray::on()
     lightSource* iterator = head;
     while(iterator!=NULL)
     {
-        iterator = iterator->next;
         iterator->on();
+        iterator = iterator->next;
     }
 }
 
@@ -183,8 +183,8 @@ void lightArray::off()
     lightSource* iterator = head;
     while(iterator!=NULL)
     {
-        iterator = iterator->next;
         iterator->off();
+        iterator = iterator->next;
     }
 }
 
@@ -196,7 +196,7 @@ entityLightNode::entityLightNode( lightSource* newL)
 entityLightNode::~entityLightNode()
 {
     //do nothing,not our job to cleanup
-}*/
+}
 
 
 entityLight::entityLight()
@@ -223,7 +223,7 @@ void entityLight::on()
     while(iterator!=NULL)
     {
         iterator = iterator->next;
-        //iterator->node->on();
+        iterator->node->on();
     }
 }
 
@@ -234,6 +234,6 @@ void entityLight::off()
     while(iterator!=NULL)
     {
         iterator = iterator->next;
-        //iterator->node->off();
+        iterator->node->off();
     }
 }

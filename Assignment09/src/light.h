@@ -6,6 +6,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
+#include <iostream>
+
+using namespace std;
 
 static const int SPOTLIGHT = 0;
 static const int AMBIENTLIGHT = 1;
@@ -17,7 +20,7 @@ class lightArray;
 class lightSource
 {
     public:
-/*        entity* parent;
+        entity* parent;
         lightSource* next;
 
         lightArray* lights;
@@ -41,7 +44,7 @@ class lightSource
         void setSpecular(double values[4]);
 
         void on();
-        void off();*/
+        void off();
 
     private:
 };
@@ -49,7 +52,7 @@ class lightSource
 class lightArray
 {
     public:
-/*        lightSource* head;
+        lightSource* head;
 
         double* position;
         double* sourceAmbient;
@@ -63,7 +66,7 @@ class lightArray
 
         void init();
         void on();
-        void off();*/
+        void off();
 
     private:
 };
@@ -87,8 +90,8 @@ class entityLightNode
         lightSource* node;
         entityLightNode* next;
 
-//        entityLightNode( lightSource* newL);
-//        ~entityLightNode();
+        entityLightNode( lightSource* newL);
+        ~entityLightNode();
     private:
 };
 

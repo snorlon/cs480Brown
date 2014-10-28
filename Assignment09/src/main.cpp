@@ -398,6 +398,9 @@ bool postInitialize()
     //separate init for old renderer stuff
     returnVal = returnVal && simRenderer.initialize();
 
+    //init the lights, turning them "ON"
+    simConfig.worldLights->init();
+
     return returnVal;
 }
 

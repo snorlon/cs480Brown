@@ -77,7 +77,6 @@ bool shaderManager::loadShaders(int argc, char **argv)
     //compile the shaders
     GLint shader_status;
 
-
     // Vertex shader first
     glShaderSource(vertex_shader, 1, (const char **)&vertexShader, NULL);
 

@@ -1,5 +1,3 @@
-
-
 uniform sampler2D gSampler;
 
 uniform vec4 eyeVector;

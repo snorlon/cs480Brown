@@ -1,5 +1,5 @@
 #include "light.h"
-
+/*
 lightSource::lightSource( lightArray* l, entity* p )
 {
     parent = p;
@@ -28,6 +28,39 @@ lightSource::lightSource( lightArray* l, entity* p )
     stateOn = false;//default to off
 
 }
+
+void lightSource::setPosition(double values[4])
+{
+    position[0] = values[0];
+    position[1] = values[1];
+    position[2] = values[2];
+    position[3] = values[3];
+}
+
+void lightSource::setAmbient(double values[4])
+{
+    sourceAmbient[0] = values[0];
+    sourceAmbient[1] = values[1];
+    sourceAmbient[2] = values[2];
+    sourceAmbient[3] = values[3];
+}
+
+void lightSource::setDiffuse(double values[4])
+{
+    sourceDiffuse[0] = values[0];
+    sourceDiffuse[1] = values[1];
+    sourceDiffuse[2] = values[2];
+    sourceDiffuse[3] = values[3];
+}
+
+void lightSource::setSpecular(double values[4])
+{
+    sourceSpecular[0] = values[0];
+    sourceSpecular[1] = values[1];
+    sourceSpecular[2] = values[2];
+    sourceSpecular[3] = values[3];
+}
+
 void lightSource::on()
 {
     if(lights==NULL)
@@ -163,7 +196,7 @@ entityLightNode::entityLightNode( lightSource* newL)
 entityLightNode::~entityLightNode()
 {
     //do nothing,not our job to cleanup
-}
+}*/
 
 
 entityLight::entityLight()
@@ -190,7 +223,7 @@ void entityLight::on()
     while(iterator!=NULL)
     {
         iterator = iterator->next;
-        iterator->node->on();
+        //iterator->node->on();
     }
 }
 
@@ -201,6 +234,6 @@ void entityLight::off()
     while(iterator!=NULL)
     {
         iterator = iterator->next;
-        iterator->node->off();
+        //iterator->node->off();
     }
 }

@@ -12,6 +12,8 @@
 #include "entitymanager.h"
 #include "camera.h"
 
+
+class lightArray;
 //This object will define the attributes of a vertex(position, color, etc...)
 struct Vertex
 {
@@ -32,6 +34,8 @@ class config
         entityManager* simEntityManager;
         GLuint program; //program id
         physics* physicsEnvironment;
+
+        lightArray* worldLights;
 
         Camera eyeCamera;
         Camera targetCamera;
@@ -55,7 +59,6 @@ class config
         float timeRate;
 
         double scale;
-        double orbitScale;
 
         int physicsLimit;
 

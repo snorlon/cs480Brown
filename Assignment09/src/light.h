@@ -1,3 +1,6 @@
+#ifndef LIGHTH
+#define LIGHTH
+
 #define GLM_FORCE_RADIANS
 
 #include <glm/glm.hpp>
@@ -14,7 +17,7 @@ class lightArray;
 class lightSource
 {
     public:
-        entity* parent;
+/*        entity* parent;
         lightSource* next;
 
         lightArray* lights;
@@ -31,8 +34,14 @@ class lightSource
         bool stateOn;
 
         lightSource( lightArray* l, entity* p = NULL);
+
+        void setPosition(double values[4]);
+        void setAmbient(double values[4]);
+        void setDiffuse(double values[4]);
+        void setSpecular(double values[4]);
+
         void on();
-        void off();
+        void off();*/
 
     private:
 };
@@ -40,7 +49,7 @@ class lightSource
 class lightArray
 {
     public:
-        lightSource* head;
+/*        lightSource* head;
 
         double* position;
         double* sourceAmbient;
@@ -54,7 +63,7 @@ class lightArray
 
         void init();
         void on();
-        void off();
+        void off();*/
 
     private:
 };
@@ -78,8 +87,8 @@ class entityLightNode
         lightSource* node;
         entityLightNode* next;
 
-        entityLightNode( lightSource* newL);
-        ~entityLightNode();
+//        entityLightNode( lightSource* newL);
+//        ~entityLightNode();
     private:
 };
 
@@ -103,3 +112,5 @@ class entityLight
         void off();
     private:
 };
+
+#endif

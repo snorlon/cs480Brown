@@ -3,9 +3,10 @@
 #include <fstream>
 #include "entity.h"
 
-#define pi 3.14159265
 
-#define AU 149597871
+#include "light.h"
+
+#define pi 3.14159265
 
 config::config()
 {
@@ -31,11 +32,11 @@ config::config()
 
     currentCamera = -1;
 
+    //worldLights = new lightArray();
+
     azimuthAngle = 0;
     altitudeAngle = 35;
     viewDistance = 70;
-
-    orbitScale = 1.0;
 
     lastFPS = 0;
 
@@ -59,13 +60,46 @@ config::config()
     }
 
     input.close();
-    
-
     //--Init the view (camera)
     //  if you will be having a moving camera the view matrix will need to more dynamic
     //  ...Like you should update it before you render more dynamic 
     //  for this project having them static will be fine
     eyeCamera.Position(1,1,-2);
+/*
+    //load in world lighting
+    char dummy;
+    double temp[4];
+    input.clear();
+    input.open("../bin/data/light_sources.dat");
+    line = 0;
+
+    lightSource* newLight;
+
+    input>>dummy;
+
+    if(!input.good())
+    {
+        cout<<"FAILED TO LOAD LIGHTS!"<<endl;
+    }
+
+    while(input.good())
+    {
+        switch(line)
+        {
+            case 0:
+                newLight = new lightSource(worldLights);
+
+                input>>temp[0]>>dummy>>temp[1]>>dummy>>temp[2]>>dummy>>temp[3]>>dummy;
+
+                newLight->setPosition(temp);
+                line++;
+                break;
+        }
+
+        input>>dummy;
+    }
+
+    input.close();*/
 
     //update the camera
     recalcCamera();
@@ -74,6 +108,7 @@ config::config()
 config::~config()
 {
     delete physicsEnvironment;
+    delete worldLights;
 }
 
 

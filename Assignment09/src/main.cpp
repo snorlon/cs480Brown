@@ -109,7 +109,7 @@ int main(int argc, char **argv)
     glutReshapeFunc(reshape);// Called if the window is resized
     glutIdleFunc(update);// Called if there is nothing else to do
     glutMouseFunc(mouse);// Called if there is mouse input
-    glutPassiveMotionFunc(mouseChange);
+    glutMotionFunc(mouseChange);
     glutKeyboardFunc(keyboard);// Called if there is keyboard input
     glutSpecialFunc(keyboardPlus);// for stuff without ascii access characters like arrow keys
 
@@ -125,7 +125,11 @@ int main(int argc, char **argv)
     bool init = initialize();
 
     //load model data
+    #ifdef TESTING
+    simEntities.loadData("../bin/data/test_load_list.dat"); // don't want to load all those machines if I'm just testing
+    #else
     simEntities.loadData("../bin/data/load_list.dat");
+    #endif
 
     //run our shader loader now
     init = init && simShaderManager.loadShaders(argc,argv);
@@ -361,14 +365,22 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     {
         simConfig.azimuthAngle += rate;
     }
+#ifdef TESTING
+    else if(key == GLUT_KEY_F1)  //if you don't have page up/down
+#else
     else if(key == GLUT_KEY_PAGE_UP)
+#endif
     {
         simConfig.viewDistance -= 1.0;
 
         if(simConfig.viewDistance<1)
             simConfig.viewDistance = 1;
     }
+#ifdef TESTING
+    else if(key == GLUT_KEY_F2)  //if you don't have page up/down
+#else
     else if(key == GLUT_KEY_PAGE_DOWN)
+#endif
     {
         simConfig.viewDistance += 1.0;
 

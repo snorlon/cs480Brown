@@ -156,8 +156,8 @@ void entity::tick(glm::vec2 dt)
 	    if( hasMouseControl )
 	    {
 		
-		absolutePosition.x += dt.y/10.0;
-		absolutePosition.z += -dt.x/10.0;
+		absolutePosition.x += dt.x/10.0;
+		absolutePosition.z += dt.y/10.0;
 		
 		if( absolutePosition.x < -4.0 )
 		{
@@ -167,9 +167,9 @@ void entity::tick(glm::vec2 dt)
 		{
 		    absolutePosition.x = 4.0;
 		}
-		if( absolutePosition.z < 0.0 )
+		if( absolutePosition.z < 0.5 )
 		{
-		    absolutePosition.z = 0.0;
+		    absolutePosition.z = 0.5;
 		}
 		else if( absolutePosition.z > 10.0 )
 		{

@@ -208,6 +208,8 @@ void update()
         }
 
         simEntities.tick(change);
+	change.x = 0.0;
+	change.y = 0.0;
     }
 
     simConfig.tick(dt);

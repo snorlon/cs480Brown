@@ -1,0 +1,15 @@
+Name:       Bat
+Model:      ToLoveRu/Bat1/ bat
+Shape:      Cylinder
+Mass:       1
+Scale:      1.0
+Location:   1, 30, 1
+Size:       1, 0.6, 1
+Velocity:   0, 0, 0
+Type:       Moveable
+Emissive:   0,0,0,0
+Orientation: 0.4,0.2,0.4
+Ambient:    0.1,0.1,0.1,0
+Diffuse:    0.9,0.9,0.9,0
+Specular:   0.7,0.7,0.7,0
+Shine:      255

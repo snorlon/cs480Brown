@@ -86,9 +86,9 @@ bool shaderManager::loadShaders(int argc, char **argv)
 
     if(!shader_status)
     {
-        glGetShaderInfoLog(fragment_shader, 512, &errLength, buffer);
+        glGetShaderInfoLog(vertex_shader, 512, &errLength, buffer);
         std::cerr << "[F] FAILED TO COMPILE VERTEX SHADER!" << std::endl;
-        fprintf(stderr, "Compilation error in Vertex Shader: %s %d\n", buffer, errLength);
+        fprintf(stderr, "Compilation error in Vertex Shader: %s\n", buffer);
 
         return false;
     }

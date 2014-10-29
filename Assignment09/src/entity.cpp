@@ -130,6 +130,13 @@ void entity::init()
     loc_objMatDiffuse = glGetUniformLocation(simConfig->program, "v_obj_diffuse");
     loc_objMatSpecular = glGetUniformLocation(simConfig->program, "v_obj_specular");
     loc_objShine = glGetUniformLocation(simConfig->program, "v_obj_shine");
+
+    loc_objLightsPosition = glGetUniformLocation(simConfig->program, "v_lights_positions");
+    loc_objLightsAmbient = glGetUniformLocation(simConfig->program, "v_lights_ambient");
+    loc_objLightsDiffuse = glGetUniformLocation(simConfig->program, "v_lights_diffuse");
+    loc_objLightsSpecular = glGetUniformLocation(simConfig->program, "v_lights_specular");
+    loc_objLightsCount = glGetUniformLocation(simConfig->program, "v_lights_count");
+
 }
 
 void entity::tick(glm::vec2 dt)
@@ -295,6 +302,44 @@ void entity::render()
                            GL_FALSE,
                            sizeof(Vertex),
                             (void*)offsetof(Vertex,uv));
+
+    //upload the lights
+    glEnableVertexAttribArray(loc_objLightsPosition);
+    glVertexAttribPointer( loc_objLightsPosition,//location of attribute
+                           simConfig->worldLights->lightCount*4,//number of elements
+                           GL_FLOAT,//type
+                           GL_FALSE,//normalized?
+                           0,//stride
+                           0);//offset
+    glEnableVertexAttribArray(loc_objLightsAmbient);
+    glVertexAttribPointer( loc_objLightsAmbient,//location of attribute
+                           simConfig->worldLights->lightCount*4,//number of elements
+                           GL_FLOAT,//type
+                           GL_FALSE,//normalized?
+                           sizeof( simConfig->worldLights->sourceAmbient),//stride
+                           0);//offset
+    glEnableVertexAttribArray(loc_objLightsDiffuse);
+    glVertexAttribPointer( loc_objLightsDiffuse,//location of attribute
+                           simConfig->worldLights->lightCount*4,//number of elements
+                           GL_FLOAT,//type
+                           GL_FALSE,//normalized?
+                           sizeof( simConfig->worldLights->sourceDiffuse),//stride
+                           0);//offset
+    glEnableVertexAttribArray(loc_objLightsSpecular);
+    glVertexAttribPointer( loc_objLightsSpecular,//location of attribute
+                           simConfig->worldLights->lightCount*4,//number of elements
+                           GL_FLOAT,//type
+                           GL_FALSE,//normalized?
+                           sizeof( simConfig->worldLights->sourceSpecular),//stride
+                           0);//offset
+
+    glUniform1f(loc_objLightsCount, simConfig->worldLights->lightCount);
+
+    /*loc_objLightsPosition = glGetUniformLocation(simConfig->program, "v_lights_positions");
+    loc_objLightsAmbient = glGetUniformLocation(simConfig->program, "v_lights_ambient");
+    loc_objLightsDiffuse = glGetUniformLocation(simConfig->program, "v_lights_diffuse");
+    loc_objLightsSpecular = glGetUniformLocation(simConfig->program, "v_lights_specular");
+    loc_objLightsSpecular = glGetUniformLocation(simConfig->program, "v_lights_count");*/
 
     //enable config stuff
     //glEnableVertexAttribArray(simConfig->loc_eyeVector);

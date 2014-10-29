@@ -44,6 +44,12 @@ class entity
         GLint loc_objMatSpecular;
         GLint loc_objShine;
 
+        GLint loc_objLightsPosition;
+        GLint loc_objLightsAmbient;
+        GLint loc_objLightsDiffuse;
+        GLint loc_objLightsSpecular;
+        GLint loc_objLightsCount;
+
         int texWidth;
         int texHeight;
         GLuint texID;

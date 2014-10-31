@@ -12,11 +12,13 @@
 
 #include "config.h"
 #include "shaderloader.h"
+#include "sprite.h"
 
 class renderer
 {
     public:
         config* simConfig;
+        spriteManager sprites;//holds all 2d image data
 
         renderer();
         bool giveLinks(config* configData);

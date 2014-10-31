@@ -31,11 +31,13 @@ ENTPHYSICS = ../src/entityphysics.cpp
 ENTPHYSICSH = ../src/entityphysics.h
 LIGHT = ../src/light.cpp
 LIGHTH = ../src/light.h
+SPRITE = ../src/sprite.cpp
+SPRITEH = ../src/sprite.h
 
 all: main
 
-main: main.o config.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o
-	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o $(LIBS)
+main: main.o config.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o
+	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o $(LIBS)
 
 main.o: $(MAIN) $(CONFIGH) $(SHADERLOADERH) $(RENDERERH) $(ENTITYH) $(ENTITYMANAGERH)
 	$(CC) $(CXXFLAGS) -c $(MAIN) $(LIBS)
@@ -58,7 +60,7 @@ shaderloader.o: $(SHADERLOADER) $(SHADERLOADERH) $(CONFIGH)
 config.o: $(CONFIG) $(CONFIGH) $(ENTITYMANAGERH) $(SHADERLOADERH) $(CAMERAH) $(PHYSICSH) $(LIGHTH)
 	$(CC) $(CXXFLAGS) -c $(CONFIG) $(LIBS)
 
-renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(ENTITYH) $(CONFIGH)
+renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(ENTITYH) $(CONFIGH) $(SPRITEH)
 	$(CC) $(CXXFLAGS) -c $(RENDERER) $(LIBS)
 
 camera.o: $(CAMERA) $(CAMERAH) $(ENTITYH)
@@ -66,6 +68,9 @@ camera.o: $(CAMERA) $(CAMERAH) $(ENTITYH)
 
 light.o: $(LIGHT) $(LIGHTH)
 	$(CC) $(CXXFLAGS) -c $(LIGHT) $(LIBS)
+
+sprite.o: $(SPRITE) $(SPRITEH) $(CONFIGH)
+	$(CC) $(CXXFLAGS) -c $(SPRITE) $(LIBS)
 
 clean:
 	rm ../bin/Project *.o

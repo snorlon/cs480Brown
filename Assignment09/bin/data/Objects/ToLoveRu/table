@@ -6,6 +6,7 @@ Scale:      6.0
 Location:   0, 0, 0
 Size:       1, 1.0, 1
 Velocity:   0, 0, 0
+Restitution: 0.99
 Type:       Moveable
 Orientation: 0,0,0
 Emissive:   0,0,0,0

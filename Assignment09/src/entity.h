@@ -62,9 +62,9 @@ class entity
         int vertexCount;
 
         string shape;
+	double restitution;
 
         bool visible;
-	bool hasMouseControl;
 
         glm::mat4 mvp;//premultiplied modelviewprojection
         glm::vec3 relativePosition;//unused

@@ -109,7 +109,7 @@ int main(int argc, char **argv)
     glutReshapeFunc(reshape);// Called if the window is resized
     glutIdleFunc(update);// Called if there is nothing else to do
     glutMouseFunc(mouse);// Called if there is mouse input
-    glutMotionFunc(mouseChange);
+    glutPassiveMotionFunc(mouseChange);
     glutKeyboardFunc(keyboard);// Called if there is keyboard input
     glutSpecialFunc(keyboardPlus);// for stuff without ascii access characters like arrow keys
 

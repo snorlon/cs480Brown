@@ -91,6 +91,17 @@ void entityPhysics::init(entity* np)
         objRB = new btRigidBody(fallRigidBodyCI);
         //simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
 
+	// set restitution
+	objRB->setRestitution( parent->restitution );
+
+	// if it's the puck make sure it onl moves in x-z direction
+	if( parent->name == "Puck" )
+	{
+	    objRB->setLinearFactor(btVector3(1,0,1));
+	    objRB->setAngularFactor(btVector3(0,1,0));
+	    objRB->setFriction(0.1);
+	}
+
         //create types and add them if necessary
         if(objType == " Static")
         {

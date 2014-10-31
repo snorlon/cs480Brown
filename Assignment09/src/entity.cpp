@@ -35,7 +35,6 @@ entity::entity(config* nConfig) //load a model from a file
     texID = 0;
 
     visible = true;
-    hasMouseControl = 0;
 
     name = "Error";
 
@@ -160,11 +159,12 @@ void entity::tick(glm::vec2 dt)
 
         if(shape!="Plane")
 	{
-	    if( hasMouseControl )
+	    //control bat with mouse
+	    if( objPhysics.objType == "Kinematic" )
 	    {
 		
-		absolutePosition.x += dt.x/10.0;
-		absolutePosition.z += dt.y/10.0;
+		absolutePosition.x += dt.x/5.0;
+		absolutePosition.z += dt.y/5.0;
 		
 		if( absolutePosition.x < -4.0 )
 		{
@@ -192,6 +192,37 @@ void entity::tick(glm::vec2 dt)
 		btt.setOrigin(vNewPos);
 		btt.setRotation(cOri);
 		objPhysics.objRB->getMotionState()->setWorldTransform(btt);
+	    }
+	    
+	    //make sure puck doesn't go crazy
+	    if( name == "Puck" )
+	    {
+		//cap velocity? Not sure if this even works
+		btVector3 velocity = objPhysics.objRB->getLinearVelocity();
+		btScalar speed = velocity.length();
+		if(speed > 30) 
+		{
+		    velocity *= 30/speed;
+		    objPhysics.objRB->setLinearVelocity(velocity);
+		}
+
+		//cap position
+		if( absolutePosition.x < -4.0 )
+		{
+		    absolutePosition.x = -4.0;
+		}
+		else if( absolutePosition.x > 4.0 )
+		{
+		    absolutePosition.x = 4.0;
+		}
+		if( absolutePosition.z < -11.0 )
+		{
+		    absolutePosition.z = -11.0;
+		}
+		else if( absolutePosition.z > 11.0 )
+		{
+		    absolutePosition.z = 11.0;
+		}
 	    }
 
             model = glm::translate( glm::mat4(1.0f), absolutePosition);

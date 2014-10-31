@@ -207,6 +207,12 @@ entity* entityManager::loadEntity(string fileName)
                 objectFile>>newPos;
                 newObj->velocity.z = newPos;
             }
+	    else if(data == "Restitution:")//restitution
+	    {
+		double newVal;
+		objectFile>>newVal;
+		newObj->restitution = newVal;
+	    }
             else if(data == "Emissive:")//Light material loading
             {
                 char dummy;
@@ -277,15 +283,6 @@ entity* entityManager::loadEntity(string fileName)
                 objectFile>>newVal;
                 newObj->objLight.shine = newVal;
             }
-	    else if( data == "Control:")//controlled by mouse
-	    {
-		int newVal = 0;
-		objectFile>>newVal;
-		std::cout << "newval: " << newVal << std::endl;
-		newObj->hasMouseControl = newVal;
-		if( newObj->hasMouseControl )
-		    std::cout << "has mouse control." << std::endl;
-	    }
             else if(data == "Model:")//model loading
             {
                 objectFile>>data2;

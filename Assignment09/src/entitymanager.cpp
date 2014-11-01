@@ -1,9 +1,9 @@
 #include "entitymanager.h"
-#include "entity.cpp"
 #include <cstddef>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "entity.h"
 
 entityManager::entityManager()
 {
@@ -277,15 +277,12 @@ entity* entityManager::loadEntity(string fileName)
                 objectFile>>newVal;
                 newObj->objLight.shine = newVal;
             }
-	    else if( data == "Control:")//controlled by mouse
-	    {
-		int newVal = 0;
-		objectFile>>newVal;
-		std::cout << "newval: " << newVal << std::endl;
-		newObj->hasMouseControl = newVal;
-		if( newObj->hasMouseControl )
-		    std::cout << "has mouse control." << std::endl;
-	    }
+	        else if( data == "Control:")//controlled by mouse
+	        {
+		        int newVal = 0;
+		        objectFile>>newVal;
+		        newObj->hasMouseControl = newVal;
+	        }
             else if(data == "Model:")//model loading
             {
                 objectFile>>data2;

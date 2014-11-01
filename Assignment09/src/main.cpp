@@ -83,7 +83,7 @@ glm::vec2 change;
 int main(int argc, char **argv)
 {
     //set config data
-    simConfig.setWindow(480, 640);
+    simConfig.setWindow(800, 1280);
 
     // Initialize glut
     glutInit(&argc, argv);
@@ -136,6 +136,9 @@ int main(int argc, char **argv)
 
     //call some other resources to initialize after the shader, separately
     init = init && postInitialize();
+
+    //create static interfaces
+    simRenderer.sprites.addSprite(&simConfig, 0, 0, 1280, 800, "interface/airhockeyinterface.png");
 
     if(init)
     {
@@ -195,6 +198,7 @@ void update()
         simConfig.lastFPS = frame;
         frame = 0;
         t3 = std::chrono::high_resolution_clock::now();
+        cout<<simConfig.lastFPS<<endl;
     }
 
     //this can be modified later if we need to reduce entity tick rate. It can consume time is why this is here.

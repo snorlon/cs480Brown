@@ -11,37 +11,40 @@ sprite::sprite(config* simConfig, int nx, int ny, int nwidth, int nheight, strin
     height = nheight;
     x = nx;
     y = ny;
-    scaleX = nscaleX;
-    scaleY = nscaleY;
+    scaleX = nscaleX*2;
+    scaleY = nscaleY*2;
 
     double xOffset = -simConfig->getWindowWidth();
     double yOffset = -simConfig->getWindowHeight();
 
+    double w = simConfig->getWindowWidth();
+    double h = simConfig->getWindowHeight();
+
     //generate our shape
     Vertex v1;
-    v1.position[0] = (xOffset+x*scaleX)/simConfig->getWindowWidth();
-    v1.position[1] = (yOffset+y*scaleY)/simConfig->getWindowHeight();
+    v1.position[0] = (xOffset+x*scaleX)/w;
+    v1.position[1] = (yOffset+y*scaleY)/h;
 
     v1.uv[0] = 0;
     v1.uv[1] = 0;
 
     Vertex v2;
-    v2.position[0] = (xOffset+(x+width)*scaleX)/simConfig->getWindowWidth();
-    v2.position[1] = (yOffset+y*scaleY)/simConfig->getWindowHeight();
+    v2.position[0] = (xOffset+(x+width)*scaleX)/w;
+    v2.position[1] = (yOffset+y*scaleY)/h;
 
     v2.uv[0] = 1;
     v2.uv[1] = 0;
 
     Vertex v3;
-    v3.position[0] = (xOffset+x*scaleX)/simConfig->getWindowWidth();
-    v3.position[1] = (yOffset+(y+height)*scaleY)/simConfig->getWindowHeight();
+    v3.position[0] = (xOffset+x*scaleX)/w;
+    v3.position[1] = (yOffset+(y+height)*scaleY)/h;
 
     v3.uv[0] = 0;
     v3.uv[1] = 1;
 
     Vertex v4;
-    v4.position[0] = (xOffset+(x+width)*scaleX)/simConfig->getWindowWidth();
-    v4.position[1] = (yOffset+(y+height)*scaleY)/simConfig->getWindowHeight();
+    v4.position[0] = (xOffset+(x+width)*scaleX)/w;
+    v4.position[1] = (yOffset+(y+height)*scaleY)/h;
 
     v4.uv[0] = 1;
     v4.uv[1] = 1;
@@ -134,6 +137,8 @@ sprite::~sprite()
 
 void sprite::render( config* simConfig )
 {
+    simConfig = NULL;//unused to shutup warning
+    simConfig = simConfig;
 
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -203,10 +208,19 @@ void spriteManager::render( config* simConfig )
     }
 }
 
-bool spriteManager::load( config* simConfig )
+void spriteManager::addSprite(config* simConfig, int nx, int ny, int nwidth, int nheight, string fpath, double nscaleX, double nscaleY)
 {
     simConfig->simShaderManager->activate2DShaders();
-    children = new sprite(simConfig, 15, 100, 50, 100, "testtrainer.png", 3.0, 3.0);
+    sprite* newSprite = new sprite(simConfig, nx, ny, nwidth, nheight, fpath, nscaleX, nscaleY);
 
-    return true;
+    sprite* iterator = children;
+    if(children == NULL)
+        children = newSprite;
+    else
+    {
+        while(iterator->next != NULL)
+            iterator = iterator->next;
+
+        iterator->next = newSprite;
+    }
 }

@@ -50,7 +50,6 @@ class sprite
         sprite(config* simConfig, int nx, int ny, int nwidth, int nheight, string fpath, double nscaleX = 1.0, double nscaleY = 1.0);
         ~sprite();
         void render( config* simConfig );
-        bool load( config* simConfig );//not sure what will go in this yet
 
     private:
 };
@@ -76,7 +75,7 @@ class spriteManager
 
         void render( config* simConfig );
 
-        bool load( config* simConfig );//also unknown what it will require
+        void addSprite(config* simConfig, int nx, int ny, int nwidth, int nheight, string fpath, double nscaleX = 1.0, double nscaleY = 1.0);
     private:
 };
 

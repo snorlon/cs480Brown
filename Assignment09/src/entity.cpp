@@ -144,7 +144,7 @@ void entity::init()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void entity::tick(glm::vec2 dt)
+void entity::tick(glm::vec2 changePosition)
 {
 //    int a = dt;
 //    a = a/1;
@@ -167,39 +167,42 @@ void entity::tick(glm::vec2 dt)
 	    {
 	        if( hasMouseControl )
 	        {
+		        absolutePosition.x += changePosition.x/10.0;
+		        absolutePosition.z += changePosition.y/10.0;
 		
-		    absolutePosition.x += dt.x/10.0;
-		    absolutePosition.z += dt.y/10.0;
-		
-		    if( absolutePosition.x < -4.0 )
-		    {
-		        absolutePosition.x = -4.0;
-		    }
-		    else if( absolutePosition.x > 4.0 )
-		    {
-		        absolutePosition.x = 4.0;
-		    }
-		    if( absolutePosition.z < 1.0 )
-		    {
-		        absolutePosition.z = 1.0;
-		    }
-		    else if( absolutePosition.z > 10.0 )
-		    {
-		        absolutePosition.z = 10.0;
-		    }
+		        if( absolutePosition.x < -4.0 )
+		        {
+		            absolutePosition.x = -4.0;
+		        }
+		        else if( absolutePosition.x > 4.0 )
+		        {
+		            absolutePosition.x = 4.0;
+		        }
+		        if( absolutePosition.z < 1.0 )
+		        {
+		            absolutePosition.z = 1.0;
+		        }
+		        else if( absolutePosition.z > 10.0 )
+		        {
+		            absolutePosition.z = 10.0;
+		        }
 
-		    btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
-		    btVector3 vNewPos = MyNewPosition;
-		    btTransform btt;
-		    btt.setIdentity();
-		    objPhysics.objRB->getMotionState()->getWorldTransform(btt);
-		    btQuaternion cOri = btt.getRotation();
-		    btt.setOrigin(vNewPos);
-		    btt.setRotation(cOri);
-		    objPhysics.objRB->getMotionState()->setWorldTransform(btt);
+                //btVector3 nForce(changePosition.x/10.0, 0.0, changePosition.y/10.0);
+                //btVector3 nCenter(0,0,0);
+                //objPhysics.objRB->applyImpulse(nForce, nCenter);
+
+		        btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
+		        btVector3 vNewPos = MyNewPosition;
+		        btTransform btt;
+		        btt.setIdentity();
+		        objPhysics.objRB->getMotionState()->getWorldTransform(btt);
+		        btQuaternion cOri = btt.getRotation();
+		        btt.setOrigin(vNewPos);
+		        btt.setRotation(cOri);
+		        objPhysics.objRB->getMotionState()->setWorldTransform(btt);
 	        }
 
-                model = glm::translate( glm::mat4(1.0f), absolutePosition);
+            model = glm::translate( glm::mat4(1.0f), absolutePosition);
 	    }
         else
             model = glm::translate( glm::mat4(1.0f), glm::vec3(0,0,0));

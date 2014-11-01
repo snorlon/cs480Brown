@@ -57,9 +57,6 @@ bool renderer::initialize()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    //do the thing with the sprites
-    sprites.load(simConfig);
-
     //and its done
     return true;
 }

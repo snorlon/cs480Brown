@@ -36,8 +36,8 @@ SPRITEH = ../src/sprite.h
 
 all: main
 
-main: main.o config.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o
-	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o $(LIBS)
+main: main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o
+	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o $(LIBS)
 
 main.o: $(MAIN) $(CONFIGH) $(SHADERLOADERH) $(RENDERERH) $(ENTITYH) $(ENTITYMANAGERH)
 	$(CC) $(CXXFLAGS) -c $(MAIN) $(LIBS)

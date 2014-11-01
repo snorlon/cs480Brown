@@ -166,21 +166,21 @@ void entity::tick(glm::vec2 dt)
 		absolutePosition.x += dt.x/5.0;
 		absolutePosition.z += dt.y/5.0;
 		
-		if( absolutePosition.x < -4.0 )
+		if( absolutePosition.x < -8.0 )
 		{
-		    absolutePosition.x = -4.0;
+		    absolutePosition.x = -8.0;
 		}
-		else if( absolutePosition.x > 4.0 )
+		else if( absolutePosition.x > 8.0 )
 		{
-		    absolutePosition.x = 4.0;
+		    absolutePosition.x = 8.0;
 		}
-		if( absolutePosition.z < 1.0 )
+		if( absolutePosition.z < -20 )
 		{
-		    absolutePosition.z = 1.0;
+		    absolutePosition.z = -20;
 		}
-		else if( absolutePosition.z > 10.0 )
+		else if( absolutePosition.z > 20.0 )
 		{
-		    absolutePosition.z = 10.0;
+		    absolutePosition.z = 20.0;
 		}
 
 		btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
@@ -193,38 +193,6 @@ void entity::tick(glm::vec2 dt)
 		btt.setRotation(cOri);
 		objPhysics.objRB->getMotionState()->setWorldTransform(btt);
 	    }
-	    
-	    //make sure puck doesn't go crazy
-	    if( name == "Puck" )
-	    {
-		//cap velocity? Not sure if this even works
-		btVector3 velocity = objPhysics.objRB->getLinearVelocity();
-		btScalar speed = velocity.length();
-		if(speed > 30) 
-		{
-		    velocity *= 30/speed;
-		    objPhysics.objRB->setLinearVelocity(velocity);
-		}
-
-		//cap position
-		if( absolutePosition.x < -4.0 )
-		{
-		    absolutePosition.x = -4.0;
-		}
-		else if( absolutePosition.x > 4.0 )
-		{
-		    absolutePosition.x = 4.0;
-		}
-		if( absolutePosition.z < -11.0 )
-		{
-		    absolutePosition.z = -11.0;
-		}
-		else if( absolutePosition.z > 11.0 )
-		{
-		    absolutePosition.z = 11.0;
-		}
-	    }
-
             model = glm::translate( glm::mat4(1.0f), absolutePosition);
 	}
         else

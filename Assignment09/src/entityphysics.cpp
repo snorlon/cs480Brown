@@ -100,7 +100,7 @@ void entityPhysics::init(entity* np)
 	    objRB->setLinearFactor(btVector3(1,0,1));
 	    objRB->setAngularFactor(btVector3(0,1,0));
 	    objRB->setFriction(0.1);
-	}
+	    }
 
         //create types and add them if necessary
         if(objType == " Static")

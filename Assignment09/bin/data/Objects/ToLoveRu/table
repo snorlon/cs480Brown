@@ -2,9 +2,9 @@ Name:       Game_Table
 Model:      ToLoveRu/Table/ AirHockeyTable
 Shape:      Custom
 Mass:       0
-Scale:      6.0
+Scale:      12.0
 Location:   0, 0, 0
-Size:       1, 1.0, 1
+Size:       1, 1, 1
 Velocity:   0, 0, 0
 Restitution: 0.99
 Type:       Moveable

@@ -86,6 +86,7 @@ void entity::cleanup()
 
 void entity::init()
 {
+    simConfig->simShaderManager->activate3DShaders();
     //save how much stuff is in the buffer for future rendering purposes
     vertexCount = vertices.size();
     entity* me = this;
@@ -137,6 +138,10 @@ void entity::init()
     loc_objLightsSpecular = glGetUniformLocation(simConfig->program, "v_lights_specular");
     loc_objLightsCount = glGetUniformLocation(simConfig->program, "v_lights_count");
 
+
+    //unbind buffer
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void entity::tick(glm::vec2 dt)
@@ -159,43 +164,43 @@ void entity::tick(glm::vec2 dt)
         absolutePosition.z = trans.getOrigin().getZ();
 
         if(shape!="Plane")
-	{
-	    if( hasMouseControl )
 	    {
+	        if( hasMouseControl )
+	        {
 		
-		absolutePosition.x += dt.x/10.0;
-		absolutePosition.z += dt.y/10.0;
+		    absolutePosition.x += dt.x/10.0;
+		    absolutePosition.z += dt.y/10.0;
 		
-		if( absolutePosition.x < -4.0 )
-		{
-		    absolutePosition.x = -4.0;
-		}
-		else if( absolutePosition.x > 4.0 )
-		{
-		    absolutePosition.x = 4.0;
-		}
-		if( absolutePosition.z < 1.0 )
-		{
-		    absolutePosition.z = 1.0;
-		}
-		else if( absolutePosition.z > 10.0 )
-		{
-		    absolutePosition.z = 10.0;
-		}
+		    if( absolutePosition.x < -4.0 )
+		    {
+		        absolutePosition.x = -4.0;
+		    }
+		    else if( absolutePosition.x > 4.0 )
+		    {
+		        absolutePosition.x = 4.0;
+		    }
+		    if( absolutePosition.z < 1.0 )
+		    {
+		        absolutePosition.z = 1.0;
+		    }
+		    else if( absolutePosition.z > 10.0 )
+		    {
+		        absolutePosition.z = 10.0;
+		    }
 
-		btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
-		btVector3 vNewPos = MyNewPosition;
-		btTransform btt;
-		btt.setIdentity();
-		objPhysics.objRB->getMotionState()->getWorldTransform(btt);
-		btQuaternion cOri = btt.getRotation();
-		btt.setOrigin(vNewPos);
-		btt.setRotation(cOri);
-		objPhysics.objRB->getMotionState()->setWorldTransform(btt);
+		    btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
+		    btVector3 vNewPos = MyNewPosition;
+		    btTransform btt;
+		    btt.setIdentity();
+		    objPhysics.objRB->getMotionState()->getWorldTransform(btt);
+		    btQuaternion cOri = btt.getRotation();
+		    btt.setOrigin(vNewPos);
+		    btt.setRotation(cOri);
+		    objPhysics.objRB->getMotionState()->setWorldTransform(btt);
+	        }
+
+                model = glm::translate( glm::mat4(1.0f), absolutePosition);
 	    }
-
-            model = glm::translate( glm::mat4(1.0f), absolutePosition);
-	}
         else
             model = glm::translate( glm::mat4(1.0f), glm::vec3(0,0,0));
 
@@ -357,6 +362,10 @@ void entity::render()
     glDisableVertexAttribArray(loc_normal);
     glDisableVertexAttribArray(loc_texture);
     //glDisableVertexAttribArray(simConfig->loc_eyeVector);
+
+    //unbind buffer
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     /*entity* iterator = children;
 

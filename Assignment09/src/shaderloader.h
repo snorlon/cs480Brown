@@ -23,19 +23,28 @@ class shaderManager
     public:
         char* vertexShader;
         char* fragmentShader;
+        char* vertexShader2d;
+        char* fragmentShader2d;
 
         GLuint vertex_shader;
         GLuint fragment_shader;
+
+        GLuint vertex_shader_2d;
+        GLuint fragment_shader_2d;
         config* simConfig;
 
         shaderManager()
         {
             vertexShader = NULL;
             fragmentShader = NULL;
+            vertexShader2d = NULL;
+            fragmentShader2d = NULL;
         }
 
         bool giveLinks(config* configData);
         bool loadShaders(int argc, char **argv);
+        void activate2DShaders();
+        void activate3DShaders();
 };
 
 #endif

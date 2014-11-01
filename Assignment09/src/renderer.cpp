@@ -22,10 +22,12 @@ bool renderer::giveLinks(config* configData)
 void renderer::render()
 {
     //--Render the scene
-
     //clear the screen
     glClearColor(0.1, 0.1, 0.15, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //activate 3D shader
+    simConfig->simShaderManager->activate3DShaders();
 
     //perform pre-rendering
     glUseProgram(simConfig->program);
@@ -35,6 +37,9 @@ void renderer::render()
 
     //throw in entity manager rendering
     simConfig->simEntityManager->render();
+
+    //activate 2D shader
+    simConfig->simShaderManager->activate2DShaders();
 
     //render the 2d images
     sprites.render( simConfig );
@@ -53,7 +58,7 @@ bool renderer::initialize()
     glDepthFunc(GL_LESS);
 
     //do the thing with the sprites
-    sprites.load();
+    sprites.load(simConfig);
 
     //and its done
     return true;

@@ -1,6 +1,8 @@
 #ifndef SPRITEH
 #define SPRITEH
 
+#include <string>
+
 #include <GL/glew.h> // glew must be included before the main gl libs
 #include <GL/glut.h> // doing otherwise causes compiler shouting
 
@@ -10,7 +12,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
+#include <vector>
+
+#include <FreeImagePlus.h>
+
+using namespace std;
+
 class config;
+class Vertex;
 class sprite
 {
     public:
@@ -22,6 +31,15 @@ class sprite
         double scaleX;
         double scaleY;
 
+        GLint loc_texture;
+        GLint loc_position;
+
+        int texWidth;
+        int texHeight;
+        GLuint texID;
+
+        std::vector< Vertex > vertices;
+
         GLuint vbo_sprite;// VBO handle for our geometry
 
         //texture data
@@ -29,10 +47,10 @@ class sprite
         sprite* next;
         sprite* children;
 
-        sprite();
+        sprite(config* simConfig, int nx, int ny, int nwidth, int nheight, string fpath, double nscaleX = 1.0, double nscaleY = 1.0);
         ~sprite();
         void render( config* simConfig );
-        bool load();//not sure what will go in this yet
+        bool load( config* simConfig );//not sure what will go in this yet
 
     private:
 };
@@ -58,7 +76,7 @@ class spriteManager
 
         void render( config* simConfig );
 
-        bool load();//also unknown what it will require
+        bool load( config* simConfig );//also unknown what it will require
     private:
 };
 

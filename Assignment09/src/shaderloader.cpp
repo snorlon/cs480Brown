@@ -30,7 +30,7 @@ bool shaderManager::loadShaders(int argc, char **argv)
         for(int i = 1; i < argc; i++)
         {
             //check if this parameter is a -v for vertex shader or -f for fragment shader
-            if(strcmp(argv[i], "-v")==0 || strcmp(argv[i], "-f")==0)
+            if(strcmp(argv[i], "-v")==0 || strcmp(argv[i], "-f")==0 || strcmp(argv[i], "-2v")==0 || strcmp(argv[i], "-2f")==0)
             {
                 //check if we can get the next parameters
                 if(i+1<argc)
@@ -54,11 +54,23 @@ bool shaderManager::loadShaders(int argc, char **argv)
                             input.get(vertexShader, fileLength, '\0');
                             std::cout<<"Vertex Shader Loaded!"<<std::endl;
                         }
-                        else
+                        else if(strcmp(argv[i], "-f")==0)
                         {
                             fragmentShader = new char[fileLength];
                             input.get(fragmentShader, fileLength, '\0');
                             std::cout<<"Fragment Shader Loaded!"<<std::endl;
+                        }
+                        else if(strcmp(argv[i], "-2v")==0)
+                        {
+                            vertexShader2d = new char[fileLength];
+                            input.get(vertexShader2d, fileLength, '\0');
+                            std::cout<<"2D Vertex Shader Loaded!"<<std::endl;
+                        }
+                        else if(strcmp(argv[i], "-2f")==0)
+                        {
+                            fragmentShader2d = new char[fileLength];
+                            input.get(fragmentShader2d, fileLength, '\0');
+                            std::cout<<"2D Fragment Shader Loaded!"<<std::endl;
                         }
                     }
                     input.close();
@@ -70,6 +82,8 @@ bool shaderManager::loadShaders(int argc, char **argv)
     //create the shaders
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    vertex_shader_2d = glCreateShader(GL_VERTEX_SHADER);
+    fragment_shader_2d = glCreateShader(GL_FRAGMENT_SHADER);
 
     char buffer[512];
     int errLength = 0;
@@ -109,12 +123,49 @@ bool shaderManager::loadShaders(int argc, char **argv)
         return false;
     }
 
+
+    // 2D Vertex shader
+    glShaderSource(vertex_shader_2d, 1, (const char **)&vertexShader2d, NULL);
+
+    glCompileShader(vertex_shader_2d);
+    //check the compile status
+    glGetShaderiv(vertex_shader_2d, GL_COMPILE_STATUS, &shader_status);
+
+    if(!shader_status)
+    {
+        glGetShaderInfoLog(vertex_shader_2d, 512, &errLength, buffer);
+        std::cerr << "[F] FAILED TO COMPILE 2D VERTEX SHADER!" << std::endl;
+        fprintf(stderr, "Compilation error in 2D Vertex Shader: %s\n", buffer);
+
+        return false;
+    }
+
+    // 2d Fragment shader
+    glShaderSource(fragment_shader_2d, 1, (const char **)&fragmentShader2d, NULL);
+
+    glCompileShader(fragment_shader_2d);
+    //check the compile status
+    glGetShaderiv(fragment_shader_2d, GL_COMPILE_STATUS, &shader_status);
+
+    if(!shader_status)
+    {
+        std::cerr << "[F] FAILED TO COMPILE 2D FRAGMENT SHADER!" << std::endl;
+        glGetShaderInfoLog(fragment_shader_2d, 512, &errLength, buffer);
+        fprintf(stderr, "Compilation error in 2D Fragment Shader: %s\n", buffer);
+    
+        return false;
+    }
+
+
+
+
     //Now we link the 2 shader objects into a program
     //This program is what is run on the GPU
     simConfig->program = glCreateProgram();
     glAttachShader(simConfig->program, vertex_shader);
     glAttachShader(simConfig->program, fragment_shader);
     glLinkProgram(simConfig->program);
+    glUseProgram(simConfig->program);
     //check if everything linked ok
     glGetProgramiv(simConfig->program, GL_LINK_STATUS, &shader_status);
     if(!shader_status)
@@ -124,4 +175,28 @@ bool shaderManager::loadShaders(int argc, char **argv)
     }
 
     return true;
+}
+
+void shaderManager::activate2DShaders()
+{
+    glDetachShader(simConfig->program, vertex_shader);
+    glDetachShader(simConfig->program, fragment_shader);
+
+    glAttachShader(simConfig->program, vertex_shader_2d);
+    glAttachShader(simConfig->program, fragment_shader_2d);
+
+    glLinkProgram(simConfig->program);
+    glUseProgram(simConfig->program);
+}
+
+void shaderManager::activate3DShaders()
+{
+    glDetachShader(simConfig->program, vertex_shader_2d);
+    glDetachShader(simConfig->program, fragment_shader_2d);
+
+    glAttachShader(simConfig->program, vertex_shader);
+    glAttachShader(simConfig->program, fragment_shader);
+
+    glLinkProgram(simConfig->program);
+    glUseProgram(simConfig->program);
 }

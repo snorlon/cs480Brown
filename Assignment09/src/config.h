@@ -21,6 +21,34 @@ struct Vertex
     GLfloat normal[3];
     GLfloat uv[2];
 
+    Vertex()
+    {
+        position[0] = 0.0;
+        position[1] = 0.0;
+        position[2] = 0.0;
+
+        normal[0] = 0.0;
+        normal[1] = 0.0;
+        normal[2] = 0.0;
+
+        uv[0] = 0.0;
+        uv[1] = 0.0;
+    }
+
+    Vertex(double* p, double* ntex)
+    {
+        position[0] = p[0];
+        position[1] = p[1];
+        position[2] = p[2];
+
+        normal[0] = 0.0;
+        normal[1] = 0.0;
+        normal[2] = 0.0;
+
+        uv[0] = ntex[0];
+        uv[1] = ntex[1];
+    }
+
     float getX(){ return position[0]; }
     float getY(){ return position[1]; }
     float getZ(){ return position[2]; }

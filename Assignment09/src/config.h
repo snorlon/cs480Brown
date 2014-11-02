@@ -11,6 +11,7 @@
 #include "shaderloader.h"
 #include "entitymanager.h"
 #include "camera.h"
+#include "game.h"
 
 
 class lightArray;
@@ -62,6 +63,8 @@ class config
         entityManager* simEntityManager;
         GLuint program; //program id
         physics* physicsEnvironment;
+
+        game gameData;
 
         lightArray* worldLights;
 

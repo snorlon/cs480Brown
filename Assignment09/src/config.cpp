@@ -35,15 +35,15 @@ config::config()
     worldLights = new lightArray();
 
     azimuthAngle = 0;
-    altitudeAngle = 35;
-    viewDistance = 70;
+    altitudeAngle = 1;
+    viewDistance = 30;
 
     lastFPS = 0;
 
     showDetails = false;
 
     currentFocalCamera = &targetCamera;
-    targetCamera.Position(0.0,11.0,0.0);
+    targetCamera.Position(0.0,6.0,0.0);
 
     input>>data;
 

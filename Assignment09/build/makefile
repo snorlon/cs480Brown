@@ -33,17 +33,22 @@ LIGHT = ../src/light.cpp
 LIGHTH = ../src/light.h
 SPRITE = ../src/sprite.cpp
 SPRITEH = ../src/sprite.h
+GAME = ../src/game.cpp
+GAMEH = ../src/game.h
 
 all: main
 
-main: main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o
-	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o $(LIBS)
+main: main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o game.o
+	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o game.o $(LIBS)
 
 main.o: $(MAIN) $(CONFIGH) $(SHADERLOADERH) $(RENDERERH) $(ENTITYH) $(ENTITYMANAGERH)
 	$(CC) $(CXXFLAGS) -c $(MAIN) $(LIBS)
 
 entitymanager.o: $(ENTITYMANAGER) $(ENTITYMANAGERH) $(CONFIGH) $(ENTITYH)
 	$(CC) $(CXXFLAGS) -c $(ENTITYMANAGER) $(LIBS)
+
+game.o: $(ENTITY) $(GAME) $(GAMEH)
+	$(CC) $(CXXFLAGS) -c $(GAME) $(LIBS)
 
 entity.o: $(ENTITY) $(ENTITYH) $(CONFIGH) $(ENTPHYSICSH) $(LIGHTH)
 	$(CC) $(CXXFLAGS) -c $(ENTITY) $(LIBS)
@@ -57,7 +62,7 @@ physics.o: $(PHYSICS) $(PHYSICSH)
 shaderloader.o: $(SHADERLOADER) $(SHADERLOADERH) $(CONFIGH)
 	$(CC) $(CXXFLAGS) -c $(SHADERLOADER) $(LIBS)
 
-config.o: $(CONFIG) $(CONFIGH) $(ENTITYMANAGERH) $(SHADERLOADERH) $(CAMERAH) $(PHYSICSH) $(LIGHTH)
+config.o: $(CONFIG) $(CONFIGH) $(ENTITYMANAGERH) $(SHADERLOADERH) $(CAMERAH) $(PHYSICSH) $(LIGHTH) $(GAMEH)
 	$(CC) $(CXXFLAGS) -c $(CONFIG) $(LIBS)
 
 renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(ENTITYH) $(CONFIGH) $(SPRITEH)

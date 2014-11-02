@@ -43,6 +43,10 @@ GLint loc_mvpmat;// Location of the modelviewprojection matrix in the shader
 GLint loc_position;
 GLint loc_color;
 
+//mouse data
+bool leftDown = false;
+bool middleDown = false;
+
 //--GLUT Callbacks
 void render();
 void update();
@@ -77,6 +81,9 @@ float getDT();
 std::chrono::time_point<std::chrono::high_resolution_clock> t1,t2,t3,t4;
 
 int x1, x2, z1, z2;
+
+int mbXPrior;
+int mbYPrior;
 glm::vec2 change;
 
 //--Main
@@ -92,6 +99,7 @@ int main(int argc, char **argv)
     glutInitWindowPosition( 100, 100);
     // Name and create the Window
     glutCreateWindow("Air Hockey");
+    glutFullScreen();
 
     // Now that the window is created the GL context is fully set up
     // Because of that we can now initialize GLEW to prepare work with shaders
@@ -110,6 +118,7 @@ int main(int argc, char **argv)
     glutIdleFunc(update);// Called if there is nothing else to do
     glutMouseFunc(mouse);// Called if there is mouse input
     glutMotionFunc(mouseChange);
+    glutPassiveMotionFunc(mouseChange);
     glutKeyboardFunc(keyboard);// Called if there is keyboard input
     glutSpecialFunc(keyboardPlus);// for stuff without ascii access characters like arrow keys
 
@@ -236,13 +245,30 @@ void reshape(int n_w, int n_h)
 
 void mouse(int button, int state, int x, int y)
 {
-    x = y;
-    y = x;
+    x=y;y=x;
+
     if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)//mouse left down
+        leftDown = true;
+    else if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+        leftDown = false;
+    else if(button == 3)//mousewheel up
     {
-        //flip rotation direction
-        //simEntities.head->rotationModifier *= -1;
+        simConfig.viewDistance -= 1.0;
+
+        if(simConfig.viewDistance<1)
+            simConfig.viewDistance = 1;
     }
+    else if(button == 4)//mousewheel down
+    {
+        simConfig.viewDistance += 1.0;
+
+        if(simConfig.viewDistance>95)
+            simConfig.viewDistance = 95;
+    }
+    else if(button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN)
+        middleDown = true;
+    else if(button == GLUT_MIDDLE_BUTTON && state == GLUT_UP)
+        middleDown = false;
 }
 
 void keyboard(unsigned char key, int x_pos, int y_pos)
@@ -368,22 +394,14 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     {
         simConfig.azimuthAngle += rate;
     }
-#ifdef TESTING
-    else if(key == GLUT_KEY_F1)  //if you don't have page up/down
-#else
     else if(key == GLUT_KEY_PAGE_UP)
-#endif
     {
         simConfig.viewDistance -= 1.0;
 
         if(simConfig.viewDistance<1)
             simConfig.viewDistance = 1;
     }
-#ifdef TESTING
-    else if(key == GLUT_KEY_F2)  //if you don't have page up/down
-#else
     else if(key == GLUT_KEY_PAGE_DOWN)
-#endif
     {
         simConfig.viewDistance += 1.0;
 
@@ -447,12 +465,64 @@ float getDT()
 
 
 
-void mouseChange(int x, int z)
+void mouseChange(int x, int y)
 {
-    x2 = x;
-    z2 = z;
-    change.x = x2 - x1;
-    change.y = z2 - z1;
-    x1 = x;
-    z1 = z;
+    //detection for tracking direction with the mouse
+    int xDir = 0;
+    int yDir = 0;
+
+    if(x<mbXPrior)
+        xDir = -1;
+    else if(x>mbXPrior)
+        xDir = 1;
+    if(y<mbYPrior)
+        yDir = -1;
+    else if(y>mbYPrior)
+        yDir = 1;
+
+    mbXPrior = x;
+    mbYPrior = y;
+
+    int rate = 1;
+    if(leftDown)
+    {
+
+    }
+    else if(middleDown)
+    {
+        //shift azimuth left
+        if(xDir<0)
+        {
+            simConfig.azimuthAngle += rate;
+        }
+        else if(xDir>0) //or right
+        {
+            simConfig.azimuthAngle -= rate;
+        }
+        if(yDir<0) //shift altitude down
+        {
+            simConfig.altitudeAngle -= rate;
+
+            //artificial altitude cap, purely for airhockey, no need for more than 85
+            if(simConfig.altitudeAngle<1)
+                simConfig.altitudeAngle = 1;
+        }
+        else if(yDir>0) //shift altitude up
+        {
+            simConfig.altitudeAngle += rate;
+
+            //artificial altitude cap, purely for airhockey, no need for more than 85
+            if(simConfig.altitudeAngle>85)
+                simConfig.altitudeAngle = 85;
+        }
+    }
+    else //passive mouse controls
+    {
+        x2 = x;
+        z2 = y;
+        change.x = x2 - x1;
+        change.y = z2 - z1;
+        x1 = x;
+        z1 = y;
+    }
 }

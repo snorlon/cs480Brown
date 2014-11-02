@@ -61,13 +61,7 @@ entity::entity(config* nConfig) //load a model from a file
 entity::~entity()
 {
     glDeleteBuffers(1, &vbo_geometry);
-
-    /*while(children!=NULL)
-    {
-        entity* temp = children;
-        children = children->next;
-        delete temp;
-    }*/
+    glDeleteTextures(1, &texID);
 }
 
 void entity::cleanup()

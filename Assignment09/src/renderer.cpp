@@ -61,6 +61,9 @@ void renderer::tick()
     sprites.generateText(simConfig, "Vs", 0.5, 612, 730);
     sprites.generateText(simConfig, "FPS "+to_string(simConfig->lastFPS), 0.4, 25, 740);
     sprites.generateText(simConfig, "Version 1.0.0", 0.4, 985, 740);
+
+    sprites.generateText(simConfig, simConfig->gameData.currentGame.p1Name, 0.5, 370, 740);
+    sprites.generateText(simConfig, simConfig->gameData.currentGame.p2Name, 0.5, 745, 740);
 }
 
 bool renderer::initialize()

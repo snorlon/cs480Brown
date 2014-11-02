@@ -76,6 +76,8 @@ Commands:
                 Mousewheel up and Mousewheel down - Zooming in & out on current camera
             End - Reset zoom
 
+        WASD - control Player 2 (if AI not enabled)
+
         R - reset the puck position
 
         + and - : controlling speed of program
@@ -88,7 +90,7 @@ Commands:
             Can pause or resume simulation or exit
         Middle Mouse - hold to rotate camera
 
-        Mouse - Control player 1
+        Mouse - Control player 1 (if AI not enabled)
 
 ========================================
 

@@ -157,6 +157,62 @@ void game::render()
     }
 }
 
+void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
+{
+    entity* currentBat = NULL;
+
+    //decide what bat to move based on the parameter
+    if(bat == 1)
+        currentBat = bat1;
+    else if(bat == 2)
+        currentBat = bat2;
+
+    //move it accordingly to the amounts provided
+    if(currentBat!=NULL)
+    {
+        currentBat->absolutePosition.x += xAmount;
+        currentBat->absolutePosition.z += yAmount;
+
+        //guard the bounds for the left and right of the board
+        if( currentBat->absolutePosition.x < -4.0 )
+            currentBat->absolutePosition.x = -4.0;
+        else if( currentBat->absolutePosition.x > 4.0 )
+            currentBat->absolutePosition.x = 4.0;
+
+        //maintain a barrier in the center and prevent going too far behind the stage
+        if(currentBat == bat1)
+        {
+            if( currentBat->absolutePosition.z < 1.0 )
+                currentBat->absolutePosition.z = 1.0;
+            else if( currentBat->absolutePosition.z > 10.0 )
+                currentBat->absolutePosition.z = 10.0;
+        }
+        else{
+            if( currentBat->absolutePosition.z > -1.0 )
+                currentBat->absolutePosition.z = -1.0;
+            else if( currentBat->absolutePosition.z < -10.0 )
+                currentBat->absolutePosition.z = -10.0;
+        }
+
+        
+        btVector3 MyNewPosition( currentBat->absolutePosition.x, currentBat->absolutePosition.y, currentBat->absolutePosition.z );
+        btVector3 vNewPos = MyNewPosition;
+        btTransform btt;
+        btt.setIdentity();
+        currentBat->objPhysics.objRB->getMotionState()->getWorldTransform(btt);
+        btQuaternion cOri = btt.getRotation();
+        btt.setOrigin(vNewPos);
+        btt.setRotation(cOri);
+        currentBat->objPhysics.objRB->getMotionState()->setWorldTransform(btt);
+
+        //remove the bat and readd it to the stage
+        //simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( currentBat->objPhysics.objRB );
+
+        //and re-add them PURIFIED
+        //currentBat->objPhysics.init( currentBat );
+    }
+}
+
 void game::resetPuck()
 {
     if(puck!=NULL)

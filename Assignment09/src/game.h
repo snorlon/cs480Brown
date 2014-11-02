@@ -49,6 +49,7 @@ class game
 
         //store game-specific materials via the game class
         entity* puck;
+        entity* bat1;
         entity* bat2;
 
         int themeCount;
@@ -60,6 +61,7 @@ class game
         void init();//for initing the game-specific components
         void tick(double dt);
         void render();
+        void moveBat(int bat, double xAmount, double yAmount, bool aiControlled);
 
         //game-specific functions
         void resetPuck();

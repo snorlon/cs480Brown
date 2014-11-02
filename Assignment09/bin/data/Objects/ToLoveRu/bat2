@@ -4,7 +4,7 @@ Shape:      Custom
 Mass:       0
 Scale:      1.0
 Location:   0, 9.5, -7
-Type:       Moveable
+Type:       Kinematic
 Orientation: 0,0,0
 Emissive:   0,0,0,0
 Ambient:    0.8,0.8,0.8,0

@@ -86,6 +86,8 @@ int mbXPrior;
 int mbYPrior;
 glm::vec2 change;
 
+double consecutivePresses[4] = {0,0,0,0};
+
 //--Main
 int main(int argc, char **argv)
 {
@@ -230,6 +232,17 @@ void update()
 
     simConfig.tick(dt);
 
+    //lower the key spam counts
+    double rate = 0.25;
+    if(consecutivePresses[0]>0)
+        consecutivePresses[0]-=rate;
+    if(consecutivePresses[1]>0)
+        consecutivePresses[1]-=rate;
+    if(consecutivePresses[2]>0)
+        consecutivePresses[2]-=rate;
+    if(consecutivePresses[3]>0)
+        consecutivePresses[3]-=rate;
+
     // Update the state of the scene
     glutPostRedisplay();//call the display callback
 }
@@ -275,6 +288,8 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
 {
     x_pos = y_pos;
     y_pos = x_pos;
+
+    float baseMovementMult = 0.2;
     // Handle keyboard input
     if(key == 27)//ESC
     {
@@ -294,6 +309,31 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
         simConfig.timeRate /= 2.0;
         if(simConfig.timeRate < 1)
             simConfig.timeRate = 1;
+    }
+    //movement for bat 2(if AI not enabled)
+    else if(key == 'w')
+    {
+        //up the key counter to factor in holding button for speed
+        consecutivePresses[0]+=1;
+        simConfig.gameData.moveBat(2, 0.0, consecutivePresses[0]*baseMovementMult, false);
+    }
+    else if(key == 's')
+    {
+        //up the key counter to factor in holding button for speed
+        consecutivePresses[1]+=1;
+        simConfig.gameData.moveBat(2, 0.0, -consecutivePresses[1]*baseMovementMult, false);
+    }
+    else if(key == 'a')
+    {
+        //up the key counter to factor in holding button for speed
+        consecutivePresses[2]+=1;
+        simConfig.gameData.moveBat(2, consecutivePresses[2]*baseMovementMult, 0.0, false);
+    }
+    else if(key == 'd')
+    {
+        //up the key counter to factor in holding button for speed
+        consecutivePresses[3]+=1;
+        simConfig.gameData.moveBat(2, -consecutivePresses[3]*baseMovementMult, 0.0, false);
     }
     else if(key == 'r')//reset the puck position (CHEATING)
     {

@@ -49,6 +49,7 @@ class game
 
         //store game-specific materials via the game class
         entity* puck;
+        entity* bat2;
 
         int themeCount;
 

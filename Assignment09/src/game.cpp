@@ -110,7 +110,10 @@ void game::init()
     if(currentTheme!=NULL)
     {
         puck = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"puck");
+        bat2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat2");
+
         puck->init();
+        bat2->init();
     }
 }
 
@@ -118,6 +121,10 @@ void game::tick(double dt)
 {
     dt = dt;
     //render the game objects if they are set
+    if(bat2!=NULL)
+    {
+        bat2->tick();
+    }
     if(puck!=NULL)
     {
         puck->tick();
@@ -140,6 +147,10 @@ void game::tick(double dt)
 void game::render()
 {
     //render the game objects if they are set
+    if(bat2!=NULL)
+    {
+        bat2->render();
+    }
     if(puck!=NULL)
     {
         puck->render();

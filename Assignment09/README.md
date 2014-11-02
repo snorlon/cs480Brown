@@ -76,6 +76,8 @@ Commands:
                 Mousewheel up and Mousewheel down - Zooming in & out on current camera
             End - Reset zoom
 
+        R - reset the puck position
+
         + and - : controlling speed of program
 
         Space - Pause/Unpause

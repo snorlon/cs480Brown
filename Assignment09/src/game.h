@@ -1,7 +1,12 @@
+#ifndef GAMEH
+#define GAMEH
+
 #include <string>
 
 using namespace std;
 
+class config;
+class entity;
 class score
 {
     public:
@@ -40,13 +45,24 @@ class game
         theme* currentTheme;
         theme* themes;
 
+        config* simConfig;
+
+        //store game-specific materials via the game class
+        entity* puck;
+
         int themeCount;
 
         game();
         void addTheme(string nname, string apath, string p1, string p2);
         void switchTheme(int themenum);
+        void resetScore();
         void init();//for initing the game-specific components
+        void tick(double dt);
+        void render();
+
+        //game-specific functions
+        void resetPuck();
     private:
 };
 
-
+#endif

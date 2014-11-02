@@ -28,8 +28,7 @@ class entity
         entity* next;
         glm::mat4 model;
         config* simConfig;
-        GLuint vbo_geometry;// VBO handle for our geometry
-        //GLuint vbo_texture;// VBO handle for our texture
+        GLuint vbo_geometry;// Vertex Buffer Object for the entire object
         GLint loc_texture;
         GLint loc_normal;
         GLint loc_position;
@@ -64,7 +63,7 @@ class entity
         string shape;
 
         bool visible;
-	bool hasMouseControl;
+	    bool hasMouseControl;
 
         glm::mat4 mvp;//premultiplied modelviewprojection
         glm::vec3 relativePosition;//unused
@@ -86,7 +85,7 @@ class entity
         void cleanup();
 
         void init();
-        void tick(glm::vec2 dt);
+        void tick(glm::vec2 dt = glm::vec2(0,0));
 
         float getX();
         float getY();

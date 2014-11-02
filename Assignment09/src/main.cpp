@@ -295,6 +295,10 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
         if(simConfig.timeRate < 1)
             simConfig.timeRate = 1;
     }
+    else if(key == 'r')//reset the puck position (CHEATING)
+    {
+        simConfig.gameData.resetPuck();
+    }
     else if(key == 'z')
     {
         simConfig.scale /= 2.0;
@@ -440,6 +444,9 @@ bool postInitialize()
 
     //init the lights, turning them "ON"
     simConfig.worldLights->init();
+
+    //init the game system
+    simConfig.gameData.init();
 
     return returnVal;
 }

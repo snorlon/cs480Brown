@@ -37,6 +37,9 @@ void renderer::render()
     //throw in entity manager rendering
     simConfig->simEntityManager->render();
 
+    //render game objects
+    simConfig->gameData.render();
+
     //activate 2D shader
     simConfig->simShaderManager->activate2DShaders();
 
@@ -62,8 +65,11 @@ void renderer::tick()
     sprites.generateText(simConfig, "FPS "+to_string(simConfig->lastFPS), 0.4, 25, 740);
     sprites.generateText(simConfig, "Version 1.0.0", 0.4, 985, 740);
 
-    sprites.generateText(simConfig, simConfig->gameData.currentGame.p1Name, 0.5, 370, 740);
-    sprites.generateText(simConfig, simConfig->gameData.currentGame.p2Name, 0.5, 745, 740);
+    //scoreboard stuff
+    sprites.generateText(simConfig, simConfig->gameData.currentGame.p1Name, 0.5, 330, 740);
+    sprites.generateText(simConfig, ""+to_string(simConfig->gameData.currentGame.score1), 0.5, 525, 740);
+    sprites.generateText(simConfig, simConfig->gameData.currentGame.p2Name, 0.5, 770, 740);
+    sprites.generateText(simConfig, ""+to_string(simConfig->gameData.currentGame.score2), 0.5, 700, 740);
 }
 
 bool renderer::initialize()

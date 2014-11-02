@@ -74,6 +74,9 @@ config::config()
 
     lightSource* newLight = NULL;
 
+    //give ourselves to our bff, the game data
+    gameData.simConfig = this;
+
     input>>dummy;
 
     if(!input.good())
@@ -204,6 +207,10 @@ void config::tick(float dt)
         physicsEnvironment->tick(dt);
 
     physicsLimit++;
+
+    //tick our entities
+    gameData.tick(dt);
+
     if(physicsLimit>0)
         physicsLimit = 0;
 

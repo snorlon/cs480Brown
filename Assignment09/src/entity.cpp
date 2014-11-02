@@ -35,7 +35,6 @@ entity::entity(config* nConfig) //load a model from a file
     texID = 0;
 
     visible = true;
-    hasMouseControl = 0;
 
     name = "Error";
 
@@ -138,10 +137,10 @@ void entity::init()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void entity::tick(glm::vec2 changePosition)
+void entity::tick(double dt)
 {
-//    int a = dt;
-//    a = a/1;
+    int a = dt;
+    a = a/1;
     //model movement stuff
     //orbitalAngle += dt * (M_PI * 2) * rotationModifier //move in a direction determined by rotationModifier, with an amount based on
      //   * (1 / ( orbitalPeriod * 24 * 60 * 60) ); //360 * dt ( seconds ) * seconds in an orbital period
@@ -159,39 +158,6 @@ void entity::tick(glm::vec2 changePosition)
 
         if(shape!="Plane")
 	    {
-	        if( hasMouseControl )
-	        {
-		        absolutePosition.x += changePosition.x/15.0;
-		        absolutePosition.z += changePosition.y/15.0;
-		
-		        if( absolutePosition.x < -4.0 )
-		        {
-		            absolutePosition.x = -4.0;
-		        }
-		        else if( absolutePosition.x > 4.0 )
-		        {
-		            absolutePosition.x = 4.0;
-		        }
-		        if( absolutePosition.z < 1.0 )
-		        {
-		            absolutePosition.z = 1.0;
-		        }
-		        else if( absolutePosition.z > 10.0 )
-		        {
-		            absolutePosition.z = 10.0;
-		        }
-
-		        btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
-		        btVector3 vNewPos = MyNewPosition;
-		        btTransform btt;
-		        btt.setIdentity();
-		        objPhysics.objRB->getMotionState()->getWorldTransform(btt);
-		        btQuaternion cOri = btt.getRotation();
-		        btt.setOrigin(vNewPos);
-		        btt.setRotation(cOri);
-		        objPhysics.objRB->getMotionState()->setWorldTransform(btt);
-	        }
-
             model = glm::translate( glm::mat4(1.0f), absolutePosition);
 	    }
         else

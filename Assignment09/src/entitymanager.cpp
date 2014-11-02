@@ -25,7 +25,7 @@ void entityManager::initialize()
     }
 }
 
-void entityManager::tick(glm::vec2 dt)
+void entityManager::tick(double dt)
 {
     entity* iterator = head;
 
@@ -259,12 +259,6 @@ entity* entityManager::loadEntity(string fileName)
             double newVal = 0;
             objectFile>>newVal;
             newObj->objLight.shine = newVal;
-        }
-        else if( data == "Control:")//controlled by mouse
-        {
-	        int newVal = 0;
-	        objectFile>>newVal;
-	        newObj->hasMouseControl = newVal;
         }
         else if(data == "Model:")//model loading
         {

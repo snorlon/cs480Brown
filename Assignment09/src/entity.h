@@ -63,7 +63,6 @@ class entity
         string shape;
 
         bool visible;
-	    bool hasMouseControl;
 
         glm::mat4 mvp;//premultiplied modelviewprojection
         glm::vec3 relativePosition;//unused
@@ -85,7 +84,7 @@ class entity
         void cleanup();
 
         void init();
-        void tick(glm::vec2 dt = glm::vec2(0,0));
+        void tick(double dt);
 
         float getX();
         float getY();

@@ -110,9 +110,11 @@ void game::init()
     if(currentTheme!=NULL)
     {
         puck = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"puck");
+        bat1 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat");
         bat2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat2");
 
         puck->init();
+        bat1->init();
         bat2->init();
     }
 }
@@ -121,13 +123,17 @@ void game::tick(double dt)
 {
     dt = dt;
     //render the game objects if they are set
+    if(bat1!=NULL)
+    {
+        bat1->tick(dt);
+    }
     if(bat2!=NULL)
     {
-        bat2->tick();
+        bat2->tick(dt);
     }
     if(puck!=NULL)
     {
-        puck->tick();
+        puck->tick(dt);
         //check if the puck is out of bounds
         //if so reset it
         if(puck->absolutePosition.y < 1)
@@ -147,6 +153,10 @@ void game::tick(double dt)
 void game::render()
 {
     //render the game objects if they are set
+    if(bat1!=NULL)
+    {
+        bat1->render();
+    }
     if(bat2!=NULL)
     {
         bat2->render();

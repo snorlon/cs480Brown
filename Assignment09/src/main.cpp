@@ -53,7 +53,9 @@ void update();
 void reshape(int n_w, int n_h);
 void mouse(int button, int state, int x, int y);
 void mouseChange(int x, int z);
-void keyboard(unsigned char key, int x_pos, int y_pos);
+void keyboard();
+void keyPressed(unsigned char key, int x, int y);
+void keyUp(unsigned char key, int x, int y);
 void keyboardPlus(int key, int x_pos, int y_pos);
 
 //--Resource management
@@ -76,17 +78,16 @@ int menuID = -1;
 
 int frame = 0;
 
+bool* keyStates = new bool[256];
+
 //--Random time things
 float getDT();
 std::chrono::time_point<std::chrono::high_resolution_clock> t1,t2,t3,t4;
 
-int x1, x2, z1, z2;
-
 int mbXPrior;
 int mbYPrior;
-glm::vec2 change;
 
-double consecutivePresses[4] = {0,0,0,0};
+double consecutivePresses[8] = {0,0,0,0,0,0,0,0};
 
 //--Main
 int main(int argc, char **argv)
@@ -121,7 +122,8 @@ int main(int argc, char **argv)
     glutMouseFunc(mouse);// Called if there is mouse input
     glutMotionFunc(mouseChange);
     glutPassiveMotionFunc(mouseChange);
-    glutKeyboardFunc(keyboard);// Called if there is keyboard input
+    glutKeyboardFunc(keyPressed);// Called if there is keyboard input
+    glutKeyboardUpFunc(keyUp);// Called if there is keyboard anti-input
     glutSpecialFunc(keyboardPlus);// for stuff without ascii access characters like arrow keys
 
     //setup inputs
@@ -201,6 +203,9 @@ void update()
 
     int ret = std::chrono::duration_cast< std::chrono::duration<float> >(t4-t3).count();
 
+    //tick the entity manager
+    simEntities.tick(dt);
+
     if(ret >= 1)
     {
         simConfig.lastFPS = frame;
@@ -224,13 +229,12 @@ void update()
             dt = 0;
             recentlyPaused = false;
         }
-
-        simEntities.tick(change);
-	    change.x = 0.0;
-	    change.y = 0.0;
     }
 
     simConfig.tick(dt);
+
+    //perform spam key options here
+    keyboard();
 
     //lower the key spam counts
     double rate = 0.25;
@@ -242,6 +246,35 @@ void update()
         consecutivePresses[2]-=rate;
     if(consecutivePresses[3]>0)
         consecutivePresses[3]-=rate;
+
+    if(consecutivePresses[4]>0)
+        consecutivePresses[4]-=rate;
+    if(consecutivePresses[5]>0)
+        consecutivePresses[5]-=rate;
+    if(consecutivePresses[6]>0)
+        consecutivePresses[6]-=rate;
+    if(consecutivePresses[7]>0)
+        consecutivePresses[7]-=rate;
+
+    //cap how fast it may get
+    double cap = 3.0;
+    if(consecutivePresses[0]>cap)
+        consecutivePresses[0]=cap;
+    if(consecutivePresses[1]>cap)
+        consecutivePresses[1]=cap;
+    if(consecutivePresses[2]>cap)
+        consecutivePresses[2]=cap;
+    if(consecutivePresses[3]>cap)
+        consecutivePresses[3]=cap;
+
+    if(consecutivePresses[4]>cap)
+        consecutivePresses[4]=cap;
+    if(consecutivePresses[5]>cap)
+        consecutivePresses[5]=cap;
+    if(consecutivePresses[6]>cap)
+        consecutivePresses[6]=cap;
+    if(consecutivePresses[7]>cap)
+        consecutivePresses[7]=cap;
 
     // Update the state of the scene
     glutPostRedisplay();//call the display callback
@@ -284,12 +317,14 @@ void mouse(int button, int state, int x, int y)
         middleDown = false;
 }
 
-void keyboard(unsigned char key, int x_pos, int y_pos)
-{
-    x_pos = y_pos;
-    y_pos = x_pos;
+void keyPressed (unsigned char key, int x, int y)
+{  
+    x = y;
+    y = x;
 
-    float baseMovementMult = 0.2;
+    keyStates[key] = true; // Set the state of the current key to pressed  
+
+
     // Handle keyboard input
     if(key == 27)//ESC
     {
@@ -309,31 +344,6 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
         simConfig.timeRate /= 2.0;
         if(simConfig.timeRate < 1)
             simConfig.timeRate = 1;
-    }
-    //movement for bat 2(if AI not enabled)
-    else if(key == 'w')
-    {
-        //up the key counter to factor in holding button for speed
-        consecutivePresses[0]+=1;
-        simConfig.gameData.moveBat(2, 0.0, consecutivePresses[0]*baseMovementMult, false);
-    }
-    else if(key == 's')
-    {
-        //up the key counter to factor in holding button for speed
-        consecutivePresses[1]+=1;
-        simConfig.gameData.moveBat(2, 0.0, -consecutivePresses[1]*baseMovementMult, false);
-    }
-    else if(key == 'a')
-    {
-        //up the key counter to factor in holding button for speed
-        consecutivePresses[2]+=1;
-        simConfig.gameData.moveBat(2, consecutivePresses[2]*baseMovementMult, 0.0, false);
-    }
-    else if(key == 'd')
-    {
-        //up the key counter to factor in holding button for speed
-        consecutivePresses[3]+=1;
-        simConfig.gameData.moveBat(2, -consecutivePresses[3]*baseMovementMult, 0.0, false);
     }
     else if(key == 'r')//reset the puck position (CHEATING)
     {
@@ -366,6 +376,45 @@ void keyboard(unsigned char key, int x_pos, int y_pos)
             glutIdleFunc(NULL);
         }
     }
+}  
+
+void keyUp (unsigned char key, int x, int y)
+{  
+    keyStates[key] = false; // Set the state of the current key to pressed  
+
+    x = y;
+    y = x;
+}  
+
+void keyboard()
+{
+    float baseMovementMult = 0.1;
+
+    //movement for bat 2(if AI not enabled)
+    if(keyStates['w'])
+    {
+        //up the key counter to factor in holding button for speed
+        consecutivePresses[0]+=1;
+    }
+    if(keyStates['s'])
+    {
+        //up the key counter to factor in holding button for speed
+        consecutivePresses[1]+=1;
+    }
+    if(keyStates['a'])
+    {
+        //up the key counter to factor in holding button for speed
+        consecutivePresses[2]+=1;
+    }
+    if(keyStates['d'])
+    {
+        //up the key counter to factor in holding button for speed
+        consecutivePresses[3]+=1;
+    }
+
+    //update the bat positions
+    simConfig.gameData.moveBat(1, consecutivePresses[6]*baseMovementMult - consecutivePresses[7]*baseMovementMult, consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult, false);
+    simConfig.gameData.moveBat(2, consecutivePresses[2]*baseMovementMult - consecutivePresses[3]*baseMovementMult, consecutivePresses[0]*baseMovementMult - consecutivePresses[1]*baseMovementMult, false);
 }
 
 void keyboardPlus(int key, int x_pos, int y_pos)
@@ -525,11 +574,27 @@ void mouseChange(int x, int y)
     }
     else //passive mouse controls
     {
-        x2 = x;
-        z2 = y;
-        change.x = x2 - x1;
-        change.y = z2 - z1;
-        x1 = x;
-        z1 = y;
+
+        //movement for bat 2(if AI not enabled)
+        if(yDir==1)
+        {
+            //up the key counter to factor in holding button for speed
+            consecutivePresses[4]+=1;
+        }
+        if(yDir==-1)
+        {
+            //up the key counter to factor in holding button for speed
+            consecutivePresses[5]+=1;
+        }
+        if(xDir==1)
+        {
+            //up the key counter to factor in holding button for speed
+            consecutivePresses[6]+=1;
+        }
+        if(xDir==-1)
+        {
+            //up the key counter to factor in holding button for speed
+            consecutivePresses[7]+=1;
+        }
     }
 }

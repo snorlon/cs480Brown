@@ -137,9 +137,6 @@ int main(int argc, char **argv)
     //call some other resources to initialize after the shader, separately
     init = init && postInitialize();
 
-    //create static interfaces
-    simRenderer.sprites.addSprite(&simConfig, 0, 0, 1280, 800, "interface/airhockeyinterface.png");
-
     if(init)
     {
         t1 = std::chrono::high_resolution_clock::now();
@@ -198,7 +195,9 @@ void update()
         simConfig.lastFPS = frame;
         frame = 0;
         t3 = std::chrono::high_resolution_clock::now();
-        cout<<simConfig.lastFPS<<endl;
+
+        //TICK THAT SEXY RENDERER SO IT REBUILDS THE DYNAMIC INTERFACE
+        simRenderer.tick();
     }
 
     //this can be modified later if we need to reduce entity tick rate. It can consume time is why this is here.
@@ -216,8 +215,8 @@ void update()
         }
 
         simEntities.tick(change);
-	change.x = 0.0;
-	change.y = 0.0;
+	    change.x = 0.0;
+	    change.y = 0.0;
     }
 
     simConfig.tick(dt);

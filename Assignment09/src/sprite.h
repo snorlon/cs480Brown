@@ -38,6 +38,12 @@ class sprite
         int texHeight;
         GLuint texID;
 
+        bool isFont;
+
+        //frame data
+        double frameSize[2];//xy
+        int frame[2];//xy, simplifies things
+
         std::vector< Vertex > vertices;
 
         GLuint vbo_sprite;// VBO handle for our geometry
@@ -45,11 +51,15 @@ class sprite
         //texture data
 
         sprite* next;
-        sprite* children;
 
-        sprite(config* simConfig, int nx, int ny, int nwidth, int nheight, string fpath, double nscaleX = 1.0, double nscaleY = 1.0);
+        sprite(int nx, int ny, int nwidth, int nheight, double nscaleX = 1.0, double nscaleY = 1.0);
         ~sprite();
-        void render( config* simConfig );
+        void rebuild(config* simConfig);
+        void setFrameData( int frameWidth, int frameHeight );
+        void setFrame( int newFrameX, int newFrameY );
+        void init(config* simConfig);
+        void load(config* simConfig, string fpath);
+        void render(  );
 
     private:
 };
@@ -68,14 +78,20 @@ class text: public sprite
 class spriteManager
 {
     public:
-        sprite* children;
+        sprite* staticSprites;
+        sprite* dynamicSprites;
+        sprite* font;
 
         spriteManager();
         ~spriteManager();
 
-        void render( config* simConfig );
+        void clearDynamic();
 
-        void addSprite(config* simConfig, int nx, int ny, int nwidth, int nheight, string fpath, double nscaleX = 1.0, double nscaleY = 1.0);
+        void render(  );
+        void init(config* simConfig);
+
+        sprite* addSprite(config* simConfig, int nx, int ny, int nwidth, int nheight, string fpath, bool isStatic, double nscaleX = 1.0, double nscaleY = 1.0, bool useFont = false);
+        void generateText(config* simConfig, string text, double scale, int startX, int startY);
     private:
 };
 

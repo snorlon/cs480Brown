@@ -167,8 +167,8 @@ void entity::tick(glm::vec2 changePosition)
 	    {
 	        if( hasMouseControl )
 	        {
-		        absolutePosition.x += changePosition.x/10.0;
-		        absolutePosition.z += changePosition.y/10.0;
+		        absolutePosition.x += changePosition.x/15.0;
+		        absolutePosition.z += changePosition.y/15.0;
 		
 		        if( absolutePosition.x < -4.0 )
 		        {
@@ -186,10 +186,6 @@ void entity::tick(glm::vec2 changePosition)
 		        {
 		            absolutePosition.z = 10.0;
 		        }
-
-                //btVector3 nForce(changePosition.x/10.0, 0.0, changePosition.y/10.0);
-                //btVector3 nCenter(0,0,0);
-                //objPhysics.objRB->applyImpulse(nForce, nCenter);
 
 		        btVector3 MyNewPosition( absolutePosition.x, absolutePosition.y, absolutePosition.z );
 		        btVector3 vNewPos = MyNewPosition;

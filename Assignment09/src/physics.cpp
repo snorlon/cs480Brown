@@ -39,7 +39,7 @@ physics::~physics()
     delete physicsConfig;
     delete dispatcher;
     delete solver;
-   // delete dynamicsWorld; //THIS TOO. BAD. DON't DO IT. SERIOUSLY. PLS.
+    //delete dynamicsWorld; //THIS TOO. BAD. DON't DO IT. SERIOUSLY. PLS.
     delete ground;
 
     delete groundMotionState;
@@ -49,5 +49,5 @@ physics::~physics()
 void physics::tick(double dt)
 {
     //update the bullet physics
-    dynamicsWorld->stepSimulation(dt, 1);
+    dynamicsWorld->stepSimulation(dt, 10);
 }

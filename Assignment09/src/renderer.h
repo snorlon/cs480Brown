@@ -23,6 +23,7 @@ class renderer
         renderer();
         bool giveLinks(config* configData);
         void render();
+        void tick();
         bool initialize();
 
     private:

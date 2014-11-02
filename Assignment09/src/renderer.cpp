@@ -4,7 +4,6 @@
 
 renderer::renderer()
 {
-
 }
 
 bool renderer::giveLinks(config* configData)
@@ -42,7 +41,7 @@ void renderer::render()
     simConfig->simShaderManager->activate2DShaders();
 
     //render the 2d images
-    sprites.render( simConfig );
+    sprites.render(  );
                            
     //swap the buffers
     glutSwapBuffers();
@@ -51,11 +50,29 @@ void renderer::render()
     glFlush();
 }
 
+void renderer::tick()
+{
+    sprites.clearDynamic();
+
+    //BRING IN THE DYNAMICS
+    //create our text stuffs
+    //sprites.addSprite(simConfig, 300, 200, 85, 232, "testtrainer.png", false);
+    sprites.generateText(simConfig, "High Scores", 0.4, 45, 215);
+    sprites.generateText(simConfig, "Vs", 0.5, 612, 730);
+    sprites.generateText(simConfig, "FPS "+to_string(simConfig->lastFPS), 0.4, 25, 740);
+    sprites.generateText(simConfig, "Version 1.0.0", 0.4, 985, 740);
+}
+
 bool renderer::initialize()
 {
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+
+    sprites.init(simConfig);
+
+    //create static interfaces
+    sprites.addSprite(simConfig, 0, 0, 1280, 800, "interface/airhockeyinterface.png", true);
 
     //and its done
     return true;

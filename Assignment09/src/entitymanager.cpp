@@ -369,7 +369,7 @@ entity* entityManager::loadEntity(string fileName)
                     //get the image width and height
                     newObj->texWidth = FreeImage_GetWidth(dib);
                     newObj->texHeight = FreeImage_GetHeight(dib);
-                    cout<<"Texture "<<newname<<" image size: "<<newObj->texWidth<<"px by "<<newObj->texHeight<<"px"<<endl;
+                    //cout<<"Texture "<<newname<<" image size: "<<newObj->texWidth<<"px by "<<newObj->texHeight<<"px"<<endl;
                     //if this somehow one of these failed (they shouldn't), return failure
 
                     //generate an OpenGL texture ID for this texture

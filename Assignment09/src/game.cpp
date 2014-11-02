@@ -35,6 +35,9 @@ game::game()
     themeCount = 0;
 
     puck = NULL;
+    bat1 = NULL;
+    bat2 = NULL;
+    table = NULL;
 
     simConfig = NULL;
 }
@@ -81,6 +84,17 @@ void game::switchTheme(int themenum)
         //if so, set it as our current theme
         currentTheme = iterator;
 
+        //load in theme
+        puck = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"puck");
+        bat1 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat");
+        bat2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat2");
+        table = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"table");
+
+        puck->init();
+        bat1->init();
+        bat2->init();
+        table->init();
+
         //reset the score
         resetScore();
     }
@@ -105,24 +119,16 @@ void game::init()
     addTheme("To Love Ru","ToLoveRu/", "Lala", "Momo");//our default theme
 
     switchTheme(1);//switch to the first theme by default
-
-    //load in our very first theme
-    if(currentTheme!=NULL)
-    {
-        puck = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"puck");
-        bat1 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat");
-        bat2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat2");
-
-        puck->init();
-        bat1->init();
-        bat2->init();
-    }
 }
 
 void game::tick(double dt)
 {
     dt = dt;
     //render the game objects if they are set
+    if(table!=NULL)
+    {
+        table->tick(dt);
+    }
     if(bat1!=NULL)
     {
         bat1->tick(dt);
@@ -153,6 +159,10 @@ void game::tick(double dt)
 void game::render()
 {
     //render the game objects if they are set
+    if(table!=NULL)
+    {
+        table->render();
+    }
     if(bat1!=NULL)
     {
         bat1->render();

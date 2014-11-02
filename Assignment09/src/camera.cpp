@@ -7,6 +7,10 @@ Camera::Camera()
     y = 0;
     z = 0;
 
+    defaultAzimuth = 0;
+    defaultAltitude = 1;
+    defaultDistance = 10;
+
     target = NULL;
     next = NULL;
 }
@@ -41,6 +45,13 @@ void Camera::MoveY(double amount)
 void Camera::MoveZ(double amount)
 {
     z += amount;
+}
+
+void Camera::Rotate(int naz, int nal, int nd)
+{
+    defaultAzimuth = naz;
+    defaultAltitude = nal;
+    defaultDistance = nd;
 }
 
 void Camera::tick(float dt)

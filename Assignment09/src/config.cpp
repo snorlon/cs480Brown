@@ -42,8 +42,26 @@ config::config()
 
     showDetails = false;
 
-    currentFocalCamera = &targetCamera;
-    targetCamera.Position(0.0,6.0,0.0);
+    //create a new camera for each of the eye positions
+    Camera* newCam = new Camera();//p1
+    newCam->Position(0.0,7.0,3.0);
+    newCam->Rotate(90,50,14);
+    newCam->next = presetCameras;
+    presetCameras = newCam;
+
+    newCam = new Camera();//p2
+    newCam->Position(0.0,7.0,-3.0);
+    newCam->Rotate(-90,50,14);
+    newCam->next = presetCameras;
+    presetCameras = newCam;
+
+    newCam = new Camera();//center of table
+    newCam->Position(0.0,6.0,0.0);
+    newCam->Rotate(0,1,25);
+    newCam->next = presetCameras;
+    presetCameras = newCam;
+
+    currentFocalCamera = newCam;
 
     input>>data;
 
@@ -186,16 +204,16 @@ Camera* config::switchCamera(int camID)
         camID--;
     }
 
+    //set the altitude and azimuth
+    azimuthAngle = iterator->defaultAzimuth;
+    altitudeAngle = iterator->defaultAltitude;
+    viewDistance = iterator->defaultDistance;
+
     view = glm::lookAt( glm::vec3(eyeCamera.x, eyeCamera.y, eyeCamera.z), //Eye Position
                         glm::vec3(iterator->x, iterator->y, iterator->z), //camera aim
                         glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 
     currentFocalCamera = iterator;
-
-    if(currentFocalCamera!=NULL && currentFocalCamera->target!=NULL)
-    {
-        viewDistance = 15.0;
-    }
 
     return iterator;
 }

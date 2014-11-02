@@ -349,6 +349,18 @@ void keyPressed (unsigned char key, int x, int y)
     {
         simConfig.gameData.resetPuck();
     }
+    else if(key == '1')//cameras
+    {
+        simConfig.switchCamera(2);
+    }
+    else if(key == '2')//cameras
+    {
+        simConfig.switchCamera(0);
+    }
+    else if(key == '3')//cameras
+    {
+        simConfig.switchCamera(1);
+    }
     else if(key == 'z')
     {
         simConfig.scale /= 2.0;

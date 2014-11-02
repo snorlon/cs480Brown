@@ -23,6 +23,11 @@ class Camera
         void DownX(){x = x - 0.05;};
         void DownY(){y = y - 0.05;};
         void DownZ(){z = z - 0.05;};
+        void Rotate(int naz, int nal, int nd);
+
+        int defaultAzimuth;
+        int defaultAltitude;
+        int defaultDistance;
 
         void tick(float dt);
 

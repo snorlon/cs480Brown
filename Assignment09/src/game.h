@@ -51,6 +51,7 @@ class game
         entity* puck;
         entity* bat1;
         entity* bat2;
+        entity* table;
 
         int themeCount;
 

@@ -83,6 +83,11 @@ Commands:
         2 - Entire table camera
         3 - Second person camera
 
+        5 - ToLoveRu theme
+        6 - Pokemon theme
+        7 - Mario theme
+        8 - Sonic theme
+
         [ - toggle player 1 AI
         ] - toggle player 2 AI
 

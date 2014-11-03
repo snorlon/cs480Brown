@@ -171,6 +171,28 @@ void game::switchTheme(int themenum)
     //check if our theme selection is valid
     if(index==themenum && iterator != NULL)
     {
+        //kill the old data
+        if(puck!=NULL)
+        {
+            simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( puck->objPhysics.objRB );
+            delete puck;
+        }
+        if(bat1!=NULL)
+        {
+            simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( bat1->objPhysics.objRB );
+            delete bat1;
+        }
+        if(bat2!=NULL)
+        {
+            simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( bat2->objPhysics.objRB );
+            delete bat2;
+        }
+        if(table!=NULL)
+        {
+            simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( table->objPhysics.objRB );
+            delete table;
+        }
+
         //if so, set it as our current theme
         currentTheme = iterator;
 
@@ -246,6 +268,7 @@ void game::resetScore()
 void game::init()
 {
     addTheme("To Love Ru","ToLoveRu/", "Lala", "Momo");//our default theme
+    addTheme("Pokemon","Pokemon/", "Red", "Blue");//a pokemon theme
 
     switchTheme(1);//switch to the first theme by default
 

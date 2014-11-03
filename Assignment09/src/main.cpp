@@ -128,7 +128,10 @@ int main(int argc, char **argv)
 
     //setup inputs
     menuID = glutCreateMenu(menu_test);
-    glutAddMenuEntry("quit", 1);
+    glutAddMenuEntry("Resume", 4);
+    glutAddMenuEntry("Pause", 3);
+    glutAddMenuEntry("Restart", 2);
+    glutAddMenuEntry("Quit", 1);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     //misc setup
@@ -169,6 +172,9 @@ void menu_test(int id)
             keepRunning = false;
             break;
         case 2:
+            simConfig.gameData.startGame();
+            break;
+        case 4:
             glutIdleFunc(update);
             break;
         case 3:
@@ -360,6 +366,14 @@ void keyPressed (unsigned char key, int x, int y)
     else if(key == '3')//cameras
     {
         simConfig.switchCamera(1);
+    }
+    else if(key == '5')//themes
+    {
+        simConfig.gameData.switchTheme(1);
+    }
+    else if(key == '6')//themes
+    {
+        simConfig.gameData.switchTheme(2);
     }
     else if(key == 'z')
     {

@@ -81,6 +81,13 @@ void renderer::tick()
     if(!simConfig->gameData.gameActive)
         sprites.generateText(simConfig, "GAME OVER!", 1.0, 410, 440, 30);
 
+    //render our theme name
+    if(simConfig->gameData.currentTheme!=NULL)
+    {
+        sprites.generateText(simConfig, "Theme: ", 0.6, 365, 138,7);
+        sprites.generateText(simConfig, simConfig->gameData.currentTheme->themeName, 0.6, 600, 138,7);//draw theme name
+    }
+
     //draw highscores
     for(int i=0; i<10; i++)
     {

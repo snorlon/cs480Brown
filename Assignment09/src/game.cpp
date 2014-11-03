@@ -364,24 +364,26 @@ void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
         currentBat->absolutePosition.z += yAmount;
 
         //guard the bounds for the left and right of the board
-        if( currentBat->absolutePosition.x < -4.0 )
-            currentBat->absolutePosition.x = -4.0;
-        else if( currentBat->absolutePosition.x > 4.0 )
-            currentBat->absolutePosition.x = 4.0;
+        double xLimit = 3.0;
+        double yLimit = 9.0;
+        if( currentBat->absolutePosition.x < -xLimit )
+            currentBat->absolutePosition.x = -xLimit;
+        else if( currentBat->absolutePosition.x > xLimit )
+            currentBat->absolutePosition.x = xLimit;
 
         //maintain a barrier in the center and prevent going too far behind the stage
         if(currentBat == bat1)
         {
             if( currentBat->absolutePosition.z < 1.0 )
                 currentBat->absolutePosition.z = 1.0;
-            else if( currentBat->absolutePosition.z > 10.0 )
-                currentBat->absolutePosition.z = 10.0;
+            else if( currentBat->absolutePosition.z > yLimit )
+                currentBat->absolutePosition.z = yLimit;
         }
         else{
             if( currentBat->absolutePosition.z > -1.0 )
                 currentBat->absolutePosition.z = -1.0;
-            else if( currentBat->absolutePosition.z < -10.0 )
-                currentBat->absolutePosition.z = -10.0;
+            else if( currentBat->absolutePosition.z < -yLimit )
+                currentBat->absolutePosition.z = -yLimit;
         }
 
         

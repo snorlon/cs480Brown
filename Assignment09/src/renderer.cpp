@@ -61,7 +61,7 @@ void renderer::tick()
     //create our text stuffs
     //sprites.addSprite(simConfig, 300, 200, 85, 232, "testtrainer.png", false);
     sprites.generateText(simConfig, "High Scores", 0.4, 45, 215);
-    sprites.generateText(simConfig, "Vs", 0.5, 612, 730);
+    sprites.generateText(simConfig, to_string(int(ceil(simConfig->gameData.time))), 0.5, 612, 730);
     sprites.generateText(simConfig, "FPS "+to_string(simConfig->lastFPS), 0.4, 25, 740);
     sprites.generateText(simConfig, "Version 1.0.0", 0.4, 985, 740);
 
@@ -70,6 +70,21 @@ void renderer::tick()
     sprites.generateText(simConfig, ""+to_string(simConfig->gameData.currentGame.score1), 0.5, 525, 740);
     sprites.generateText(simConfig, simConfig->gameData.currentGame.p2Name, 0.5, 770, 740);
     sprites.generateText(simConfig, ""+to_string(simConfig->gameData.currentGame.score2), 0.5, 700, 740);
+
+    //render GAMEOVER if game is not active
+    if(!simConfig->gameData.gameActive)
+        sprites.generateText(simConfig, "GAME OVER!", 1.0, 410, 440, 30);
+
+    //draw highscores
+    for(int i=0; i<10; i++)
+    {
+        if(simConfig->gameData.highscores[i]!=NULL)
+        {
+            score* currentScore = simConfig->gameData.highscores[i];//for readability
+            sprites.generateText(simConfig, currentScore->bestName(), 0.3, 45, 180-20*i,-2);//draw name
+            sprites.generateText(simConfig, to_string(currentScore->bestScore()), 0.3, 225, 180-20*i,-2);//draw score
+        }
+    }
 }
 
 bool renderer::initialize()

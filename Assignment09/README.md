@@ -83,6 +83,8 @@ Commands:
         2 - Entire table camera
         3 - Second person camera
 
+        Enter - Start match
+
         Space - Pause/Unpause
         Esc - Exit program
 

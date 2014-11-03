@@ -310,7 +310,7 @@ sprite* spriteManager::addSprite(config* simConfig, int nx, int ny, int nwidth, 
     return newSprite;//return our new sprite for operations
 }
 
-void spriteManager::generateText(config* simConfig, string text, double scale, int startX, int startY)
+void spriteManager::generateText(config* simConfig, string text, double scale, int startX, int startY, double gapOverride)
 {
     double xPos = startX;
     double yPos = startY;
@@ -347,5 +347,6 @@ void spriteManager::generateText(config* simConfig, string text, double scale, i
             letter->rebuild(simConfig);
         }
         xPos+=18;
+        xPos+=gapOverride;
     }
 }

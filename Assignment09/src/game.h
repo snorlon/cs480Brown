@@ -19,6 +19,9 @@ class score
         int score2;
 
         score();
+        score(score* s);
+        string bestName();
+        int bestScore();
 
     private:
 };
@@ -53,16 +56,23 @@ class game
         entity* bat2;
         entity* table;
 
+        double time;
+
         int themeCount;
 
+        bool gameActive;
+
         game();
+        ~game();
         void addTheme(string nname, string apath, string p1, string p2);
         void switchTheme(int themenum);
+        void addScore(score* s);
         void resetScore();
         void init();//for initing the game-specific components
         void tick(double dt);
         void render();
         void moveBat(int bat, double xAmount, double yAmount, bool aiControlled);
+        void startGame();
 
         //game-specific functions
         void resetPuck();

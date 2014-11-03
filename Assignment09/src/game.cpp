@@ -2,6 +2,10 @@
 #include "entity.h"
 #include "config.h"
 #include "physics.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 score::score()
 {
@@ -13,6 +17,44 @@ score::score()
 
     score1 = 0;
     score2 = 0;
+}
+
+score::score(score* s)
+{
+    player1Player = s->player1Player;
+    player2Player = s->player2Player;
+
+    p1Name = s->p1Name;
+    p2Name = s->p2Name;
+
+    score1 = s->score1;
+    score2 = s->score2;
+}
+
+string score::bestName()
+{
+    //output the better of the two players
+    string p = p1Name;
+
+    if(score2 > score1)
+    {
+        p = p2Name;
+    }
+
+    return p;
+}
+
+int score::bestScore()
+{
+    //output the better of the two players
+    int s = score1;
+
+    if(score2 > score1)
+    {
+        s = score2;
+    }
+
+    return s;
 }
 
 theme::theme()
@@ -40,6 +82,44 @@ game::game()
     table = NULL;
 
     simConfig = NULL;
+
+    //attempt to load in existing scores
+    ifstream fin("../bin/highscores.txt");
+    int i = 0;
+    string input;
+    int scoreIn = 0;
+
+    getline(fin, input, '|');//get the name
+    while(i<10 && fin.good())
+    {
+        highscores[i] = new score();
+        //set it to player 1 by default
+        highscores[i]->p1Name = input;
+        fin>>scoreIn;
+        highscores[i]->score1 = scoreIn;
+
+        getline(fin, input);//get the end of the line
+        getline(fin, input, '|');//get the name
+        i++;
+    }
+    fin.close();
+}
+
+game::~game()
+{
+    //save out our high scores on exit
+    ofstream fout("../bin/highscores.txt");
+    //output all of the highscores
+    for(int i=0; i<10; i++)
+    {
+        //check if the high score exists
+        if(highscores[i]!=NULL)
+        {
+            fout<<highscores[i]->bestName()<<"|"<<highscores[i]->bestScore()<<endl;
+        }
+    }
+    
+    fout.close();
 }
 
 void game::addTheme(string nname, string apath, string p1, string p2)
@@ -78,6 +158,8 @@ void game::switchTheme(int themenum)
         index++;
     }
 
+    gameActive = false;
+
     //check if our theme selection is valid
     if(index==themenum && iterator != NULL)
     {
@@ -100,9 +182,46 @@ void game::switchTheme(int themenum)
     }
 }
 
-void game::resetScore()
+void game::addScore(score* s)
 {
     //check if this is a high score!
+    score* current = s;
+
+    //check if we beat someone else
+    for(int i=0; i<10&&highscores[i]!=NULL; i++)
+    {
+        //if so
+        if(highscores[i]->bestScore() < current->bestScore())
+        {
+            //ursurp their puny score
+            score* temp = highscores[i];
+            highscores[i] = current;
+            current = temp;
+
+            //now add on this old score
+            addScore(current);
+            return;
+        }
+    }
+    //if that failed, then we check if there's an empty space for us
+    for(int i=0; i<10;i++)
+    {
+        if(highscores[i] == NULL)
+        {
+            highscores[i] = current;
+            return;//abort here
+        }
+    }
+
+    //otherwise, purge the scum
+    delete current;
+}
+
+void game::resetScore()
+{
+    //only add successful scores
+    if(currentGame.bestScore()>0)
+        addScore(new score(&currentGame));
 
     //reset the score and players
     if(currentTheme!=NULL)
@@ -112,6 +231,8 @@ void game::resetScore()
         currentGame.score1 = 0;
         currentGame.score2 = 0;
     }
+
+    time = 60;//reset our timer
 }
 
 void game::init()
@@ -154,6 +275,15 @@ void game::tick(double dt)
             resetPuck();
         }
     }
+
+    //do not tick if game is not running
+    if(gameActive)
+        time-=dt;
+
+    //check if timer is zero
+    //end the game if so
+    if(time<=0)
+        gameActive = false;
 }
 
 void game::render()
@@ -179,6 +309,10 @@ void game::render()
 
 void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
 {
+    //ditch controls if game not active
+    if(!gameActive)
+        return;
+
     entity* currentBat = NULL;
 
     //decide what bat to move based on the parameter
@@ -284,4 +418,18 @@ void game::resetPuck()
         //and re-add them PURIFIED
         puck->objPhysics.init( puck );
     }
+}
+
+void game::startGame()
+{
+    //to start the game we MUST
+    //set the flag
+    gameActive = true;
+
+    //reset the score
+    resetScore();
+
+    //reset the camera
+    simConfig->switchCamera(0);
+
 }

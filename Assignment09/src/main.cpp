@@ -388,6 +388,11 @@ void keyPressed (unsigned char key, int x, int y)
             glutIdleFunc(NULL);
         }
     }
+    else if(key == 13)
+    {
+        //start a new game
+        simConfig.gameData.startGame();
+    }
 }  
 
 void keyUp (unsigned char key, int x, int y)

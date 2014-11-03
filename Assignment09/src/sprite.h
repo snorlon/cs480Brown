@@ -91,7 +91,7 @@ class spriteManager
         void init(config* simConfig);
 
         sprite* addSprite(config* simConfig, int nx, int ny, int nwidth, int nheight, string fpath, bool isStatic, double nscaleX = 1.0, double nscaleY = 1.0, bool useFont = false);
-        void generateText(config* simConfig, string text, double scale, int startX, int startY);
+        void generateText(config* simConfig, string text, double scale, int startX, int startY, double gapOverride = 0);
     private:
 };
 

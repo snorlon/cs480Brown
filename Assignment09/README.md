@@ -39,16 +39,22 @@ How to run:
 
     For loading fragment shader from file, enter './../bin/Project -f filename'
 
-    For both shaders from file, enter './../bin/Project -f filename -v filename2' order does not matter
-        All that matters is that file name follows the -f or -v command
+    For loading 2d vertex shader from file, enter './../bin/Project -2v filename'
+
+    For loading 2d fragment shader from file, enter './../bin/Project -2f filename'
+
+    For all shaders from file, enter './../bin/Project -f filename -v filename2 -2f filename3 -2v filename4' order does not matter
+        All that matters is that file name follows the -f or -v type commands
 
     Example terminal command:
-        ./../bin/Project -f ../bin/shaders/fragmentshader -v ../bin/shaders/vertexshader
+        ./../bin/Project -v ../bin/shaders/vertexshader -f ../bin/shaders/fragmentshader -2v ../bin/shaders/vertexshader2d -2f ../bin/shaders/fragmentshader2d
 
     If the file name is good, it will say in the terminal that the corresponding shader has been loaded. If not, it will warn you. Shaders MUST be provided
 
     The terminal will tell you if your texture or model sucks
         this program only supports a single texture and a single obj and a single material file, all in the same location
+
+    Alternatively, run "./execute.sh" if available
 
 ========================================
 
@@ -108,13 +114,14 @@ Commands:
 
 Extra Credit: 
     Detailed background
-    Themes
+    Four Swappable Themes
     Lighting
     2D rendering system, including custom text rendering
     Highscores
     Two-player controls
         Rotate depending on camera
     AI for both sides
+    AI/Human Toggle
 
 ========================================
 

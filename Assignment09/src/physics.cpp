@@ -49,5 +49,6 @@ physics::~physics()
 void physics::tick(double dt)
 {
     //update the bullet physics
-    dynamicsWorld->stepSimulation(dt, 10);
+    if(dt>0.0)
+        dynamicsWorld->stepSimulation(dt, 10);
 }

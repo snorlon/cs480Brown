@@ -175,10 +175,11 @@ void menu_test(int id)
             simConfig.gameData.startGame();
             break;
         case 4:
-            glutIdleFunc(update);
+            //glutIdleFunc(update);
+            recentlyPaused = false;
             break;
         case 3:
-            glutIdleFunc(NULL);
+            //glutIdleFunc(NULL);
             recentlyPaused = true;
             break;
     }
@@ -201,13 +202,17 @@ void render()
 
 void update()
 {
-    float dt = 0;
+    float dt = getDT() * simConfig.timeRate;
 
     //rough fps handling
     frame++;
     t4 = std::chrono::high_resolution_clock::now();
 
     int ret = std::chrono::duration_cast< std::chrono::duration<float> >(t4-t3).count();
+
+    //if we're paused, throw out dt
+    if(recentlyPaused)
+        dt = 0;
 
     //tick the entity manager
     simEntities.tick(dt);
@@ -220,21 +225,6 @@ void update()
 
         //TICK THAT SEXY RENDERER SO IT REBUILDS THE DYNAMIC INTERFACE
         simRenderer.tick();
-    }
-
-    //this can be modified later if we need to reduce entity tick rate. It can consume time is why this is here.
-    //frame % X where we skip every frame not divisible by X
-    if(frame % 1 == 0 || frame != 0)
-    {
-        //time passed gets calculated
-        dt = getDT() * simConfig.timeRate;
-
-        //if we just exited a pause, just make the dt zero so no jerking when unpausing
-        if(recentlyPaused)
-        {
-            dt = 0;
-            recentlyPaused = false;
-        }
     }
 
     simConfig.tick(dt);
@@ -413,11 +403,12 @@ void keyPressed (unsigned char key, int x, int y)
     {
         //toggle pause
         if(recentlyPaused)
-           glutIdleFunc(update);
+        {
+           recentlyPaused = false;
+        }
         else
         {
             recentlyPaused = true;
-            glutIdleFunc(NULL);
         }
     }
     else if(key == 13)
@@ -461,9 +452,12 @@ void keyboard()
         consecutivePresses[3]+=1;
     }
 
-    //update the bat positions
-    simConfig.gameData.moveBat(1, consecutivePresses[6]*baseMovementMult - consecutivePresses[7]*baseMovementMult, consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult, false);
-    simConfig.gameData.moveBat(2, consecutivePresses[2]*baseMovementMult - consecutivePresses[3]*baseMovementMult, consecutivePresses[0]*baseMovementMult - consecutivePresses[1]*baseMovementMult, false);
+    //update the bat positions IF time is passing
+    if(!recentlyPaused)
+    {
+        simConfig.gameData.moveBat(1, consecutivePresses[6]*baseMovementMult - consecutivePresses[7]*baseMovementMult, consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult, false);
+        simConfig.gameData.moveBat(2, consecutivePresses[2]*baseMovementMult - consecutivePresses[3]*baseMovementMult, consecutivePresses[0]*baseMovementMult - consecutivePresses[1]*baseMovementMult, false);
+    }
 }
 
 void keyboardPlus(int key, int x_pos, int y_pos)

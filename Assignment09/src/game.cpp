@@ -281,11 +281,13 @@ void game::init()
 
 void game::tick(double dt)
 {
+    //abort if dt is 0
+    if(dt==0)
+        return;
     //do our rolls up here so that they go even if they aren't used
     double roll1 = ((rand() % 21)-10)/10;
     double roll2 = ((rand() % 21)-10)/10;
 
-    dt = dt;
     //render the game objects if they are set
     if(table!=NULL)
     {

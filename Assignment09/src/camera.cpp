@@ -11,6 +11,8 @@ Camera::Camera()
     defaultAltitude = 1;
     defaultDistance = 10;
 
+    controlRot = 0;
+
     target = NULL;
     next = NULL;
 }
@@ -20,6 +22,12 @@ Camera::Camera(entity* ntarget)
     x = 0;
     y = 0;
     z = 0;
+
+    defaultAzimuth = 0;
+    defaultAltitude = 1;
+    defaultDistance = 10;
+
+    controlRot = 0;
 
     target = ntarget;
     next = NULL;

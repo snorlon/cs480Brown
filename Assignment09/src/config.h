@@ -81,6 +81,8 @@ class config
         int altitudeAngle;
         double viewDistance;
 
+        int controlRot;
+
         int lastFPS;
     
         Camera* currentFocalCamera;

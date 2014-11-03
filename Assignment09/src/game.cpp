@@ -187,6 +187,42 @@ void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
     else if(bat == 2)
         currentBat = bat2;
 
+    //tweak amounts based on bat, AI, and angle
+    switch(simConfig->controlRot)
+    {
+        case 0:
+            //bat modifications
+            if(bat == 1)
+            {
+                double temp = xAmount;
+                xAmount = yAmount;
+                yAmount = -temp;
+            }
+            else
+            {
+                double temp = xAmount;
+                xAmount = -yAmount;
+                yAmount = temp;
+            }
+            break;
+        case 1:
+            //bat modifications
+            if(bat == 2)
+            {
+                xAmount = -xAmount;
+                yAmount = -yAmount;
+            }
+            break;
+        case 2:
+            //bat modifications
+            if(bat == 1)
+            {
+                xAmount = -xAmount;
+                yAmount = -yAmount;
+            }
+            break;
+    }
+
     //move it accordingly to the amounts provided
     if(currentBat!=NULL)
     {

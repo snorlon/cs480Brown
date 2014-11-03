@@ -37,6 +37,7 @@ config::config()
     azimuthAngle = 0;
     altitudeAngle = 1;
     viewDistance = 30;
+    controlRot = 0;
 
     lastFPS = 0;
 
@@ -46,12 +47,14 @@ config::config()
     Camera* newCam = new Camera();//p1
     newCam->Position(0.0,7.0,3.0);
     newCam->Rotate(90,50,14);
+    newCam->controlRot = 1;
     newCam->next = presetCameras;
     presetCameras = newCam;
 
     newCam = new Camera();//p2
     newCam->Position(0.0,7.0,-3.0);
     newCam->Rotate(-90,50,14);
+    newCam->controlRot = 2;
     newCam->next = presetCameras;
     presetCameras = newCam;
 
@@ -204,10 +207,11 @@ Camera* config::switchCamera(int camID)
         camID--;
     }
 
-    //set the altitude and azimuth
+    //set the camera-specific defaults for things
     azimuthAngle = iterator->defaultAzimuth;
     altitudeAngle = iterator->defaultAltitude;
     viewDistance = iterator->defaultDistance;
+    controlRot = iterator->controlRot;
 
     view = glm::lookAt( glm::vec3(eyeCamera.x, eyeCamera.y, eyeCamera.z), //Eye Position
                         glm::vec3(iterator->x, iterator->y, iterator->z), //camera aim

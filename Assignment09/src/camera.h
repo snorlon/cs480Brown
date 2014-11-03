@@ -11,6 +11,8 @@ class Camera
 
         entity* target;
 
+        int controlRot;
+
         Camera();
         Camera(entity* ntarget);
         void Position(double nx, double ny, double nz);

@@ -66,14 +66,11 @@ NOTES:
 
 Commands:
     Keyboard
-        REWRITE
-
         Arrow Keys - Camera movement
 
             Up & Down Arrow - Rotate Along the Y plane
             Left & Right Arrow - Rotate Along the Y axis
             Pg Up & Pg Down OR
-                Mousewheel up and Mousewheel down - Zooming in & out on current camera
             End - Reset zoom
 
         WASD - control Player 2 (if AI not enabled)
@@ -82,6 +79,10 @@ Commands:
 
         + and - : controlling speed of program
 
+        1 - First person camera
+        2 - Entire table camera
+        3 - Second person camera
+
         Space - Pause/Unpause
         Esc - Exit program
 
@@ -89,6 +90,7 @@ Commands:
         Right - Open menu
             Can pause or resume simulation or exit
         Middle Mouse - hold to rotate camera
+            Mousewheel up and Mousewheel down - Zooming in & out on current camera
 
         Mouse - Control player 1 (if AI not enabled)
 

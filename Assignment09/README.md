@@ -103,7 +103,9 @@ Extra Credit:
     Themes
     Lighting
     2D rendering system, including custom text rendering
-    
+    Highscores
+    Two-player controls
+        Rotate depending on camera
 
 ========================================
 

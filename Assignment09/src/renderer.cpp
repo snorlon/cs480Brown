@@ -71,6 +71,12 @@ void renderer::tick()
     sprites.generateText(simConfig, simConfig->gameData.currentGame.p2Name, 0.5, 770, 740);
     sprites.generateText(simConfig, ""+to_string(simConfig->gameData.currentGame.score2), 0.5, 700, 740);
 
+    //ai flags
+    if(simConfig->gameData.ai1Enabled)
+        sprites.generateText(simConfig, "AI ENABLED", 0.3, 370, 700,-2);
+    if(simConfig->gameData.ai2Enabled)
+        sprites.generateText(simConfig, "AI ENABLED", 0.3, 740, 700,-2);
+
     //render GAMEOVER if game is not active
     if(!simConfig->gameData.gameActive)
         sprites.generateText(simConfig, "GAME OVER!", 1.0, 410, 440, 30);

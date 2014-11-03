@@ -62,6 +62,9 @@ class game
 
         bool gameActive;
 
+        bool ai1Enabled;
+        bool ai2Enabled;
+
         game();
         ~game();
         void addTheme(string nname, string apath, string p1, string p2);
@@ -73,6 +76,7 @@ class game
         void render();
         void moveBat(int bat, double xAmount, double yAmount, bool aiControlled);
         void startGame();
+        void enableAI(int person);
 
         //game-specific functions
         void resetPuck();

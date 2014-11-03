@@ -2,6 +2,9 @@
 #include "entity.h"
 #include "config.h"
 #include "physics.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <iostream>
 #include <fstream>
 
@@ -88,6 +91,11 @@ game::game()
     int i = 0;
     string input;
     int scoreIn = 0;
+
+    ai1Enabled = false;
+    ai2Enabled = false;
+
+    srand (0);
 
     getline(fin, input, '|');//get the name
     while(i<10 && fin.good())
@@ -240,10 +248,19 @@ void game::init()
     addTheme("To Love Ru","ToLoveRu/", "Lala", "Momo");//our default theme
 
     switchTheme(1);//switch to the first theme by default
+
+    //TEMPORARY
+    //toggle ai on
+    enableAI(2);
+    enableAI(1);
 }
 
 void game::tick(double dt)
 {
+    //do our rolls up here so that they go even if they aren't used
+    double roll1 = ((rand() % 21)-10)/10;
+    double roll2 = ((rand() % 21)-10)/10;
+
     dt = dt;
     //render the game objects if they are set
     if(table!=NULL)
@@ -267,12 +284,84 @@ void game::tick(double dt)
         {
             //make sure to update the scoreboard!
             //base score on z position
-            if(puck->absolutePosition.z > 5.0)
+            if(puck->absolutePosition.z > 4.0)
                 currentGame.score2++;
-            if(puck->absolutePosition.z < 5.0)
+            if(puck->absolutePosition.z < 4.0)
                 currentGame.score1++;
 
             resetPuck();
+        }
+
+        //reset puck if it gets stuck on the roof
+        if(puck->absolutePosition.y > 13)
+        {
+            resetPuck();
+        }
+    }
+    //do ai things
+    if(ai2Enabled||ai1Enabled)
+    {
+        double timeStep = 0.5;
+        double moveCap = 0.5;
+
+
+        //predict where puck should be
+        btVector3  forceAddedVel = puck->objPhysics.objRB->getLinearVelocity();
+
+         //the predicted position is the balls position plus these two terms
+        btTransform pucktrans;
+        puck->objPhysics.objRB->getMotionState()->getWorldTransform(pucktrans);
+
+        btTransform bat1trans;
+        btTransform bat2trans;
+
+        if(ai1Enabled)
+        {
+            bat1->objPhysics.objRB->getMotionState()->getWorldTransform(bat1trans);
+        }
+        if(ai2Enabled)
+        {
+            bat2->objPhysics.objRB->getMotionState()->getWorldTransform(bat2trans);
+        }
+
+        //update position
+        btVector3 FuturePosition=pucktrans.getOrigin() + (forceAddedVel) * timeStep;
+
+        //add a small factor to try to get behind
+        //also add a small amount of error
+        if(ai1Enabled)
+        {
+            double xDifference = FuturePosition.getX()-bat1trans.getOrigin().getX()-0.5+(roll1/100);
+            double zDifference = FuturePosition.getZ()-bat1trans.getOrigin().getZ()+0.5+(roll2/10);
+
+            if(xDifference > moveCap)
+                xDifference = moveCap;
+            if(xDifference < -moveCap)
+                xDifference = -moveCap;
+            if(zDifference > moveCap)
+                zDifference = moveCap;
+            if(zDifference < -moveCap)
+                zDifference = -moveCap;
+
+            //attempt to move towards it
+            moveBat(1, -zDifference, xDifference, true);
+        }
+        if(ai2Enabled)
+        {
+            double xDifference = FuturePosition.getX()-bat2trans.getOrigin().getX()+0.5+(roll1/100);
+            double zDifference = FuturePosition.getZ()-bat2trans.getOrigin().getZ()-0.5+(roll2/10);
+
+            if(xDifference > moveCap)
+                xDifference = moveCap;
+            if(xDifference < -moveCap)
+                xDifference = -moveCap;
+            if(zDifference > moveCap)
+                zDifference = moveCap;
+            if(zDifference < -moveCap)
+                zDifference = -moveCap;
+
+            //attempt to move towards it
+            moveBat(2, zDifference, -xDifference, true);
         }
     }
 
@@ -312,6 +401,12 @@ void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
     //ditch controls if game not active
     if(!gameActive)
         return;
+
+    //check if we aren't supposed to be able to control this bat
+    if(!aiControlled && bat==1 && ai1Enabled)
+        return;//abort, we can't touch this
+    if(!aiControlled && bat==2 && ai2Enabled)
+        return;//abort, we can't touch this
 
     entity* currentBat = NULL;
 
@@ -364,8 +459,8 @@ void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
         currentBat->absolutePosition.z += yAmount;
 
         //guard the bounds for the left and right of the board
-        double xLimit = 3.0;
-        double yLimit = 9.0;
+        double xLimit = 3.2;
+        double yLimit = 9.5;
         if( currentBat->absolutePosition.x < -xLimit )
             currentBat->absolutePosition.x = -xLimit;
         else if( currentBat->absolutePosition.x > xLimit )
@@ -434,4 +529,19 @@ void game::startGame()
     //reset the camera
     simConfig->switchCamera(0);
 
+}
+
+void game::enableAI(int person)
+{
+    //toggle the ai on/off
+    if(person==1)
+    {
+        ai1Enabled = !ai1Enabled;
+    }
+    else
+    {
+        ai2Enabled = !ai2Enabled;
+    }
+    //forfeit the match
+    gameActive=false;
 }

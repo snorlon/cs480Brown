@@ -269,6 +269,8 @@ void game::init()
 {
     addTheme("To Love Ru","ToLoveRu/", "Lala", "Momo");//our default theme
     addTheme("Pokemon","Pokemon/", "Red", "Blue");//a pokemon theme
+    addTheme("Mario Bros.","Mario/", "Mario", "Luigi");//a mario theme
+    addTheme("Sonic","Sonic/", "Sonic", "Eggman");//a mario theme
 
     switchTheme(1);//switch to the first theme by default
 

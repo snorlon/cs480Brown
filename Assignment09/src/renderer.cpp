@@ -98,6 +98,9 @@ void renderer::tick()
             sprites.generateText(simConfig, to_string(currentScore->bestScore()), 0.3, 225, 180-20*i,-2);//draw score
         }
     }
+
+    //render theme images
+    sprites.addSprite(simConfig, 316, 0, 648, 131, "interface/themes/"+simConfig->gameData.currentTheme->themeName+".png", false);
 }
 
 bool renderer::initialize()

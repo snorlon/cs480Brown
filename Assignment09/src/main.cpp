@@ -375,6 +375,14 @@ void keyPressed (unsigned char key, int x, int y)
     {
         simConfig.gameData.switchTheme(2);
     }
+    else if(key == '7')//themes
+    {
+        simConfig.gameData.switchTheme(3);
+    }
+    else if(key == '8')//themes
+    {
+        simConfig.gameData.switchTheme(4);
+    }
     else if(key == 'z')
     {
         simConfig.scale /= 2.0;

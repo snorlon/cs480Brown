@@ -377,6 +377,16 @@ void keyPressed (unsigned char key, int x, int y)
     {
         simConfig.showDetails = !simConfig.showDetails;
     }
+    //ai toggle
+    else if(key == '[')
+    {
+        simConfig.gameData.enableAI(1);
+    }
+    //ai toggle
+    else if(key == ']')
+    {
+        simConfig.gameData.enableAI(2);
+    }
     else if(key == ' ')//space
     {
         //toggle pause

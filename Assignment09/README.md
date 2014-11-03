@@ -83,6 +83,9 @@ Commands:
         2 - Entire table camera
         3 - Second person camera
 
+        [ - toggle player 1 AI
+        ] - toggle player 2 AI
+
         Enter - Start match
 
         Space - Pause/Unpause
@@ -106,6 +109,7 @@ Extra Credit:
     Highscores
     Two-player controls
         Rotate depending on camera
+    AI for both sides
 
 ========================================
 

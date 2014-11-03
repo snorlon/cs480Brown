@@ -252,7 +252,6 @@ void game::init()
     //TEMPORARY
     //toggle ai on
     enableAI(2);
-    enableAI(1);
 }
 
 void game::tick(double dt)

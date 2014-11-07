@@ -1,0 +1,11 @@
+Name:       Game_Barrier
+Model:      Wall/ tabletop
+Shape:      Custom
+Mass:       0
+Scale:      16.0
+Location:   0, 3.5, 0
+Size:       1, 1, 1
+Velocity:   0, 0, 0
+Type:       Moveable
+Orientation: 0,0,0
+Visible:    false

@@ -1,0 +1,8 @@
+Name:       TestCube
+Model:      Cube/ Cube
+Shape:      Box
+Mass:       1
+Scale:      0.5
+Location:   0, 50, 0
+Velocity:   0, 0, 0
+Type:       Moveable

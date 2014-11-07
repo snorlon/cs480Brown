@@ -1,0 +1,10 @@
+Name:       Machine
+Model:      Arcade/LoZ/ arcade
+Shape:      Box
+Mass:       100
+Scale:      10.0
+Location:   130, 0, 0
+Velocity:   0, 0, 0
+Type:       Moveable
+Orientation: 0,90,0
+Size:       10, 16.5, 10

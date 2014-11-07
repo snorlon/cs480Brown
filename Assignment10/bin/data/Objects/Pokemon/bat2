@@ -1,0 +1,12 @@
+Name:       Bat2
+Model:      Pokemon/Bat2/ bat2
+Shape:      Custom
+Mass:       0
+Scale:      1.0
+Location:   0, 9.5, -7
+Type:       Kinematic
+Emissive:   0,0,0,0
+Ambient:    0.8,0.8,0.8,0
+Diffuse:    0.9,0.9,0.9,0
+Specular:   0.5,0.5,0.5,0
+Shine:      150

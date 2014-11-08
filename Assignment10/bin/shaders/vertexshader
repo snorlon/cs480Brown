@@ -21,9 +21,6 @@ uniform float v_obj_shine;
 
 uniform vec4 eyeVector;
 
-out vec4 SpotLightDirection;
-out float SpotLightCutoff;
-
 out vec4 normal;
 out vec4 position;
 

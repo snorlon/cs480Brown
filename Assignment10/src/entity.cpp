@@ -295,7 +295,7 @@ void entity::render()
             glUniform4f(loc_lightDiffuse[i], 0,0,0,0);
             glUniform4f(loc_lightSpecular[i], 0,0,0.6,0);
             glUniform4f(loc_lightSpotDir[i], 0,-1,0,0);
-            glUniform1f(loc_lightSpotCutoff[i], 0);
+            glUniform1f(loc_lightSpotCutoff[i], 90);
         }
     }
 

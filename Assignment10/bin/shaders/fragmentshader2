@@ -3,13 +3,16 @@ uniform sampler2D gSampler;
 
 uniform vec4 eyeVector;
 
-in vec4 LightPosW;
-in vec4 AmbientLightColor;
-in vec4 DiffuseLightColor;
-in vec4 SpecularLightColor;
+struct Light{
+    vec4 position;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+    vec4 spotdirection;
+    float spotcutoff;
+};
 
-in vec4 SpotLightDirection;
-in float SpotLightCutoff;
+uniform Light lights[200];
 
 uniform vec4 v_obj_ambient;
 uniform vec4 v_obj_diffuse;
@@ -25,38 +28,41 @@ uniform mat4 viewMatrix;
 
 void main()
 {
-    vec4 Ambient = v_obj_ambient * AmbientLightColor; //temporarily, add in global and light source ambient later
- 
-    // Compute the diffuse term.
+    vec4 Ambient = vec4(0,0,0,0);
+    vec4 Diffuse = vec4(0,0,0,0);
+    vec4 Specular = vec4(0,0,0,0);
+
     vec4 N = normalize( normal );
-    vec4 L = normalize( LightPosW - position );
-    float NdotL = max( dot( N, L ), 0 );
-    vec4 Diffuse =  NdotL * DiffuseLightColor * v_obj_diffuse;
-     
-    // Compute the specular term.
     vec4 V = normalize( eyeVector - position );
-    vec4 H = normalize( L + V );
-    vec4 R = reflect( -L, N );
-    float RdotV = max( dot( R, V ), 0 );
-    float NdotH = max( dot( N, H ), 0 );
-    vec4 Specular = pow( RdotV, v_obj_shine ) * SpecularLightColor * v_obj_specular;
 
-    //calculate spotlight
-    float Spotlight = 0;
-    vec4 n = normalize(normal);
-    vec4 lightDir = vec4(LightPosW-position); 
+    for(int i=0;i<10;i++)
+    {
+     
+        // Compute the diffuse term.
+        vec4 L = normalize( lights[i].position - position );
+        float NdotL = max( dot( N, L ), 0 );
 
-    /* compute the dot product between normal and ldir */
-    float SNdotL = max(dot(n,normalize(lightDir)),0.0);
-    if (SNdotL > 0.0) {
+        //calculate spotlight
+        /* compute the dot product between normal and ldir */
+        if (NdotL > 0.0) {
+            float spotEffect = dot(lights[i].spotdirection, -L);
+            if (spotEffect > radians(lights[i].spotcutoff))
+            {
+                Ambient += v_obj_ambient * lights[i].ambient; //temporarily, add in global and light source ambient later
+
+                Diffuse +=  NdotL * lights[0].diffuse * v_obj_diffuse;
+                 
+                // Compute the specular term.
+                vec4 H = normalize( L + V );
+                vec4 R = reflect( -L, N );
+                float RdotV = max( dot( R, V ), 0 );
+                if(RdotV>0)
+                {
+                    Specular += pow( RdotV, v_obj_shine ) * lights[i].specular * v_obj_specular;
+                }
+            }
+        } 
+    }
      
-        float spotEffect = dot(normalize(SpotLightDirection),
-                normalize(-lightDir));
-        if (spotEffect > radians(SpotLightCutoff)) {
-            Spotlight = 1;
-     
-        }
-    } 
-     
-    gl_FragColor = Spotlight * ( Ambient + Diffuse + Specular ) * texture2D( gSampler, gl_TexCoord[0].st );
+    gl_FragColor = ( Ambient + Diffuse + Specular ) * texture2D( gSampler, gl_TexCoord[0].st );
 }

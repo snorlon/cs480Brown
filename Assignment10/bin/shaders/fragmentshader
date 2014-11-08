@@ -14,9 +14,6 @@ struct Light{
 
 uniform Light lights[200];
 
-in vec4 SpotLightDirection;
-in float SpotLightCutoff;
-
 uniform vec4 v_obj_ambient;
 uniform vec4 v_obj_diffuse;
 uniform vec4 v_obj_specular;
@@ -40,32 +37,29 @@ void main()
 
     for(int i=0;i<10;i++)
     {
-        vec4 Ambient2 = v_obj_ambient * lights[i].ambient; //temporarily, add in global and light source ambient later
      
         // Compute the diffuse term.
         vec4 L = normalize( lights[i].position - position );
         float NdotL = max( dot( N, L ), 0 );
-        vec4 Diffuse2 =  NdotL * lights[0].diffuse * v_obj_diffuse;
-         
-        // Compute the specular term.
-        vec4 H = normalize( L + V );
-        vec4 R = reflect( -L, N );
-        float RdotV = max( dot( R, V ), 0 );
-        float NdotH = max( dot( N, H ), 0 );
-        vec4 Specular2 = pow( RdotV, v_obj_shine ) * lights[i].specular * v_obj_specular;
 
         //calculate spotlight
-
         /* compute the dot product between normal and ldir */
-        float SNdotL = max(dot(N,normalize(L)),0.0);
-        if (SNdotL > 0.0) {
-            float spotEffect = dot(normalize(lights[i].spotdirection), normalize(-L));
+        if (NdotL > 0.0) {
+            float spotEffect = dot(lights[i].spotdirection, -L);
             if (spotEffect > radians(lights[i].spotcutoff))
             {
-                Ambient += Ambient2;
-                Diffuse += Diffuse2;
-                Specular += Specular2;
-         
+                Ambient += v_obj_ambient * lights[i].ambient; //temporarily, add in global and light source ambient later
+
+                Diffuse +=  NdotL * lights[0].diffuse * v_obj_diffuse;
+                 
+                // Compute the specular term.
+                vec4 H = normalize( L + V );
+                vec4 R = reflect( -L, N );
+                float RdotV = max( dot( R, V ), 0 );
+                if(RdotV>0)
+                {
+                    Specular += pow( RdotV, v_obj_shine ) * lights[i].specular * v_obj_specular;
+                }
             }
         } 
     }

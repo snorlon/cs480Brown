@@ -20,6 +20,10 @@ class renderer
         config* simConfig;
         spriteManager sprites;//holds all 2d image data
 
+        GLuint colorBuffer;
+        GLuint depthBuffer;
+        GLuint fbo_main;
+
         renderer();
         bool giveLinks(config* configData);
         void render();

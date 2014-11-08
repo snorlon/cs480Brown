@@ -118,19 +118,24 @@ void entity::init()
         std::cerr << "[F] MVPMATRIX NOT FOUND" << std::endl;
     }
 
-    loc_model = glGetUniformLocation(simConfig->program, "modelMatrix");
+    //fuck i hope this doesn't break
+    for(int i=0; i<10; i++)
+    {
+        loc_lightPosition[i] = glGetUniformLocation(simConfig->program, const_cast<const char*>(("lights["+to_string(i)+"].position").c_str()));
+        loc_lightAmbient[i] = glGetUniformLocation(simConfig->program, const_cast<const char*>(("lights["+to_string(i)+"].ambient").c_str()));
+        loc_lightDiffuse[i] = glGetUniformLocation(simConfig->program, const_cast<const char*>(("lights["+to_string(i)+"].diffuse").c_str()));
+        loc_lightSpecular[i] = glGetUniformLocation(simConfig->program, const_cast<const char*>(("lights["+to_string(i)+"].specular").c_str()));
+        loc_lightSpotDir[i] = glGetUniformLocation(simConfig->program, const_cast<const char*>(("lights["+to_string(i)+"].spotdirection").c_str()));
+        loc_lightSpotCutoff[i] = glGetUniformLocation(simConfig->program, const_cast<const char*>(("lights["+to_string(i)+"].spotcutoff").c_str()));
+    }
 
-    loc_objEmissive = glGetUniformLocation(simConfig->program, "v_obj_emissive");
+    loc_model = glGetUniformLocation(simConfig->program, "modelMatrix");
+    loc_view = glGetUniformLocation(simConfig->program, "viewMatrix");
+
     loc_objMatAmbient = glGetUniformLocation(simConfig->program, "v_obj_ambient");
     loc_objMatDiffuse = glGetUniformLocation(simConfig->program, "v_obj_diffuse");
     loc_objMatSpecular = glGetUniformLocation(simConfig->program, "v_obj_specular");
     loc_objShine = glGetUniformLocation(simConfig->program, "v_obj_shine");
-
-    loc_objLightsPosition = glGetUniformLocation(simConfig->program, "v_lights_positions");
-    loc_objLightsAmbient = glGetUniformLocation(simConfig->program, "v_lights_ambient");
-    loc_objLightsDiffuse = glGetUniformLocation(simConfig->program, "v_lights_diffuse");
-    loc_objLightsSpecular = glGetUniformLocation(simConfig->program, "v_lights_specular");
-    loc_objLightsCount = glGetUniformLocation(simConfig->program, "v_lights_count");
 
 
     //unbind buffer
@@ -241,6 +246,7 @@ void entity::render()
     //upload the matrix to the shader
     glUniformMatrix4fv(loc_mvpmat, 1, GL_FALSE, glm::value_ptr(mvp));
     glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(loc_view, 1, GL_FALSE, glm::value_ptr(simConfig->view));
 
     //set up the Vertex Buffer Object so it can be drawn
     glEnableVertexAttribArray(loc_position);
@@ -268,43 +274,30 @@ void entity::render()
                            sizeof(Vertex),
                             (void*)offsetof(Vertex,uv));
 
-    //upload the lights
-    glEnableVertexAttribArray(loc_objLightsPosition);
-    glVertexAttribPointer( loc_objLightsPosition,//location of attribute
-                           simConfig->worldLights->lightCount*4,//number of elements
-                           GL_FLOAT,//type
-                           GL_FALSE,//normalized?
-                           0,//stride
-                           0);//offset
-    glEnableVertexAttribArray(loc_objLightsAmbient);
-    glVertexAttribPointer( loc_objLightsAmbient,//location of attribute
-                           simConfig->worldLights->lightCount*4,//number of elements
-                           GL_FLOAT,//type
-                           GL_FALSE,//normalized?
-                           sizeof( simConfig->worldLights->sourceAmbient),//stride
-                           0);//offset
-    glEnableVertexAttribArray(loc_objLightsDiffuse);
-    glVertexAttribPointer( loc_objLightsDiffuse,//location of attribute
-                           simConfig->worldLights->lightCount*4,//number of elements
-                           GL_FLOAT,//type
-                           GL_FALSE,//normalized?
-                           sizeof( simConfig->worldLights->sourceDiffuse),//stride
-                           0);//offset
-    glEnableVertexAttribArray(loc_objLightsSpecular);
-    glVertexAttribPointer( loc_objLightsSpecular,//location of attribute
-                           simConfig->worldLights->lightCount*4,//number of elements
-                           GL_FLOAT,//type
-                           GL_FALSE,//normalized?
-                           sizeof( simConfig->worldLights->sourceSpecular),//stride
-                           0);//offset
 
-    glUniform1f(loc_objLightsCount, simConfig->worldLights->lightCount);
-
-    /*loc_objLightsPosition = glGetUniformLocation(simConfig->program, "v_lights_positions");
-    loc_objLightsAmbient = glGetUniformLocation(simConfig->program, "v_lights_ambient");
-    loc_objLightsDiffuse = glGetUniformLocation(simConfig->program, "v_lights_diffuse");
-    loc_objLightsSpecular = glGetUniformLocation(simConfig->program, "v_lights_specular");
-    loc_objLightsSpecular = glGetUniformLocation(simConfig->program, "v_lights_count");*/
+    lightSource* iterator = simConfig->worldLights->head;
+    for(int i=0; i<10; i++)
+    {
+        if(iterator!=NULL)
+        {
+            glUniform4f(loc_lightPosition[i], iterator->position[0],iterator->position[1],iterator->position[2],iterator->position[3]);
+            glUniform4f(loc_lightAmbient[i], iterator->sourceAmbient[0],iterator->sourceAmbient[1],iterator->sourceAmbient[2],iterator->sourceAmbient[3]);
+            glUniform4f(loc_lightDiffuse[i], iterator->sourceDiffuse[0],iterator->sourceDiffuse[1],iterator->sourceDiffuse[2],iterator->sourceDiffuse[3]);
+            glUniform4f(loc_lightSpecular[i], iterator->sourceSpecular[0],iterator->sourceSpecular[1],iterator->sourceSpecular[2],iterator->sourceSpecular[3]);
+            glUniform4f(loc_lightSpotDir[i], iterator->sourceSpotlightDirection[0],iterator->sourceSpotlightDirection[1],iterator->sourceSpotlightDirection[2],iterator->sourceSpotlightDirection[3]);
+            glUniform1f(loc_lightSpotCutoff[i], iterator->sourceSpotlightCutoff);
+            iterator = iterator->next;
+        }
+        else
+        {
+            glUniform4f(loc_lightPosition[i], 0,0,0,0);
+            glUniform4f(loc_lightAmbient[i], 0,0,0,0);
+            glUniform4f(loc_lightDiffuse[i], 0,0,0,0);
+            glUniform4f(loc_lightSpecular[i], 0,0,0.6,0);
+            glUniform4f(loc_lightSpotDir[i], 0,-1,0,0);
+            glUniform1f(loc_lightSpotCutoff[i], 0);
+        }
+    }
 
     //enable config stuff
     //glEnableVertexAttribArray(simConfig->loc_eyeVector);

@@ -190,22 +190,6 @@ entity* entityManager::loadEntity(string fileName)
             objectFile>>newPos;
             newObj->velocity.z = newPos;
         }
-        else if(data == "Emissive:")//Light material loading
-        {
-            char dummy;
-            double newVal = 0;
-            objectFile>>newVal;
-            newObj->objLight.emissive[0] = newVal;
-            objectFile>>dummy;
-            objectFile>>newVal;
-            newObj->objLight.emissive[1] = newVal;
-            objectFile>>dummy;
-            objectFile>>newVal;
-            newObj->objLight.emissive[2] = newVal;
-            objectFile>>dummy;
-            objectFile>>newVal;
-            newObj->objLight.emissive[3] = newVal;
-        }
         else if(data == "Ambient:")//Light material loading
         {
             char dummy;

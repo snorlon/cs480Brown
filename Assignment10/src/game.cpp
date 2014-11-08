@@ -276,6 +276,7 @@ void game::init()
 
     //TEMPORARY
     //toggle ai on
+    enableAI(1);
     enableAI(2);
 }
 

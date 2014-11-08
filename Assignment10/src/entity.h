@@ -36,18 +36,19 @@ class entity
         GLint loc_mvpmat;
 
         GLint loc_model;
+        GLint loc_view;
 
-        GLint loc_objEmissive;
+        GLint loc_lightPosition[10];
+        GLint loc_lightDiffuse[10];
+        GLint loc_lightSpecular[10];
+        GLint loc_lightAmbient[10];
+        GLint loc_lightSpotDir[10];
+        GLint loc_lightSpotCutoff[10];
+
         GLint loc_objMatAmbient;
         GLint loc_objMatDiffuse;
         GLint loc_objMatSpecular;
         GLint loc_objShine;
-
-        GLint loc_objLightsPosition;
-        GLint loc_objLightsAmbient;
-        GLint loc_objLightsDiffuse;
-        GLint loc_objLightsSpecular;
-        GLint loc_objLightsCount;
 
         int texWidth;
         int texHeight;

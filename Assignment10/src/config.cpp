@@ -32,6 +32,7 @@ config::config()
     currentCamera = -1;
 
     worldLights = new lightArray();
+    worldLights->simConfig = this;
 
     azimuthAngle = 0;
     altitudeAngle = 1;
@@ -72,7 +73,7 @@ config::config()
     eyeCamera.Position(1,1,-2);
     //load in world lighting
     char dummy;
-    double temp[4];
+    double temp[5];
     input.clear();
     input.open("../bin/data/light_sources.dat");
     line = 0;
@@ -119,10 +120,16 @@ config::config()
                 newLight->setSpecular(temp);
                 line++;
                 break;
+            case 4:
+                input>>temp[0]>>dummy>>temp[1]>>dummy>>temp[2]>>dummy>>temp[3]>>dummy>>temp[4]>>dummy;
+
+                newLight->setSpotlight(temp,temp[4]);
+                line++;
+                break;
         }
 
         //call it a day with this light when we finish it
-        if(line >= 4)
+        if(line >= 5)
         {
             line = 0;
             newLight = NULL;

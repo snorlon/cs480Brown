@@ -1,4 +1,5 @@
 #include "light.h"
+#include "config.h"
 
 lightSource::lightSource( lightArray* l, entity* p )
 {
@@ -26,6 +27,11 @@ lightSource::lightSource( lightArray* l, entity* p )
     type = POINTLIGHT;
 
     stateOn = false;//default to off
+
+}
+
+lightSource::~lightSource()
+{
 
 }
 
@@ -61,77 +67,34 @@ void lightSource::setSpecular(double values[4])
     sourceSpecular[3] = values[3];
 }
 
+void lightSource::setSpotlight(double values[4], double val2)
+{
+    sourceSpotlightDirection[0] = values[0];
+    sourceSpotlightDirection[1] = values[1];
+    sourceSpotlightDirection[2] = values[2];
+    sourceSpotlightDirection[3] = values[3];
+
+    sourceSpotlightCutoff = val2;
+}
+
 void lightSource::on()
 {
     if(lights==NULL)
         return;
 
     stateOn = true;
-
-    //set all of our values in the master light array
-    //set the position
-    lights->position[id*4 + 0] = position[0];//x
-    lights->position[id*4 + 1] = position[1];//y
-    lights->position[id*4 + 2] = position[2];//z
-    lights->position[id*4 + 3] = position[3];//??
-
-    //set the ambient
-    lights->sourceAmbient[id*4 + 0] = sourceAmbient[0];//R
-    lights->sourceAmbient[id*4 + 1] = sourceAmbient[1];//G
-    lights->sourceAmbient[id*4 + 2] = sourceAmbient[2];//B
-    lights->sourceAmbient[id*4 + 3] = sourceAmbient[3];//A
-
-    //set the diffuse
-    lights->sourceDiffuse[id*4 + 0] = sourceDiffuse[0];//R
-    lights->sourceDiffuse[id*4 + 1] = sourceDiffuse[1];//G
-    lights->sourceDiffuse[id*4 + 2] = sourceDiffuse[2];//B
-    lights->sourceDiffuse[id*4 + 3] = sourceDiffuse[3];//A
-
-    //set the specular
-    lights->sourceSpecular[id*4 + 0] = sourceSpecular[0];//R
-    lights->sourceSpecular[id*4 + 1] = sourceSpecular[1];//G
-    lights->sourceSpecular[id*4 + 2] = sourceSpecular[2];//B
-    lights->sourceSpecular[id*4 + 3] = sourceSpecular[3];//A
 }
 
 void lightSource::off()
 {
     stateOn = false;
-
-    //set all of our values in the master light array
-    //set the position
-    lights->position[id*4 + 0] = 0;//x
-    lights->position[id*4 + 1] = 0;//y
-    lights->position[id*4 + 2] = 0;//z
-    lights->position[id*4 + 3] = 0;//??
-
-    //set the ambient
-    lights->sourceAmbient[id*4 + 0] = 0;//R
-    lights->sourceAmbient[id*4 + 1] = 0;//G
-    lights->sourceAmbient[id*4 + 2] = 0;//B
-    lights->sourceAmbient[id*4 + 3] = 0;//A
-
-    //set the diffuse
-    lights->sourceDiffuse[id*4 + 0] = 0;//R
-    lights->sourceDiffuse[id*4 + 1] = 0;//G
-    lights->sourceDiffuse[id*4 + 2] = 0;//B
-    lights->sourceDiffuse[id*4 + 3] = 0;//A
-
-    //set the specular
-    lights->sourceSpecular[id*4 + 0] = 0;//R
-    lights->sourceSpecular[id*4 + 1] = 0;//G
-    lights->sourceSpecular[id*4 + 2] = 0;//B
-    lights->sourceSpecular[id*4 + 3] = 0;//A
 }
 
 lightArray::lightArray()
 {
     head = NULL;
 
-    position = NULL;
-    sourceAmbient = NULL;
-    sourceDiffuse = NULL;
-    sourceSpecular = NULL;
+    simConfig = NULL;
 
     lightCount = 0;
 }
@@ -145,25 +108,25 @@ lightArray::~lightArray()
     }
 }
 
+bool lightArray::addLight(double pos[4], double ambient[4], double diffuse[4], double specular[4], double spotdir[4], double spotcut, entity* parent)
+{
+    lightSource* newLight = NULL;
+    if(lightCount>=10)
+        return false;
+
+    newLight = new lightSource(this, parent);
+
+    newLight->setPosition(pos);
+    newLight->setAmbient(ambient);
+    newLight->setDiffuse(diffuse);
+    newLight->setSpecular(specular);
+    newLight->setSpotlight(spotdir, spotcut);
+
+    return true;
+}
+
 void lightArray::init()
 {
-    //start the arrays off with +1 in case we have 0 lights, just in case, you know?
-    position = new double[(lightCount+1)*4];
-    sourceAmbient = new double[(lightCount+1)*4];
-    sourceDiffuse = new double[(lightCount+1)*4];
-    sourceSpecular = new double[(lightCount+1)*4];
-
-    //default them to 0
-    for(int i=0; i< (lightCount+1)*4; i++)
-    {
-        position[i] = 0.0;
-        sourceAmbient[i] = 0.0;
-        sourceDiffuse[i] = 0.0;
-        sourceSpecular[i] = 0.0;
-    }
-
-    //flip them switches
-    on();
 }
 
 void lightArray::on()

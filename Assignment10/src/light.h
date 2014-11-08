@@ -1,6 +1,9 @@
 #ifndef LIGHTH
 #define LIGHTH
 
+#include <GL/glew.h> // glew must be included before the main gl libs
+#include <GL/glut.h> // doing otherwise causes compiler shouting
+
 #define GLM_FORCE_RADIANS
 
 #include <glm/glm.hpp>
@@ -15,6 +18,7 @@ static const int AMBIENTLIGHT = 1;
 static const int POINTLIGHT = 2;
 static const int DISTANTLIGHT = 3;
 
+class config;
 class entity;
 class lightArray;
 class lightSource
@@ -33,15 +37,19 @@ class lightSource
         double sourceAmbient[4] = {0.0,0.0,0.0,0.0};
         double sourceDiffuse[4] = {0.0,0.0,0.0,0.0};
         double sourceSpecular[4] = {0.0,0.0,0.0,0.0};
+        double sourceSpotlightDirection[4] = {0,-1,0,0};
+        float sourceSpotlightCutoff = 0;
 
         bool stateOn;
 
         lightSource( lightArray* l, entity* p = NULL);
+        ~lightSource();
 
         void setPosition(double values[4]);
         void setAmbient(double values[4]);
         void setDiffuse(double values[4]);
         void setSpecular(double values[4]);
+        void setSpotlight(double values[4], double val2);
 
         void on();
         void off();
@@ -54,15 +62,14 @@ class lightArray
     public:
         lightSource* head;
 
-        double* position;
-        double* sourceAmbient;
-        double* sourceDiffuse;
-        double* sourceSpecular;
+        config* simConfig;
 
         int lightCount;
 
         lightArray();
         ~lightArray();
+
+        bool addLight(double pos[4], double ambient[4], double diffuse[4], double specular[4], double spotdir[4], double spotcut, entity* parent = NULL);
 
         void init();
         void on();
@@ -100,7 +107,6 @@ class entityLight
     //aterial properties
     public:
 //emissive, ambient, diffuse, and specular
-        double emissive[4] = {0.1,0.1,0.1,0.0};
         double materialAmbient[4] = {0.1,0.1,0.1,0.0};
         double materialDiffuse[4] = {0.1,0.1,0.1,0.0};
         double materialSpecular[4] = {0.1,0.1,0.1,0.0};

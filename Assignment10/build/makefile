@@ -71,7 +71,7 @@ renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(ENTITYH) $(CONFIGH) $(SP
 camera.o: $(CAMERA) $(CAMERAH) $(ENTITYH)
 	$(CC) $(CXXFLAGS) -c $(CAMERA) $(LIBS)
 
-light.o: $(LIGHT) $(LIGHTH)
+light.o: $(LIGHT) $(LIGHTH) $(CONFIGH)
 	$(CC) $(CXXFLAGS) -c $(LIGHT) $(LIBS)
 
 sprite.o: $(SPRITE) $(SPRITEH) $(CONFIGH)

@@ -1,39 +1,21 @@
 #version 130
-in vec2 v_tex;
-in vec3 v_normal;
-in vec3 v_position;
+in highp vec2 v_tex;
+in highp vec3 v_normal;
+in highp vec3 v_position;
 
-struct Light{
-    vec4 position;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
-    vec4 spotdirection;
-    float spotcutoff;
-};
+out highp vec3 normal;
+out highp vec3 position;
 
-uniform Light lights[200];
-
-uniform vec4 v_obj_ambient;
-uniform vec4 v_obj_diffuse;
-uniform vec4 v_obj_specular;
-uniform float v_obj_shine;
-
-uniform vec4 eyeVector;
-
-out vec4 normal;
-out vec4 position;
-
-uniform mat4 mvpMatrix;
-uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
+uniform highp mat4 mvpMatrix;
+uniform highp mat4 modelMatrix;
+uniform highp mat4 viewMatrix;
 
 void main()
 {
     gl_Position = mvpMatrix * vec4(v_position, 1.0);
     gl_TexCoord[0].st = v_tex;
 
-    normal = modelMatrix * vec4(v_normal, 0);
-    position = modelMatrix * vec4(v_position, 1);
+    normal = normalize((modelMatrix * vec4(v_normal, 0)).rgb);
+    position = (modelMatrix * vec4(v_position, 1)).rgb;
 
 }

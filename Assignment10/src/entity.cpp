@@ -132,10 +132,10 @@ void entity::init()
     loc_model = glGetUniformLocation(simConfig->program, "modelMatrix");
     loc_view = glGetUniformLocation(simConfig->program, "viewMatrix");
 
-    loc_objMatAmbient = glGetUniformLocation(simConfig->program, "v_obj_ambient");
-    loc_objMatDiffuse = glGetUniformLocation(simConfig->program, "v_obj_diffuse");
-    loc_objMatSpecular = glGetUniformLocation(simConfig->program, "v_obj_specular");
-    loc_objShine = glGetUniformLocation(simConfig->program, "v_obj_shine");
+    loc_objMatAmbient = glGetUniformLocation(simConfig->program, "lightMat.ambient");
+    loc_objMatDiffuse = glGetUniformLocation(simConfig->program, "lightMat.diffuse");
+    loc_objMatSpecular = glGetUniformLocation(simConfig->program, "lightMat.specular");
+    loc_objShine = glGetUniformLocation(simConfig->program, "lightMat.shine");
 
 
     //unbind buffer
@@ -280,32 +280,32 @@ void entity::render()
     {
         if(iterator!=NULL)
         {
-            glUniform4f(loc_lightPosition[i], iterator->position[0],iterator->position[1],iterator->position[2],iterator->position[3]);
-            glUniform4f(loc_lightAmbient[i], iterator->sourceAmbient[0],iterator->sourceAmbient[1],iterator->sourceAmbient[2],iterator->sourceAmbient[3]);
-            glUniform4f(loc_lightDiffuse[i], iterator->sourceDiffuse[0],iterator->sourceDiffuse[1],iterator->sourceDiffuse[2],iterator->sourceDiffuse[3]);
-            glUniform4f(loc_lightSpecular[i], iterator->sourceSpecular[0],iterator->sourceSpecular[1],iterator->sourceSpecular[2],iterator->sourceSpecular[3]);
-            glUniform4f(loc_lightSpotDir[i], iterator->sourceSpotlightDirection[0],iterator->sourceSpotlightDirection[1],iterator->sourceSpotlightDirection[2],iterator->sourceSpotlightDirection[3]);
+            glUniform3f(loc_lightPosition[i], iterator->position[0],iterator->position[1],iterator->position[2]);
+            glUniform3f(loc_lightAmbient[i], iterator->sourceAmbient[0],iterator->sourceAmbient[1],iterator->sourceAmbient[2]);
+            glUniform3f(loc_lightDiffuse[i], iterator->sourceDiffuse[0],iterator->sourceDiffuse[1],iterator->sourceDiffuse[2]);
+            glUniform3f(loc_lightSpecular[i], iterator->sourceSpecular[0],iterator->sourceSpecular[1],iterator->sourceSpecular[2]);
+            glUniform3f(loc_lightSpotDir[i], iterator->sourceSpotlightDirection[0],iterator->sourceSpotlightDirection[1],iterator->sourceSpotlightDirection[2]);
             glUniform1f(loc_lightSpotCutoff[i], iterator->sourceSpotlightCutoff);
             iterator = iterator->next;
         }
         else
         {
-            glUniform4f(loc_lightPosition[i], 0,0,0,0);
-            glUniform4f(loc_lightAmbient[i], 0,0,0,0);
-            glUniform4f(loc_lightDiffuse[i], 0,0,0,0);
-            glUniform4f(loc_lightSpecular[i], 0,0,0.6,0);
-            glUniform4f(loc_lightSpotDir[i], 0,-1,0,0);
+            glUniform3f(loc_lightPosition[i], 0,0,0);
+            glUniform3f(loc_lightAmbient[i], 0,0,0);
+            glUniform3f(loc_lightDiffuse[i], 0,0,0);
+            glUniform3f(loc_lightSpecular[i], 0,0,0.6);
+            glUniform3f(loc_lightSpotDir[i], 0,-1,0);
             glUniform1f(loc_lightSpotCutoff[i], 90);
         }
     }
 
     //enable config stuff
     //glEnableVertexAttribArray(simConfig->loc_eyeVector);
-    glUniform4f(simConfig->loc_eyeVector, simConfig->currentFocalCamera->x, simConfig->currentFocalCamera->y, simConfig->currentFocalCamera->z, 1);
-    glUniform4f(loc_objMatAmbient, objLight.materialAmbient[0], objLight.materialAmbient[1], objLight.materialAmbient[2], objLight.materialAmbient[3]);
+    glUniform3f(simConfig->loc_eyeVector, simConfig->currentFocalCamera->x, simConfig->currentFocalCamera->y, simConfig->currentFocalCamera->z);
+    glUniform3f(loc_objMatAmbient, objLight.materialAmbient[0], objLight.materialAmbient[1], objLight.materialAmbient[2]);
 //cout<<objLight.materialAmbient[0]<<objLight.materialAmbient[1]<<objLight.materialAmbient[2]<<endl;
-    glUniform4f(loc_objMatDiffuse, objLight.materialDiffuse[0], objLight.materialDiffuse[1], objLight.materialDiffuse[2], objLight.materialDiffuse[3]);
-    glUniform4f(loc_objMatSpecular, objLight.materialSpecular[0], objLight.materialSpecular[1], objLight.materialSpecular[2], objLight.materialSpecular[3]);
+    glUniform3f(loc_objMatDiffuse, objLight.materialDiffuse[0], objLight.materialDiffuse[1], objLight.materialDiffuse[2]);
+    glUniform3f(loc_objMatSpecular, objLight.materialSpecular[0], objLight.materialSpecular[1], objLight.materialSpecular[2]);
     glUniform1f(loc_objShine, objLight.shine);
 
     glDrawArrays(GL_TRIANGLES, 0, vertexCount);//mode, starting index, count

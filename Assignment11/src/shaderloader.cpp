@@ -78,6 +78,8 @@ bool shaderManager::loadShaders()
             {
                 glGetShaderInfoLog(vertexShaders[shaderCount], 512, &errLength, buffer);
                 std::cerr << "[F] FAILED TO COMPILE "+tempString+" VERTEX SHADER!" << std::endl;
+                glGetShaderInfoLog(vertexShaders[shaderCount], 512, &errLength, buffer);
+                fprintf(stderr, "Compilation error: %s\n", buffer);
 
                 good = false;
             }
@@ -92,10 +94,16 @@ bool shaderManager::loadShaders()
             //check the compile status
             glGetShaderiv(fragmentShaders[shaderCount], GL_COMPILE_STATUS, &shader_status);
 
+    
+
+
+
             if(!shader_status)
             {
                 glGetShaderInfoLog(fragmentShaders[shaderCount], 512, &errLength, buffer);
                 std::cerr << "[F] FAILED TO COMPILE "+tempString+" FRAGMENT SHADER!" << std::endl;
+                glGetShaderInfoLog(fragmentShaders[shaderCount], 512, &errLength, buffer);
+                fprintf(stderr, "Compilation error: %s\n", buffer);
 
                 good = false;
             }
@@ -119,6 +127,7 @@ bool shaderManager::loadShaders()
                     cout<<tempString+" shader loaded successfully!"<<endl;
                     shaderCount++;
                 }
+                activateShader(shaderCount);
             }
         }
 
@@ -138,7 +147,7 @@ void shaderManager::activateShader(string id)
 
     if(shaderIndex == -1)
     {
-        cout<<"Invalid shader "+id+"!"<<endl;
+        return;
     }
     glUseProgram(programs[shaderIndex]);
 
@@ -152,7 +161,7 @@ void shaderManager::activateShader(int id)
 
     if(shaderIndex < 0 || shaderIndex >= shaderCount)
     {
-        cout<<"Invalid shader "<<id<<"!"<<endl;
+        return;
     }
     glUseProgram(programs[shaderIndex]);
 

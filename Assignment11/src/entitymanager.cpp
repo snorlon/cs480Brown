@@ -354,7 +354,7 @@ entity* entityManager::loadEntity(string fileName)
 
                     //generate an OpenGL texture ID for this texture
                     //generate texture for each shader
-                    for(int i=0; i<simConfig->simShaderManager->shaderCount-1; i++)
+                    for(int i=0; i<simConfig->simShaderManager->shaderCount; i++)
                     {
                         simConfig->simShaderManager->activateShader(i);
 

@@ -21,7 +21,8 @@ bool renderer::giveLinks(config* configData)
 void renderer::render()
 {
     //--Render the scene
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_main);
+    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
 
     //activate 3D shader
     if(simConfig->lightPerVertex)
@@ -30,7 +31,6 @@ void renderer::render()
         simConfig->simShaderManager->activateShader("PerFragmentLighting");
 
     //clear the screen
-    glClearColor(0.5, 0.5, 0.5, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //perform pre-rendering
@@ -42,11 +42,57 @@ void renderer::render()
     //render game objects
     simConfig->gameData.render();
 
+
+    //Will the real frame buffer please stand up
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+    //glClearColor(0.5, 0.5, 0.9, 1.0);
+    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     //activate 2D shader
     simConfig->simShaderManager->activateShader("2D");
 
+
     //render the 2d images
     sprites.render(  );
+
+		// Bind our texture in Texture Unit 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, renderedTexture);
+		// Set our "renderedTexture" sampler to user Texture Unit 0
+		glUniform1i(texID, 0);
+
+glBindBuffer(GL_ARRAY_BUFFER, outputSprite->vbo_sprite);
+
+    //set up the Vertex Buffer Object so it can be drawn
+    glEnableVertexAttribArray(outputSprite->loc_position);
+    //set pointers into the vbo for each of the attributes(position and color)
+    glVertexAttribPointer( outputSprite->loc_position,//location of attribute
+                           3,//number of elements
+                           GL_FLOAT,//type
+                           GL_FALSE,//normalized?
+                           sizeof(Vertex),//stride
+                           0);//offset
+
+    glEnableVertexAttribArray(outputSprite->loc_texture);
+    glVertexAttribPointer( outputSprite->loc_texture,
+                           2,
+                           GL_FLOAT,
+                           GL_FALSE,
+                           sizeof(Vertex),
+                            (void*)offsetof(Vertex,uv));
+
+    glDrawArrays(GL_QUADS, 0, 4);//mode, starting index, count
+
+    //clean up
+    glDisableVertexAttribArray(outputSprite->loc_position);
+    glDisableVertexAttribArray(outputSprite->loc_texture);
+
+    //unbind buffer
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                            
     //swap the buffers
     glutSwapBuffers();
@@ -107,34 +153,50 @@ void renderer::tick()
 
 bool renderer::initialize()
 {
-    // create the color texture
-    glGenTextures(1, &colorBuffer);
-    glBindTexture(GL_TEXTURE_2D, colorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1024, 768, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // create the depth texture
-    glGenTextures(1, &depthBuffer);
-    glBindTexture(GL_TEXTURE_2D, depthBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1024, 768, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    simConfig->simShaderManager->activateShader("2D");
 
     // create the fbo
     glGenFramebuffers(1, &fbo_main);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_main);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthBuffer, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_main);;
+
+	texID = glGetUniformLocation(simConfig->simShaderManager->activeProgram, "gSampler");
+
+
+	// The texture we're going to render to
+	glGenTextures(1, &renderedTexture);
+	
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+
+	// Give an empty image to OpenGL ( the last "0" means "empty" )
+	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, simConfig->getWindowWidth(), simConfig->getWindowHeight(), 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+	// Poor filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
+
+	// The depth buffer
+	if ( !GLEW_ARB_framebuffer_object ){ // OpenGL 2.1 doesn't require this, 3.1+ does
+		printf("Your GPU does not provide framebuffer objects. Use a texture instead.");
+		return false;
+	}
+	glGenRenderbuffers(1, &depthrenderbuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, simConfig->getWindowWidth(), simConfig->getWindowHeight());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
+
+	GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+cout<<"FUCK YOU"<<endl;
 
     //create a sprite to render
-    outputSprite = new sprite(0, 0, 1024, 768, 1.0, 1.0);
+    outputSprite = new sprite(0, 0, simConfig->getWindowWidth(), simConfig->getWindowHeight(), 1.0, 1.0);
+    outputSprite->load(simConfig,"interface/airhockeyinterface.png");
     outputSprite->init(simConfig);
-
-    simConfig->simShaderManager->activateShader("2D");
-    texID = glGetUniformLocation(simConfig->simShaderManager->activeProgram, "colorBuffer");
-    outputSprite->loc_texture = texID;
 
     //enable depth testing
     glEnable(GL_DEPTH_TEST);

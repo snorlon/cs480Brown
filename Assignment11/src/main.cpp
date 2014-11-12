@@ -102,7 +102,7 @@ int main(int argc, char **argv)
     glutInitWindowPosition( 100, 100);
     // Name and create the Window
     glutCreateWindow("Air Hockey");
-    glutFullScreen();
+    //glutFullScreen();
 
     // Now that the window is created the GL context is fully set up
     // Because of that we can now initialize GLEW to prepare work with shaders

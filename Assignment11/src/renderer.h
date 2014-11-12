@@ -20,8 +20,8 @@ class renderer
         config* simConfig;
         spriteManager sprites;//holds all 2d image data
 
-        GLuint colorBuffer;
-        GLuint depthBuffer;
+        GLuint renderedTexture;
+        GLuint depthrenderbuffer;
         GLuint fbo_main;
         GLuint texID;
 

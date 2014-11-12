@@ -74,6 +74,8 @@ class lightArray
         void init();
         void on();
         void off();
+        void toggle(int lightID);
+        lightSource* getLight(int lightID);
 
     private:
 };

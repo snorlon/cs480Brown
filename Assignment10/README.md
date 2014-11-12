@@ -1,4 +1,4 @@
-GROUP PROJECT's Assignment 00
+GROUP PROJECT's Assignment 10
 
 Chad Brown
 Alexander Falconi
@@ -8,10 +8,11 @@ Molly Headland
 
 Assignment explanation:
 
-    Air Hockey
-        It does air hockey things!
-
-    80% of graphics custom-made for this assignment, including all 3d models and most of the textures.
+    Implement a program that applies all 4 light types and allows each to be toggleable.
+        Ambient
+        Distant
+        Point
+        Spot
 
 ========================================
 
@@ -72,32 +73,15 @@ NOTES:
 
 Commands:
     Keyboard
-        Arrow Keys - Camera movement
+        WASD - control spotlight 1
+        mouse - control spotlight 2
+        arrow keys - camera
 
-            Up & Down Arrow - Rotate Along the Y plane
-            Left & Right Arrow - Rotate Along the Y axis
-            Pg Up & Pg Down OR
-            End - Reset zoom
-
-        WASD - control Player 2 (if AI not enabled)
-
-        R - reset the puck position
-
-        + and - : controlling speed of program
-
-        1 - First person camera
-        2 - Entire table camera
-        3 - Second person camera
-
-        5 - ToLoveRu theme
-        6 - Pokemon theme
-        7 - Mario theme
-        8 - Sonic theme
-
-        [ - toggle player 1 AI
-        ] - toggle player 2 AI
-
-        Enter - Start match
+        Y - toggle ambient light
+        U - toggle spotlight
+        I - toggle point light
+        O - toggle distant light
+        P - toggle second spotlight
 
         Space - Pause/Unpause
         Esc - Exit program
@@ -105,23 +89,12 @@ Commands:
     Mouse
         Right - Open menu
             Can pause or resume simulation or exit
-        Middle Mouse - hold to rotate camera
-            Mousewheel up and Mousewheel down - Zooming in & out on current camera
-
-        Mouse - Control player 1 (if AI not enabled)
 
 ========================================
 
 Extra Credit: 
-    Detailed background
-    Four Swappable Themes
-    Lighting
-    2D rendering system, including custom text rendering
-    Highscores
-    Two-player controls
-        Rotate depending on camera
-    AI for both sides
-    AI/Human Toggle
+    Multiple spotlights
+    Can control each spotlight
 
 ========================================
 

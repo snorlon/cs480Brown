@@ -233,7 +233,7 @@ void update()
     keyboard();
 
     //lower the key spam counts
-    double rate = 0.25;
+    double rate = 0.05;
     if(consecutivePresses[0]>0)
         consecutivePresses[0]-=rate;
     if(consecutivePresses[1]>0)
@@ -253,7 +253,7 @@ void update()
         consecutivePresses[7]-=rate;
 
     //cap how fast it may get
-    double cap = 3.0;
+    double cap = 0.1;
     if(consecutivePresses[0]>cap)
         consecutivePresses[0]=cap;
     if(consecutivePresses[1]>cap)
@@ -381,6 +381,26 @@ void keyPressed (unsigned char key, int x, int y)
     {
         simConfig.showDetails = !simConfig.showDetails;
     }
+    else if(key == 'y')//lights
+    {
+        simConfig.worldLights->toggle(0);
+    }
+    else if(key == 'u')//lights
+    {
+        simConfig.worldLights->toggle(1);
+    }
+    else if(key == 'i')//lights
+    {
+        simConfig.worldLights->toggle(2);
+    }
+    else if(key == 'o')//lights
+    {
+        simConfig.worldLights->toggle(3);
+    }
+    else if(key == 'p')//lights
+    {
+        simConfig.worldLights->toggle(4);
+    }
     //ai toggle
     else if(key == '[')
     {
@@ -447,8 +467,44 @@ void keyboard()
     //update the bat positions IF time is passing
     if(!recentlyPaused)
     {
-        simConfig.gameData.moveBat(1, consecutivePresses[6]*baseMovementMult - consecutivePresses[7]*baseMovementMult, consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult, false);
-        simConfig.gameData.moveBat(2, consecutivePresses[2]*baseMovementMult - consecutivePresses[3]*baseMovementMult, consecutivePresses[0]*baseMovementMult - consecutivePresses[1]*baseMovementMult, false);
+        lightSource* t = simConfig.worldLights->getLight(1);
+        //move spotlight one
+        t->sourceSpotlightDirection[0]+=(consecutivePresses[1]*baseMovementMult - consecutivePresses[0]*baseMovementMult)/10;
+        t->sourceSpotlightDirection[2]+=(consecutivePresses[2]*baseMovementMult - consecutivePresses[3]*baseMovementMult)/10;
+        if(abs(t->sourceSpotlightDirection[0])>1)
+        {
+            if(t->sourceSpotlightDirection[0]<0)
+                t->sourceSpotlightDirection[0] = -1;
+            else
+                t->sourceSpotlightDirection[0] = 1;
+        }
+        if(abs(t->sourceSpotlightDirection[2])>1)
+        {
+            if(t->sourceSpotlightDirection[2]<0)
+                t->sourceSpotlightDirection[2] = -1;
+            else
+                t->sourceSpotlightDirection[2] = 1;
+        }
+
+
+        t = simConfig.worldLights->getLight(4);
+        t->sourceSpotlightDirection[0]+=(consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult)/10;
+        t->sourceSpotlightDirection[2]+=(consecutivePresses[7]*baseMovementMult - consecutivePresses[6]*baseMovementMult)/10;
+        if(abs(t->sourceSpotlightDirection[0])>1)
+        {
+            if(t->sourceSpotlightDirection[0]<0)
+                t->sourceSpotlightDirection[0] = -1;
+            else
+                t->sourceSpotlightDirection[0] = 1;
+        }
+        if(abs(t->sourceSpotlightDirection[2])>1)
+        {
+            if(t->sourceSpotlightDirection[2]<0)
+                t->sourceSpotlightDirection[2] = -1;
+            else
+                t->sourceSpotlightDirection[2] = 1;
+        }
+        
     }
 }
 

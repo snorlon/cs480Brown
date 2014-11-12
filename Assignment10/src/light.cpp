@@ -26,7 +26,7 @@ lightSource::lightSource( lightArray* l, entity* p )
 
     type = POINTLIGHT;
 
-    stateOn = false;//default to off
+    stateOn = true;//default to off
 
 }
 
@@ -79,9 +79,6 @@ void lightSource::setSpotlight(double values[4], double val2)
 
 void lightSource::on()
 {
-    if(lights==NULL)
-        return;
-
     stateOn = true;
 }
 
@@ -149,6 +146,40 @@ void lightArray::off()
         iterator->off();
         iterator = iterator->next;
     }
+}
+
+void lightArray::toggle(int lightID)
+{
+    //TOGGLE THEM LIGHTS LIKE THE BADASS YOU ARE, FLIP THEM SWITCHES LIKE YOU JUST DON'T CARE
+    lightSource* iterator = head;
+    int index = 0;
+    while(iterator!=NULL&&index<=lightID)
+    {
+        if(index==lightID)
+        {
+            iterator->stateOn = !iterator->stateOn;
+            return;
+        }
+        iterator = iterator->next;
+        index++;
+    }
+}
+
+lightSource* lightArray::getLight(int lightID)
+{
+    //TOGGLE THEM LIGHTS LIKE THE BADASS YOU ARE, FLIP THEM SWITCHES LIKE YOU JUST DON'T CARE
+    lightSource* iterator = head;
+    int index = 0;
+    while(iterator!=NULL&&index<=lightID)
+    {
+        if(index==lightID)
+        {
+            return iterator;
+        }
+        iterator = iterator->next;
+        index++;
+    }
+    return head;
 }
 
 entityLightNode::entityLightNode( lightSource* newL)

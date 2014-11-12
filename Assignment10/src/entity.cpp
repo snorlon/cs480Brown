@@ -278,7 +278,7 @@ void entity::render()
     lightSource* iterator = simConfig->worldLights->head;
     for(int i=0; i<10; i++)
     {
-        if(iterator!=NULL)
+        if(iterator!=NULL&&iterator->stateOn)
         {
             glUniform3f(loc_lightPosition[i], iterator->position[0],iterator->position[1],iterator->position[2]);
             glUniform3f(loc_lightAmbient[i], iterator->sourceAmbient[0],iterator->sourceAmbient[1],iterator->sourceAmbient[2]);
@@ -286,7 +286,6 @@ void entity::render()
             glUniform3f(loc_lightSpecular[i], iterator->sourceSpecular[0],iterator->sourceSpecular[1],iterator->sourceSpecular[2]);
             glUniform3f(loc_lightSpotDir[i], iterator->sourceSpotlightDirection[0],iterator->sourceSpotlightDirection[1],iterator->sourceSpotlightDirection[2]);
             glUniform1f(loc_lightSpotCutoff[i], iterator->sourceSpotlightCutoff);
-            iterator = iterator->next;
         }
         else
         {
@@ -297,6 +296,8 @@ void entity::render()
             glUniform3f(loc_lightSpotDir[i], 0,-1,0);
             glUniform1f(loc_lightSpotCutoff[i], 90);
         }
+        if(iterator!=NULL)
+            iterator = iterator->next;
     }
 
     //enable config stuff

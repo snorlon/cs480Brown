@@ -21,12 +21,13 @@ bool renderer::giveLinks(config* configData)
 void renderer::render()
 {
     //--Render the scene
+    //glBindFramebuffer(GL_FRAMEBUFFER, fbo_main);
     //clear the screen
     glClearColor(0.1, 0.1, 0.15, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //activate 3D shader
-    simConfig->simShaderManager->activate3DShaders(simConfig->lightPerVertex);
+    simConfig->simShaderManager->activate3DShaders(false);
 
     //perform pre-rendering
     glUseProgram(simConfig->program);
@@ -40,6 +41,29 @@ void renderer::render()
     //render game objects
     simConfig->gameData.render();
 
+    //
+    //attempt the texture map display
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    simConfig->simShaderManager->activate3DShaders(true);
+    // Render to the screen
+
+                // Clear the screen
+                //glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                // Use our shader
+
+                // Bind our texture in Texture Unit 0
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, colorBuffer);
+                // Set our "renderedTexture" sampler to user Texture Unit 0
+                //glUniform1i(texID, 0);
+
+                //outputSprite->render();
+
+
+
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //activate 2D shader
     simConfig->simShaderManager->activate2DShaders();
 
@@ -125,6 +149,13 @@ bool renderer::initialize()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthBuffer, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    //create a sprite to render
+    outputSprite = new sprite(0, 0, 1024, 768, 1.0, 1.0);
+    outputSprite->init(simConfig);
+
+    texID = glGetUniformLocation(simConfig->program, "colorBuffer");
+    outputSprite->loc_texture = texID;
 
     //enable depth testing
     glEnable(GL_DEPTH_TEST);

@@ -1,0 +1,15 @@
+Name:       Machine
+Model:      Arcade/Stadium/ arcade
+Shape:      Box
+Mass:       100
+Scale:      10.0
+Location:   130, 0, -50
+Velocity:   0, 0, 0
+Type:       Moveable
+Orientation: 0,90,0
+Size:       10, 16.5, 10
+Emissive:   0.01,0.01,0.01,0
+Ambient:    0.1,0.1,0.1,0
+Diffuse:    0.6,0.6,0.6,0
+Specular:   0.3,0.3,0.3,0
+Shine:      100

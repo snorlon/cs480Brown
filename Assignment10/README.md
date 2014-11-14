@@ -36,9 +36,13 @@ How to run:
 
     enter './../bin/Project' to execute from build folder
 
-    For loading vertex shader from file, enter './../bin/Project -v filename'
+    For loading per vert vertex shader from file, enter './../bin/Project -vv filename'
 
-    For loading fragment shader from file, enter './../bin/Project -f filename'
+    For loading per vert fragment shader from file, enter './../bin/Project -fv filename'
+
+    For loading per frag vertex shader from file, enter './../bin/Project -vf filename'
+
+    For loading per frag fragment shader from file, enter './../bin/Project -ff filename'
 
     For loading 2d vertex shader from file, enter './../bin/Project -2v filename'
 
@@ -48,12 +52,9 @@ How to run:
         All that matters is that file name follows the -f or -v type commands
 
     Example terminal command:
-        ./../bin/Project -v ../bin/shaders/vertexshader -f ../bin/shaders/fragmentshader -2v ../bin/shaders/vertexshader2d -2f ../bin/shaders/fragmentshader2d
+        ./../bin/Project -vf ../bin/shaders/vertexshader -ff ../bin/shaders/fragmentshader -vv ../bin/shaders/vertexshader2 -fv ../bin/shaders/fragmentshader2 -2v ../bin/shaders/vertexshader2d -2f ../bin/shaders/fragmentshader2d
 
     If the file name is good, it will say in the terminal that the corresponding shader has been loaded. If not, it will warn you. Shaders MUST be provided
-
-    The terminal will tell you if your texture or model sucks
-        this program only supports a single texture and a single obj and a single material file, all in the same location
 
     Alternatively, run "./execute.sh" if available
 

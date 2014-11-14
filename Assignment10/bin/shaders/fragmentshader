@@ -2,7 +2,7 @@
 
 uniform sampler2D gSampler;
 
-uniform highp vec3 eyeVector;
+uniform vec3 eyeVector;
 
 struct Light{
     vec3 position;
@@ -20,11 +20,11 @@ struct LightMaterial{
     float shine;
 };
 
-uniform mediump Light lights[10];
-uniform lowp LightMaterial lightMat;
+uniform Light lights[10];
+uniform LightMaterial lightMat;
 
-in highp vec3 normal;
-in highp vec3 position;
+in vec3 normal;
+in vec3 position;
 
 void main()
 {

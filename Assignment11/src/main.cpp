@@ -343,7 +343,7 @@ void keyPressed (unsigned char key, int x, int y)
     }
     else if(key == 'r')//reset the puck position (CHEATING)
     {
-        simConfig.gameData.resetPuck();
+        simConfig.gameData.resetBall();
     }
     else if(key == '1')//cameras
     {
@@ -356,22 +356,6 @@ void keyPressed (unsigned char key, int x, int y)
     else if(key == '3')//cameras
     {
         simConfig.switchCamera(1);
-    }
-    else if(key == '5')//themes
-    {
-        simConfig.gameData.switchTheme(1);
-    }
-    else if(key == '6')//themes
-    {
-        simConfig.gameData.switchTheme(2);
-    }
-    else if(key == '7')//themes
-    {
-        simConfig.gameData.switchTheme(3);
-    }
-    else if(key == '8')//themes
-    {
-        simConfig.gameData.switchTheme(4);
     }
     else if(key == 'c')
     {
@@ -420,36 +404,43 @@ void keyUp (unsigned char key, int x, int y)
 
 void keyboard()
 {
-    float baseMovementMult = 0.1;
+    float baseMovementMult = 3;
+    float xGShift = -0.1;
+    float zGShift = -0.1;
+
+    if(rand()%2 == 0)
+        xGShift+=0.2;
+    if(rand()%2 == 0)
+        zGShift+=0.2;
 
     //movement for bat 2(if AI not enabled)
     if(keyStates['w'])
     {
         //up the key counter to factor in holding button for speed
-        consecutivePresses[0]+=1;
+        xGShift -= baseMovementMult;
     }
     if(keyStates['s'])
     {
         //up the key counter to factor in holding button for speed
-        consecutivePresses[1]+=1;
+        xGShift += baseMovementMult;
     }
     if(keyStates['a'])
     {
         //up the key counter to factor in holding button for speed
-        consecutivePresses[2]+=1;
+        zGShift += baseMovementMult;
     }
     if(keyStates['d'])
     {
         //up the key counter to factor in holding button for speed
-        consecutivePresses[3]+=1;
+        zGShift -= baseMovementMult;
     }
 
     //update the bat positions IF time is passing
     if(!recentlyPaused)
     {
         simConfig.gameData.moveBat(1, consecutivePresses[6]*baseMovementMult - consecutivePresses[7]*baseMovementMult, consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult, false);
-        simConfig.gameData.moveBat(2, consecutivePresses[2]*baseMovementMult - consecutivePresses[3]*baseMovementMult, consecutivePresses[0]*baseMovementMult - consecutivePresses[1]*baseMovementMult, false);
     }
+    simConfig.physicsEnvironment->shiftGravity(xGShift,zGShift);
 }
 
 void keyboardPlus(int key, int x_pos, int y_pos)

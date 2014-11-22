@@ -31,16 +31,16 @@ in highp vec3 position;
 void main()
 {
     vec3 LightTotal = vec3(0.0,0.0,0.0);
-    vec3 lightParts[5];
+    vec3 lightParts[10];
 
-    for(int j=0;j<5;j++)
+    for(int j=0;j<10;j++)
     {
         lightParts[j] = lightMat.ambient * lights[j].ambient;
     }
 
     vec3 V = normalize( eyeVector - position );
 
-    for(int i=0;i<5;i++)
+    for(int i=0;i<10;i++)
     {
         // Compute the diffuse term.
         vec3 L = normalize( lights[i].position - position );

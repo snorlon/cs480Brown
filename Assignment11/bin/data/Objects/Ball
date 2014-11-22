@@ -2,7 +2,13 @@ Name:       TestBall
 Model:      Ball/ Ball
 Shape:      Sphere
 Mass:       5
-Scale:      1.0
-Location:   1, 20, 0
-Velocity:   0, 20, 0
+Scale:      0.25
+Size:       0.25, 0.5, 0.5
+Location:   14.2, 11, -14.2
+Velocity:   0, 0, 0
 Type:       Moveable
+Emissive:   0,0,0,0
+Ambient:    0.8,0.8,0.8,0
+Diffuse:    0.9,0.9,0.9,0
+Specular:   0.7,0.7,0.7,0
+Shine:      255

@@ -45,30 +45,25 @@ class game
         score* highscores[10];
         score currentGame;
 
-        theme* currentTheme;
-        theme* themes;
+        theme currentTheme;
 
         config* simConfig;
 
         //store game-specific materials via the game class
-        entity* puck;
+        entity* ball;
         entity* bat1;
         entity* bat2;
         entity* table;
 
         double time;
 
-        int themeCount;
-
-        bool gameActive;
+        int gameState;
 
         bool ai1Enabled;
         bool ai2Enabled;
 
         game();
         ~game();
-        void addTheme(string nname, string apath, string p1, string p2);
-        void switchTheme(int themenum);
         void addScore(score* s);
         void resetScore();
         void init();//for initing the game-specific components
@@ -79,7 +74,7 @@ class game
         void enableAI(int person);
 
         //game-specific functions
-        void resetPuck();
+        void resetBall();
     private:
 };
 

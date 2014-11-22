@@ -1,0 +1,14 @@
+Name:       Board
+Model:      Maze/ labyrinth
+Shape:      Custom
+Mass:       0
+Scale:      15.0
+Location:   0, 10, 0
+Velocity:   0, 0, 0
+Type:       Moveable
+Orientation: 0,0,0
+Size:       1, 1, 1
+Ambient:    0.1,0.1,0.1,0
+Diffuse:    0.6,0.6,0.6,0
+Specular:   0.3,0.3,0.3,0
+Shine:      150

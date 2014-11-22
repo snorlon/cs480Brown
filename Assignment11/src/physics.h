@@ -24,6 +24,7 @@ class physics
         ~physics();
 
         void tick(double dt);
+        void shiftGravity(float xAmount, float zAmount);
     private:
 };
 

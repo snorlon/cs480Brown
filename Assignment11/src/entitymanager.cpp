@@ -365,7 +365,7 @@ entity* entityManager::loadEntity(string fileName)
 
                         //store the texture data for OpenGL use
                         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, newObj->texWidth, newObj->texHeight, 0, GL_BGR, GL_UNSIGNED_BYTE, bits);
+                        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, newObj->texWidth, newObj->texHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, bits);
                     }
 
                     simConfig->texCount++;

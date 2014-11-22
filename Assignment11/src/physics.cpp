@@ -1,5 +1,7 @@
 #include "physics.h"
+#include <iostream>
 
+using namespace std;
 
 physics::physics()
 {
@@ -14,7 +16,7 @@ physics::physics()
     dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, physicsConfig);
 
     //the gravity of the situation is just outrageous
-    dynamicsWorld->setGravity(btVector3(0, -100.81, 0));
+    dynamicsWorld->setGravity(btVector3(0, -9.81, 0));
 
     //it isn't the fall that kills you, it's the collision with the ground
     /*ground = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
@@ -50,5 +52,10 @@ void physics::tick(double dt)
 {
     //update the bullet physics
     if(dt>0.0)
-        dynamicsWorld->stepSimulation(dt, 5);
+        dynamicsWorld->stepSimulation(dt, 10);
+}
+
+void physics::shiftGravity(float xAmount, float zAmount)
+{
+    dynamicsWorld->setGravity(btVector3(xAmount, -9.81, zAmount));
 }

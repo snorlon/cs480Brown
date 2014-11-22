@@ -75,11 +75,7 @@ game::game()
     for(int i=0; i<10; i++)
         highscores[i] = NULL;
 
-    currentTheme = NULL;
-    themes = NULL;
-    themeCount = 0;
-
-    puck = NULL;
+    ball = NULL;
     bat1 = NULL;
     bat2 = NULL;
     table = NULL;
@@ -94,6 +90,8 @@ game::game()
 
     ai1Enabled = false;
     ai2Enabled = false;
+
+    gameState=1;
 
     srand (0);
 
@@ -128,88 +126,6 @@ game::~game()
     }
     
     fout.close();
-}
-
-void game::addTheme(string nname, string apath, string p1, string p2)
-{
-    theme* newtheme = new theme();
-    newtheme->themeName = nname;
-    newtheme->assetsPath = apath;
-    newtheme->p1 = p1;
-    newtheme->p2 = p2;
-
-    if(themes == NULL)
-    {
-        themes = newtheme;
-    }
-    else
-    {
-        theme* iterator = themes;
-        while(iterator->next!=NULL)
-            iterator = iterator->next;
-
-        iterator->next = newtheme;
-    }
-    themeCount++;
-}
-
-void game::switchTheme(int themenum)
-{
-    if(themenum>themeCount)
-        themenum = themeCount;
-
-    int index = 1;
-    theme* iterator = themes;
-    while(index<themenum && iterator!=NULL)
-    {
-        iterator = iterator->next;
-        index++;
-    }
-
-    gameActive = false;
-
-    //check if our theme selection is valid
-    if(index==themenum && iterator != NULL)
-    {
-        //kill the old data
-        if(puck!=NULL)
-        {
-            simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( puck->objPhysics.objRB );
-            delete puck;
-        }
-        if(bat1!=NULL)
-        {
-            simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( bat1->objPhysics.objRB );
-            delete bat1;
-        }
-        if(bat2!=NULL)
-        {
-            simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( bat2->objPhysics.objRB );
-            delete bat2;
-        }
-        if(table!=NULL)
-        {
-            simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( table->objPhysics.objRB );
-            delete table;
-        }
-
-        //if so, set it as our current theme
-        currentTheme = iterator;
-
-        //load in theme
-        puck = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"puck");
-        bat1 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat");
-        bat2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"bat2");
-        table = simConfig->simEntityManager->loadEntity("../bin/data/Objects/"+currentTheme->assetsPath+"table");
-
-        puck->init();
-        bat1->init();
-        bat2->init();
-        table->init();
-
-        //reset the score
-        resetScore();
-    }
 }
 
 void game::addScore(score* s)
@@ -254,30 +170,34 @@ void game::resetScore()
         addScore(new score(&currentGame));
 
     //reset the score and players
-    if(currentTheme!=NULL)
-    {
-        currentGame.p1Name = currentTheme->p1;
-        currentGame.p2Name = currentTheme->p2;
-        currentGame.score1 = 0;
-        currentGame.score2 = 0;
-    }
+    currentGame.p1Name = currentTheme.p1;
+    currentGame.p2Name = currentTheme.p2;
+    currentGame.score1 = 0;
+    currentGame.score2 = 0;
 
-    time = 60;//reset our timer
+    time = 0;//reset our timer
 }
 
 void game::init()
 {
-    addTheme("To Love Ru","ToLoveRu/", "Lala", "Momo");//our default theme
-    addTheme("Pokemon","Pokemon/", "Red", "Blue");//a pokemon theme
-    addTheme("Mario Bros.","Mario/", "Mario", "Luigi");//a mario theme
-    addTheme("Sonic","Sonic/", "Sonic", "Eggman");//a mario theme
+    //load in theme
+    ball = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Ball");
+    bat1 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/ToLoveRu/bat");
+    bat2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/ToLoveRu/bat2");
+    table = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Props/Labrynth");
 
-    switchTheme(1);//switch to the first theme by default
+    ball->init();
+    bat1->init();
+    bat2->init();
+    table->init();
+
+    //reset the score
+    resetScore();
 
     //TEMPORARY
     //toggle ai on
-    enableAI(1);
-    enableAI(2);
+    //enableAI(1);
+    //enableAI(2);
 }
 
 void game::tick(double dt)
@@ -302,27 +222,24 @@ void game::tick(double dt)
     {
         bat2->tick(dt);
     }
-    if(puck!=NULL)
+    if(ball!=NULL)
     {
-        puck->tick(dt);
+        ball->tick(dt);
         //check if the puck is out of bounds
         //if so reset it
-        if(puck->absolutePosition.y < 1)
+        if(ball->absolutePosition.y < 10)
         {
             //make sure to update the scoreboard!
             //base score on z position
-            if(puck->absolutePosition.z > 4.0)
+            /*if(puck->absolutePosition.z > 4.0)
                 currentGame.score2++;
             if(puck->absolutePosition.z < 4.0)
-                currentGame.score1++;
+                currentGame.score1++;*/
 
-            resetPuck();
-        }
+            //player lost if they fell in
+            gameState=1;
 
-        //reset puck if it gets stuck on the roof
-        if(puck->absolutePosition.y > 13)
-        {
-            resetPuck();
+            resetBall();
         }
     }
     //do ai things
@@ -333,11 +250,11 @@ void game::tick(double dt)
 
 
         //predict where puck should be
-        btVector3  forceAddedVel = puck->objPhysics.objRB->getLinearVelocity();
+        btVector3  forceAddedVel = ball->objPhysics.objRB->getLinearVelocity();
 
          //the predicted position is the balls position plus these two terms
         btTransform pucktrans;
-        puck->objPhysics.objRB->getMotionState()->getWorldTransform(pucktrans);
+        ball->objPhysics.objRB->getMotionState()->getWorldTransform(pucktrans);
 
         btTransform bat1trans;
         btTransform bat2trans;
@@ -393,13 +310,8 @@ void game::tick(double dt)
     }
 
     //do not tick if game is not running
-    if(gameActive)
-        time-=dt;
-
-    //check if timer is zero
-    //end the game if so
-    if(time<=0)
-        gameActive = false;
+    if(gameState==0)
+        time+=dt;
 }
 
 void game::render()
@@ -417,16 +329,16 @@ void game::render()
     {
         bat2->render();
     }
-    if(puck!=NULL)
+    if(ball!=NULL)
     {
-        puck->render();
+        ball->render();
     }
 }
 
 void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
 {
     //ditch controls if game not active
-    if(!gameActive)
+    if(gameState!=0)
         return;
 
     //check if we aren't supposed to be able to control this bat
@@ -527,20 +439,20 @@ void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
     }
 }
 
-void game::resetPuck()
+void game::resetBall()
 {
-    if(puck!=NULL)
+    if(ball!=NULL)
     {
         //reset our position
-        puck->absolutePosition.x = 0;
-        puck->absolutePosition.y = 10;
-        puck->absolutePosition.z = 0;
+        ball->absolutePosition.x = 14.2;
+        ball->absolutePosition.y = 11;
+        ball->absolutePosition.z = -14.2;
 
         //remove the HEATHEN!
-        simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( puck->objPhysics.objRB );
+        simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( ball->objPhysics.objRB );
 
         //and re-add them PURIFIED
-        puck->objPhysics.init( puck );
+        ball->objPhysics.init( ball );
     }
 }
 
@@ -548,13 +460,14 @@ void game::startGame()
 {
     //to start the game we MUST
     //set the flag
-    gameActive = true;
+    gameState = 0;
 
     //reset the score
     resetScore();
+    resetBall();
 
     //reset the camera
-    simConfig->switchCamera(0);
+    //simConfig->switchCamera(0);
 
 }
 
@@ -570,5 +483,5 @@ void game::enableAI(int person)
         ai2Enabled = !ai2Enabled;
     }
     //forfeit the match
-    gameActive=false;
+    gameState=0;
 }

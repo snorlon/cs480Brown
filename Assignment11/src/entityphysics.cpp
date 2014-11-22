@@ -90,7 +90,7 @@ void entityPhysics::init(entity* np)
         btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, objMotion, shape, fallInertia);
 
         //set the friction
-        fallRigidBodyCI.m_friction = 0.1;
+        fallRigidBodyCI.m_friction = 0.01;
 
         objRB = new btRigidBody(fallRigidBodyCI);
         //simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);

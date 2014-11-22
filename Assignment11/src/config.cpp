@@ -42,22 +42,8 @@ config::config()
     showDetails = false;
 
     //create a new camera for each of the eye positions
-    Camera* newCam = new Camera();//p1
-    newCam->Position(0.0,7.0,3.0);
-    newCam->Rotate(90,50,14);
-    newCam->controlRot = 1;
-    newCam->next = presetCameras;
-    presetCameras = newCam;
-
-    newCam = new Camera();//p2
-    newCam->Position(0.0,7.0,-3.0);
-    newCam->Rotate(-90,50,14);
-    newCam->controlRot = 2;
-    newCam->next = presetCameras;
-    presetCameras = newCam;
-
-    newCam = new Camera();//center of table
-    newCam->Position(0.0,6.0,0.0);
+    Camera* newCam = new Camera();//center of table
+    newCam->Position(0.0,18.0,0.0);
     newCam->Rotate(0,1,25);
     newCam->next = presetCameras;
     presetCameras = newCam;

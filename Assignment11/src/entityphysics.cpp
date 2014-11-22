@@ -95,6 +95,8 @@ void entityPhysics::init(entity* np)
         objRB = new btRigidBody(fallRigidBodyCI);
         //simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
 
+        objRB->setActivationState(DISABLE_DEACTIVATION);
+
         //create types and add them if necessary
         if(objType == " Static")
         {
@@ -104,12 +106,12 @@ void entityPhysics::init(entity* np)
         {
             simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB, COL_OBJ, objCollidesWith);
         }
-	else if(objType == "Kinematic")
-	{
-	    objRB->setCollisionFlags(objRB->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-	    objRB->setActivationState(DISABLE_DEACTIVATION);
-	    simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
-	}
+	    else if(objType == "Kinematic")
+	    {
+	        objRB->setCollisionFlags(objRB->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	        objRB->setActivationState(DISABLE_DEACTIVATION);
+	        simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);
+	    }
         else
         {
             simConfig->physicsEnvironment->dynamicsWorld->addRigidBody(objRB);

@@ -114,10 +114,7 @@ void renderer::tick()
     sprites.generateText(simConfig, "Version 1.0.0", 0.4, 985, 740);
 
     //scoreboard stuff
-    sprites.generateText(simConfig, simConfig->gameData.currentGame.p1Name, 0.5, 330, 740);
-    sprites.generateText(simConfig, ""+to_string(simConfig->gameData.currentGame.score1), 0.5, 525, 740);
-    sprites.generateText(simConfig, simConfig->gameData.currentGame.p2Name, 0.5, 770, 740);
-    sprites.generateText(simConfig, ""+to_string(simConfig->gameData.currentGame.score2), 0.5, 700, 740);
+    sprites.generateText(simConfig, ""+to_string(int(floor(simConfig->gameData.currentGame.currScore))), 0.5, 425, 740);
 
     //ai flags
     if(simConfig->gameData.ai1Enabled)
@@ -137,8 +134,7 @@ void renderer::tick()
         if(simConfig->gameData.highscores[i]!=NULL)
         {
             score* currentScore = simConfig->gameData.highscores[i];//for readability
-            sprites.generateText(simConfig, currentScore->bestName(), 0.3, 45, 180-20*i,-2);//draw name
-            sprites.generateText(simConfig, to_string(currentScore->bestScore()), 0.3, 225, 180-20*i,-2);//draw score
+            sprites.generateText(simConfig, to_string(int(floor(currentScore->currScore))), 0.3, 225, 180-20*i,-2);//draw score
         }
     }
 }

@@ -12,52 +12,12 @@ using namespace std;
 
 score::score()
 {
-    player1Player = true;
-    player2Player = true;
-
-    p1Name = "Player 1";
-    p2Name = "Player 2";
-
-    score1 = 0;
-    score2 = 0;
+    currScore = 0;
 }
 
 score::score(score* s)
 {
-    player1Player = s->player1Player;
-    player2Player = s->player2Player;
-
-    p1Name = s->p1Name;
-    p2Name = s->p2Name;
-
-    score1 = s->score1;
-    score2 = s->score2;
-}
-
-string score::bestName()
-{
-    //output the better of the two players
-    string p = p1Name;
-
-    if(score2 > score1)
-    {
-        p = p2Name;
-    }
-
-    return p;
-}
-
-int score::bestScore()
-{
-    //output the better of the two players
-    int s = score1;
-
-    if(score2 > score1)
-    {
-        s = score2;
-    }
-
-    return s;
+    currScore = s->currScore;
 }
 
 theme::theme()
@@ -76,8 +36,7 @@ game::game()
         highscores[i] = NULL;
 
     ball = NULL;
-    bat1 = NULL;
-    bat2 = NULL;
+    bat = NULL;
     table = NULL;
 
     simConfig = NULL;
@@ -95,17 +54,13 @@ game::game()
 
     srand (0);
 
-    getline(fin, input, '|');//get the name
+    fin>>scoreIn;
     while(i<10 && fin.good())
     {
         highscores[i] = new score();
-        //set it to player 1 by default
-        highscores[i]->p1Name = input;
-        fin>>scoreIn;
-        highscores[i]->score1 = scoreIn;
+        highscores[i]->currScore = scoreIn;
 
-        getline(fin, input);//get the end of the line
-        getline(fin, input, '|');//get the name
+        fin>>scoreIn;
         i++;
     }
     fin.close();
@@ -121,7 +76,7 @@ game::~game()
         //check if the high score exists
         if(highscores[i]!=NULL)
         {
-            fout<<highscores[i]->bestName()<<"|"<<highscores[i]->bestScore()<<endl;
+            fout<<highscores[i]->currScore<<endl;
         }
     }
     
@@ -137,7 +92,7 @@ void game::addScore(score* s)
     for(int i=0; i<10&&highscores[i]!=NULL; i++)
     {
         //if so
-        if(highscores[i]->bestScore() < current->bestScore())
+        if(highscores[i]->currScore < current->currScore)
         {
             //ursurp their puny score
             score* temp = highscores[i];
@@ -166,14 +121,14 @@ void game::addScore(score* s)
 void game::resetScore()
 {
     //only add successful scores
-    if(currentGame.bestScore()>0)
+    if(currentGame.currScore>0 && gameState==2)
+    {
         addScore(new score(&currentGame));
+    }
+    gameState=0;
 
     //reset the score and players
-    currentGame.p1Name = currentTheme.p1;
-    currentGame.p2Name = currentTheme.p2;
-    currentGame.score1 = 0;
-    currentGame.score2 = 0;
+    currentGame.currScore = 120;
 
     time = 0;//reset our timer
 }
@@ -182,13 +137,11 @@ void game::init()
 {
     //load in theme
     ball = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Ball");
-    bat1 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/ToLoveRu/bat");
-    bat2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/ToLoveRu/bat2");
+    bat = simConfig->simEntityManager->loadEntity("../bin/data/Objects/ToLoveRu/bat");
     table = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Props/Labrynth");
 
     ball->init();
-    bat1->init();
-    bat2->init();
+    bat->init();
     table->init();
 
     //reset the score
@@ -214,13 +167,9 @@ void game::tick(double dt)
     {
         table->tick(dt);
     }
-    if(bat1!=NULL)
+    if(bat!=NULL)
     {
-        bat1->tick(dt);
-    }
-    if(bat2!=NULL)
-    {
-        bat2->tick(dt);
+        bat->tick(dt);
     }
     if(ball!=NULL)
     {
@@ -229,15 +178,16 @@ void game::tick(double dt)
         //if so reset it
         if(ball->absolutePosition.y < 10)
         {
-            //make sure to update the scoreboard!
-            //base score on z position
-            /*if(puck->absolutePosition.z > 4.0)
-                currentGame.score2++;
-            if(puck->absolutePosition.z < 4.0)
-                currentGame.score1++;*/
-
             //player lost if they fell in
             gameState=1;
+
+            resetBall();
+        }
+        //check for win
+        else if(ball->absolutePosition.z <= -14.6 && gameState==0)
+        {
+            //player lost if they fell in
+            gameState=2;
 
             resetBall();
         }
@@ -257,15 +207,10 @@ void game::tick(double dt)
         ball->objPhysics.objRB->getMotionState()->getWorldTransform(pucktrans);
 
         btTransform bat1trans;
-        btTransform bat2trans;
 
         if(ai1Enabled)
         {
-            bat1->objPhysics.objRB->getMotionState()->getWorldTransform(bat1trans);
-        }
-        if(ai2Enabled)
-        {
-            bat2->objPhysics.objRB->getMotionState()->getWorldTransform(bat2trans);
+            bat->objPhysics.objRB->getMotionState()->getWorldTransform(bat1trans);
         }
 
         //update position
@@ -290,28 +235,20 @@ void game::tick(double dt)
             //attempt to move towards it
             moveBat(1, -zDifference, xDifference, true);
         }
-        if(ai2Enabled)
-        {
-            double xDifference = FuturePosition.getX()-bat2trans.getOrigin().getX()+0.5+(roll1/100);
-            double zDifference = FuturePosition.getZ()-bat2trans.getOrigin().getZ()-0.5+(roll2/10);
-
-            if(xDifference > moveCap)
-                xDifference = moveCap;
-            if(xDifference < -moveCap)
-                xDifference = -moveCap;
-            if(zDifference > moveCap)
-                zDifference = moveCap;
-            if(zDifference < -moveCap)
-                zDifference = -moveCap;
-
-            //attempt to move towards it
-            moveBat(2, zDifference, -xDifference, true);
-        }
     }
 
     //do not tick if game is not running
     if(gameState==0)
+    {
         time+=dt;
+        //also change our score
+        if(currentGame.currScore>0)
+        {
+            currentGame.currScore-=dt;
+        }
+        if(currentGame.currScore<0)
+            currentGame.currScore=0;
+    }
 }
 
 void game::render()
@@ -321,13 +258,9 @@ void game::render()
     {
         table->render();
     }
-    if(bat1!=NULL)
+    if(bat!=NULL)
     {
-        bat1->render();
-    }
-    if(bat2!=NULL)
-    {
-        bat2->render();
+        bat->render();
     }
     if(ball!=NULL)
     {
@@ -335,61 +268,20 @@ void game::render()
     }
 }
 
-void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
+void game::moveBat(int cbat, double xAmount, double yAmount, bool aiControlled)
 {
     //ditch controls if game not active
     if(gameState!=0)
         return;
 
     //check if we aren't supposed to be able to control this bat
-    if(!aiControlled && bat==1 && ai1Enabled)
-        return;//abort, we can't touch this
-    if(!aiControlled && bat==2 && ai2Enabled)
+    if(!aiControlled && cbat==1 && ai1Enabled)
         return;//abort, we can't touch this
 
     entity* currentBat = NULL;
 
     //decide what bat to move based on the parameter
-    if(bat == 1)
-        currentBat = bat1;
-    else if(bat == 2)
-        currentBat = bat2;
-
-    //tweak amounts based on bat, AI, and angle
-    switch(simConfig->controlRot)
-    {
-        case 0:
-            //bat modifications
-            if(bat == 1)
-            {
-                double temp = xAmount;
-                xAmount = yAmount;
-                yAmount = -temp;
-            }
-            else
-            {
-                double temp = xAmount;
-                xAmount = -yAmount;
-                yAmount = temp;
-            }
-            break;
-        case 1:
-            //bat modifications
-            if(bat == 2)
-            {
-                xAmount = -xAmount;
-                yAmount = -yAmount;
-            }
-            break;
-        case 2:
-            //bat modifications
-            if(bat == 1)
-            {
-                xAmount = -xAmount;
-                yAmount = -yAmount;
-            }
-            break;
-    }
+    currentBat = bat;
 
     //move it accordingly to the amounts provided
     if(currentBat!=NULL)
@@ -406,19 +298,10 @@ void game::moveBat(int bat, double xAmount, double yAmount, bool aiControlled)
             currentBat->absolutePosition.x = xLimit;
 
         //maintain a barrier in the center and prevent going too far behind the stage
-        if(currentBat == bat1)
-        {
-            if( currentBat->absolutePosition.z < 1.0 )
-                currentBat->absolutePosition.z = 1.0;
-            else if( currentBat->absolutePosition.z > yLimit )
-                currentBat->absolutePosition.z = yLimit;
-        }
-        else{
-            if( currentBat->absolutePosition.z > -1.0 )
-                currentBat->absolutePosition.z = -1.0;
-            else if( currentBat->absolutePosition.z < -yLimit )
-                currentBat->absolutePosition.z = -yLimit;
-        }
+        if( currentBat->absolutePosition.z < 1.0 )
+            currentBat->absolutePosition.z = 1.0;
+        else if( currentBat->absolutePosition.z > yLimit )
+            currentBat->absolutePosition.z = yLimit;
 
         
         btVector3 MyNewPosition( currentBat->absolutePosition.x, currentBat->absolutePosition.y, currentBat->absolutePosition.z );
@@ -459,9 +342,6 @@ void game::resetBall()
 void game::startGame()
 {
     //to start the game we MUST
-    //set the flag
-    gameState = 0;
-
     //reset the score
     resetScore();
     resetBall();
@@ -469,19 +349,4 @@ void game::startGame()
     //reset the camera
     //simConfig->switchCamera(0);
 
-}
-
-void game::enableAI(int person)
-{
-    //toggle the ai on/off
-    if(person==1)
-    {
-        ai1Enabled = !ai1Enabled;
-    }
-    else
-    {
-        ai2Enabled = !ai2Enabled;
-    }
-    //forfeit the match
-    gameState=0;
 }

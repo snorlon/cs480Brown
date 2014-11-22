@@ -10,18 +10,10 @@ class entity;
 class score
 {
     public:
-        bool player1Player;
-        string p1Name;
-        bool player2Player;
-        string p2Name;
-
-        int score1;
-        int score2;
+        double currScore;
 
         score();
         score(score* s);
-        string bestName();
-        int bestScore();
 
     private:
 };
@@ -51,8 +43,7 @@ class game
 
         //store game-specific materials via the game class
         entity* ball;
-        entity* bat1;
-        entity* bat2;
+        entity* bat;
         entity* table;
 
         double time;
@@ -71,7 +62,6 @@ class game
         void render();
         void moveBat(int bat, double xAmount, double yAmount, bool aiControlled);
         void startGame();
-        void enableAI(int person);
 
         //game-specific functions
         void resetBall();

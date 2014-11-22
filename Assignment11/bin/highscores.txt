@@ -1,10 +1,4 @@
-Erin|20
-Lala|19
-Sonic|12
-Luigi|10
-Luigi|10
-Lala|10
-Red|9
-Eggman|9
-Eggman|9
-Blue|9
+120
+101.132
+99.2319
+96.7727

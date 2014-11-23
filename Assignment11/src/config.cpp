@@ -44,7 +44,13 @@ config::config()
     //create a new camera for each of the eye positions
     Camera* newCam = new Camera();//center of table
     newCam->Position(0.0,18.0,0.0);
-    newCam->Rotate(0,1,25);
+    newCam->Rotate(180,1,25);
+    newCam->next = presetCameras;
+    presetCameras = newCam;
+
+    newCam = new Camera();//center of table
+    newCam->Position(50.0,14.0,0.0);
+    newCam->Rotate(180,1,25);
     newCam->next = presetCameras;
     presetCameras = newCam;
 
@@ -125,6 +131,8 @@ config::config()
     input.close();
 
     cout<<"LIGHTS LOADED!"<<endl;
+
+    switchCamera(0);
 
     //update the camera
     recalcCamera();

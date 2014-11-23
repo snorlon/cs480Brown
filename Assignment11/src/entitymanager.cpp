@@ -176,6 +176,9 @@ entity* entityManager::loadEntity(string fileName)
             objectFile>>dummy;
             objectFile>>newPos;
             newObj->orientation.z = newPos;
+            objectFile>>dummy;
+            objectFile>>newPos;
+            newObj->orientation.w = newPos;
         }
         else if(data == "Velocity:")//Initial speed loading
         {

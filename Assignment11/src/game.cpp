@@ -328,7 +328,7 @@ void game::resetBall()
     {
         //reset our position
         ball->absolutePosition.x = 14.2;
-        ball->absolutePosition.y = 11;
+        ball->absolutePosition.y = 16;
         ball->absolutePosition.z = -14.2;
 
         //remove the HEATHEN!

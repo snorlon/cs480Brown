@@ -52,6 +52,7 @@ entity::entity(config* nConfig) //load a model from a file
     orientation.x = 0.0;
     orientation.y = 0.0;
     orientation.z = 0.0;
+    orientation.w = 1.0;
 }
 
 entity::~entity()

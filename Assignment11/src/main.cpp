@@ -407,22 +407,22 @@ void keyboard()
     if(keyStates['w'])
     {
         //up the key counter to factor in holding button for speed
-        xGShift -= baseMovementMult;
+        xGShift += baseMovementMult;
     }
     if(keyStates['s'])
     {
         //up the key counter to factor in holding button for speed
-        xGShift += baseMovementMult;
+        xGShift -= baseMovementMult;
     }
     if(keyStates['a'])
     {
         //up the key counter to factor in holding button for speed
-        zGShift += baseMovementMult;
+        zGShift -= baseMovementMult;
     }
     if(keyStates['d'])
     {
         //up the key counter to factor in holding button for speed
-        zGShift -= baseMovementMult;
+        zGShift += baseMovementMult;
     }
 
     //update the bat positions IF time is passing

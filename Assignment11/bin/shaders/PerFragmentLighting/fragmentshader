@@ -2,7 +2,7 @@
 
 uniform sampler2D gSampler;
 
-uniform highp vec3 eyeVector;
+uniform vec3 eyeVector;
 
 struct Light{
     vec3 position;
@@ -20,11 +20,11 @@ struct LightMaterial{
     float shine;
 };
 
-uniform mediump Light lights[10];
-uniform lowp LightMaterial lightMat;
+uniform Light lights[10];
+uniform LightMaterial lightMat;
 
-in highp vec3 normal;
-in highp vec3 position;
+in vec3 normal;
+in vec3 position;
 
 
 
@@ -65,4 +65,10 @@ void main()
     }  
      
     gl_FragColor = vec4( LightTotal, 1 ) * texture2D( gSampler, gl_TexCoord[0].st );
+    if(gl_FragColor.x>1)
+        gl_FragColor.x = 1;
+    if(gl_FragColor.y>1)
+        gl_FragColor.y = 1;
+    if(gl_FragColor.z>1)
+        gl_FragColor.z = 1;
 }

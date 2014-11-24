@@ -125,6 +125,44 @@ bool lightArray::addLight(double pos[4], double ambient[4], double diffuse[4], d
     return true;
 }
 
+void lightArray::tick(float dt)
+{
+
+    dt = dt+1;
+
+    lightSource* l1 = getLight(0);
+    if(l1!=NULL && (rand() % 10 == 0))
+    {
+        l1->sourceDiffuse[0] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[1] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[2] = ((rand() % 40)/100.0)+0.2;
+    }
+
+    l1 = getLight(1);
+    if(l1!=NULL && (rand() % 10 == 0))
+    {
+        l1->sourceDiffuse[0] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[1] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[2] = ((rand() % 40)/100.0)+0.2;
+    }
+
+    l1 = getLight(2);
+    if(l1!=NULL && (rand() % 10 == 0))
+    {
+        l1->sourceDiffuse[0] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[1] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[2] = ((rand() % 40)/100.0)+0.2;
+    }
+
+    l1 = getLight(3);
+    if(l1!=NULL && (rand() % 10 == 0))
+    {
+        l1->sourceDiffuse[0] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[1] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[2] = ((rand() % 40)/100.0)+0.2;
+    }
+}
+
 void lightArray::init()
 {
 }
@@ -149,6 +187,18 @@ void lightArray::off()
         iterator->off();
         iterator = iterator->next;
     }
+}
+
+lightSource* lightArray::getLight(int index)
+{
+    lightSource* iterator = head;
+    while(iterator!=NULL && index>0)
+    {
+        iterator->off();
+        iterator = iterator->next;
+        index--;
+    }
+    return iterator;
 }
 
 entityLightNode::entityLightNode( lightSource* newL)

@@ -1,0 +1,14 @@
+Name:       Door
+Model:      opendoor/ door-open
+Shape:      Custom
+Mass:       0
+Scale:      10.0
+Location:   148, 0, -7.5
+Velocity:   0, 0, 0
+Type:       Moveable
+Orientation: 0,0,0,1
+Size:       1, 1, 1
+Ambient:    0.1,0.1,0.1,0
+Diffuse:    0.4,0.4,0.4,0
+Specular:   0.0,0.0,0.0,0
+Shine:      150

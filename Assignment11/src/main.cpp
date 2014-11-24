@@ -172,7 +172,7 @@ void menu_test(int id)
             keepRunning = false;
             break;
         case 2:
-            simConfig.gameData.startGame();
+            simConfig.gameData.startGame(0);
             break;
         case 4:
             //glutIdleFunc(update);
@@ -377,10 +377,20 @@ void keyPressed (unsigned char key, int x, int y)
             recentlyPaused = true;
         }
     }
+    else if(key == '5')
+    {
+        //start a new game
+        simConfig.gameData.startGame(0);
+    }
+    else if(key == '6')
+    {
+        //start a new game
+        simConfig.gameData.startGame(1);
+    }
     else if(key == 13)
     {
         //start a new game
-        simConfig.gameData.startGame();
+        simConfig.gameData.startGame(simConfig.gameData.mode);
     }
 }  
 
@@ -428,7 +438,7 @@ void keyboard()
     //update the bat positions IF time is passing
     if(!recentlyPaused)
     {
-        simConfig.gameData.moveBat(1, consecutivePresses[6]*baseMovementMult - consecutivePresses[7]*baseMovementMult, consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult, false);
+        simConfig.gameData.moveBat(consecutivePresses[6]*baseMovementMult - consecutivePresses[7]*baseMovementMult, consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult);
     }
     simConfig.physicsEnvironment->shiftGravity(xGShift,zGShift);
 }

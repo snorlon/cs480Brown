@@ -1,4 +1,4 @@
-GROUP PROJECT's Assignment 00
+GROUP PROJECT's Assignment 11
 
 Chad Brown
 Alexander Falconi
@@ -8,10 +8,9 @@ Molly Headland
 
 Assignment explanation:
 
-    Air Hockey
-        It does air hockey things!
+    The purpose of this assignment is to produce a 3D simulation of the Labyrinth game that is as realistic to the actual game as possible, yet still being a playable and an enjoyable experience for the end user.
 
-    80% of graphics custom-made for this assignment, including all 3d models and most of the textures.
+    -Labyrinth
 
 ========================================
 
@@ -35,26 +34,7 @@ How to run:
 
     enter './../bin/Project' to execute from build folder
 
-    For loading vertex shader from file, enter './../bin/Project -v filename'
-
-    For loading fragment shader from file, enter './../bin/Project -f filename'
-
-    For loading 2d vertex shader from file, enter './../bin/Project -2v filename'
-
-    For loading 2d fragment shader from file, enter './../bin/Project -2f filename'
-
-    For all shaders from file, enter './../bin/Project -f filename -v filename2 -2f filename3 -2v filename4' order does not matter
-        All that matters is that file name follows the -f or -v type commands
-
-    Example terminal command:
-        ./../bin/Project -v ../bin/shaders/vertexshader -f ../bin/shaders/fragmentshader -2v ../bin/shaders/vertexshader2d -2f ../bin/shaders/fragmentshader2d
-
-    If the file name is good, it will say in the terminal that the corresponding shader has been loaded. If not, it will warn you. Shaders MUST be provided
-
-    The terminal will tell you if your texture or model sucks
-        this program only supports a single texture and a single obj and a single material file, all in the same location
-
-    Alternatively, run "./execute.sh" if available
+    No command-line input, just "./../bin/Project" after making. All needed files are loaded in on startup.
 
 ========================================
 
@@ -79,25 +59,19 @@ Commands:
             Pg Up & Pg Down OR
             End - Reset zoom
 
-        WASD - control Player 2 (if AI not enabled)
+        WASD - control balls
 
-        R - reset the puck position
+        R - reset the balls position
 
         + and - : controlling speed of program
 
-        1 - First person camera
-        2 - Entire table camera
-        3 - Second person camera
+        1 - Game camera
+        2 - Table camera
 
-        5 - ToLoveRu theme
-        6 - Pokemon theme
-        7 - Mario theme
-        8 - Sonic theme
+        5 - Start 1-ball game
+        6 - Start 2-ball game
 
-        [ - toggle player 1 AI
-        ] - toggle player 2 AI
-
-        Enter - Start match
+        Enter - Start match with prior ball count
 
         Space - Pause/Unpause
         Esc - Exit program
@@ -108,20 +82,11 @@ Commands:
         Middle Mouse - hold to rotate camera
             Mousewheel up and Mousewheel down - Zooming in & out on current camera
 
-        Mouse - Control player 1 (if AI not enabled)
-
 ========================================
 
 Extra Credit: 
-    Detailed background
-    Four Swappable Themes
-    Lighting
-    2D rendering system, including custom text rendering
-    Highscores
-    Two-player controls
-        Rotate depending on camera
-    AI for both sides
-    AI/Human Toggle
+    Multiple Balls
+    High Scores
 
 ========================================
 

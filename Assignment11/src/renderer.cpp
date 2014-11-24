@@ -108,7 +108,7 @@ void renderer::tick()
     //BRING IN THE DYNAMICS
     //create our text stuffs
     //sprites.addSprite(simConfig, 300, 200, 85, 232, "testtrainer.png", false);
-    sprites.generateText(simConfig, "High Scores", 0.4, 45, 215);
+    sprites.generateText(simConfig, "Scores", 0.4, 5, 215);
     sprites.generateText(simConfig, to_string(int(ceil(simConfig->gameData.time))), 0.5, 612, 730);
     sprites.generateText(simConfig, "FPS "+to_string(simConfig->lastFPS), 0.4, 25, 740);
     sprites.generateText(simConfig, "Version 1.0.0", 0.4, 985, 740);
@@ -128,7 +128,7 @@ void renderer::tick()
         if(simConfig->gameData.highscores[i]!=NULL)
         {
             score* currentScore = simConfig->gameData.highscores[i];//for readability
-            sprites.generateText(simConfig, to_string(int(floor(currentScore->currScore))), 0.3, 225, 180-20*i,-2);//draw score
+            sprites.generateText(simConfig, to_string(int(floor(currentScore->currScore))), 0.3, 45, 180-20*i,-2);//draw score
         }
     }
 }

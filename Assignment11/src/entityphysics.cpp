@@ -52,6 +52,8 @@ void entityPhysics::init(entity* np)
         {
             //ez sphere creation
             shape = new btSphereShape(parent->size.x);
+
+            shape->setMargin(0.01f);
         }
         else if(parent->shape == "Custom")
         {
@@ -82,8 +84,24 @@ void entityPhysics::init(entity* np)
             shape = new btBoxShape(btVector3(0.0001,0.0001,0.0001));
         }
 
-        objMotion = new btDefaultMotionState(btTransform(btQuaternion(parent->orientation.x, parent->orientation.y, parent->orientation.z, parent->orientation.w), btVector3(parent->absolutePosition.x, 
-            parent->absolutePosition.y, parent->absolutePosition.z)));
+        //lets roll this world
+        btQuaternion rotation = btQuaternion();
+        btVector3 up(0, 1, 0);
+        btVector3 lookat = quatRotate(rotation, btVector3(0, 0, 1));
+        btVector3 forward = btVector3(lookat.getX(), 0, lookat.getZ()).normalize();
+        btVector3 side = btCross(up, forward);
+
+        rotation = btQuaternion(up,      parent->orientation.y) * rotation;
+        rotation = btQuaternion(side,    parent->orientation.x+3.14) * rotation;
+        rotation = btQuaternion(forward, parent->orientation.z) * rotation;
+
+        if(parent->shape == "Plane" || parent->shape == "Sphere")
+            objMotion = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(parent->absolutePosition.x, 
+                parent->absolutePosition.y, parent->absolutePosition.z)));
+        else
+            objMotion = new btDefaultMotionState(btTransform(rotation, btVector3(parent->absolutePosition.x, 
+               parent->absolutePosition.y, parent->absolutePosition.z)));
+
         btVector3 fallInertia(0, 0, 0);
         shape->calculateLocalInertia(mass, fallInertia);
 

@@ -1,0 +1,14 @@
+Name:       Arcade1
+Model:      Arcade/Mario/ arcade
+Shape:      Custom
+Mass:       50
+Scale:      6.0
+Location:   30, 10, -120
+Velocity:   0, 0, 0
+Type:       Moveable
+Orientation: 3.14,3.14,0,1
+Size:       1, 1, 1
+Ambient:    0.1,0.1,0.1,0
+Diffuse:    0.4,0.4,0.4,0
+Specular:   0.0,0.0,0.0,0
+Shine:      150

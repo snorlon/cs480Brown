@@ -1,0 +1,12 @@
+#version 130
+
+uniform sampler2D gSampler;
+
+in highp vec3 normal;
+in highp vec3 position;
+in highp vec3 LightTotal;
+
+void main()
+{
+    gl_FragData[0] = vec4( LightTotal, 1 ) * texture2D( gSampler, gl_TexCoord[0].st );
+}

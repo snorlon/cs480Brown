@@ -1,0 +1,8 @@
+Name:       TestTube
+Model:      Tube/ Tube
+Shape:      Cylinder
+Mass:       30
+Scale:      1.0
+Location:   0, 20, 0
+Velocity:   1, 0, 0
+Type:       Moveable

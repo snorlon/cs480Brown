@@ -1,0 +1,34 @@
+#version 130
+
+uniform sampler2D gSampler;
+uniform sampler2DShadow shadowMap;
+
+uniform vec3 eyeVector;
+
+struct LightMaterial{
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shine;
+};
+
+uniform LightMaterial lightMat;
+
+in vec3 normal;
+in vec3 position;
+in vec4 ShadowCoord;
+
+
+
+void main()
+{
+    float visibility = texture( shadowMap, vec3(ShadowCoord.xy, (ShadowCoord.z)/ShadowCoord.w) );  
+     
+    gl_FragColor = (visibility+0.1) * texture2D( gSampler, gl_TexCoord[0].st );
+    if(gl_FragColor.x>1)
+        gl_FragColor.x = 1;
+    if(gl_FragColor.y>1)
+        gl_FragColor.y = 1;
+    if(gl_FragColor.z>1)
+        gl_FragColor.z = 1;
+}

@@ -1,0 +1,26 @@
+#version 130
+in vec2 v_tex;
+in vec3 v_normal;
+in vec3 v_position;
+
+out vec3 normal;
+out vec3 position;
+out vec4 ShadowCoord;
+
+uniform mat4 mvpMatrix;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+
+uniform mat4 DepthBiasMVP;
+
+void main()
+{
+    gl_Position = mvpMatrix * vec4(v_position, 1.0);
+    gl_TexCoord[0].st = v_tex;
+
+    normal = normalize((modelMatrix * vec4(v_normal, 0)).rgb);
+    position = (modelMatrix * vec4(v_position, 1)).rgb;
+
+    ShadowCoord = DepthBiasMVP * vec4(v_position,1);
+
+}

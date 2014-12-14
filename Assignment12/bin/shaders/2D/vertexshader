@@ -1,0 +1,18 @@
+#version 130
+in highp vec2 v_tex;
+in highp vec3 v_normal;
+in highp vec3 v_position;
+
+uniform highp mat4 mvpMatrix;
+uniform highp mat4 modelMatrix;
+uniform highp mat4 viewMatrix;
+
+in vec2 s_tex;
+in vec3 s_position;
+
+void main()
+{
+    gl_Position = vec4(s_position, 1.0);
+    gl_TexCoord[0].st = s_tex;
+
+}

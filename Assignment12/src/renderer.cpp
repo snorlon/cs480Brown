@@ -26,6 +26,8 @@ bool renderer::giveLinks(config* configData)
 
 void renderer::render()
 {
+    depthRenderModule.render();
+
     //switch buffer
     glBindFramebuffer(GL_FRAMEBUFFER, flatRenderModule.fbo_drawn);
 

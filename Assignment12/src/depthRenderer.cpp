@@ -32,7 +32,7 @@ depthRenderer::~depthRenderer()
 void depthRenderer::render()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, depthFrameBuffer);
-    glViewport(0,0,1024,1024); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight()); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
     // We don't use bias in the shader, but instead we draw back faces, 
     // which are already separated from the front faces by a small distance 
@@ -53,7 +53,7 @@ void depthRenderer::render()
 
     // Render to the screen
     glBindFramebuffer(GL_FRAMEBUFFER, 0);//direct at texture image?
-    glViewport(0,0,1024,768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight()); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles

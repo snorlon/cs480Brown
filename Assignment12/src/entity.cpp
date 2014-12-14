@@ -224,10 +224,13 @@ void entity::render()
     glBindTexture(GL_TEXTURE_2D, texID[shaderIndex]);
     glUniform1i(texID[shaderIndex], 0);
 
-    /*glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, simConfig->simRenderer->depthTexture);
-    glUniform1i(simConfig->simRenderer->ShadowMapID, 1);
 
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, simConfig->simRenderer->depthRenderModule.depthTexture);
+    glUniform1i(simConfig->simRenderer->depthRenderModule.ShadowMapID, 1);
+
+    /*
     glm::mat4 biasMatrix(
                         0.5, 0.0, 0.0, 0.0, 
                         0.0, 0.5, 0.0, 0.0,
@@ -257,7 +260,15 @@ void entity::render()
     glUniformMatrix4fv(loc_model[shaderIndex], 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(loc_view[shaderIndex], 1, GL_FALSE, glm::value_ptr(simConfig->view));
 
-    uploadVertices(loc_position[simConfig->simShaderManager->activeShader]);//upload vertices
+    //set up the Vertex Buffer Object so it can be drawn
+    glEnableVertexAttribArray(loc_position[shaderIndex]);
+    //set pointers into the vbo for each of the attributes(position and color)
+    glVertexAttribPointer( loc_position[shaderIndex],//location of attribute
+                           3,//number of elements
+                           GL_FLOAT,//type
+                           GL_FALSE,//normalized?
+                           sizeof(Vertex),//stride
+                           0);//offset
 
     glEnableVertexAttribArray(loc_normal[shaderIndex]);
     glVertexAttribPointer( loc_normal[shaderIndex],//location of attribute
@@ -283,13 +294,12 @@ void entity::render()
     glUniform3f(loc_objMatSpecular[shaderIndex], objLight.materialSpecular[0], objLight.materialSpecular[1], objLight.materialSpecular[2]);
     glUniform1f(loc_objShine[shaderIndex], objLight.shine);
 
-    drawVertices(loc_position[simConfig->simShaderManager->activeShader]);//draw the vertices
+    glDrawArrays(GL_TRIANGLES, 0, vertexCount);//mode, starting index, count
 
     //clean up
     glDisableVertexAttribArray(loc_position[shaderIndex]);
     glDisableVertexAttribArray(loc_normal[shaderIndex]);
     glDisableVertexAttribArray(loc_texture[shaderIndex]);
-    //glDisableVertexAttribArray(simConfig->loc_eyeVector);
 
     //unbind buffer
     glBindBuffer(GL_ARRAY_BUFFER, 0);

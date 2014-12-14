@@ -26,12 +26,10 @@ bool renderer::giveLinks(config* configData)
 
 void renderer::render()
 {
-    //--Render the scene
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_depth);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
+    //switch buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, flatRenderModule.fbo_drawn);
 
-    simConfig->simShaderManager->activateShader("Depth");
+    /*simConfig->simShaderManager->activateShader("Depth");
 
     //lights render
     simConfig->worldLights->render();
@@ -39,15 +37,8 @@ void renderer::render()
     //upload models
     simConfig->simEntityManager->uploadVertices();
 
-    //switch buffer
-    glBindFramebuffer(GL_FRAMEBUFFER, flatRenderModule.fbo_drawn);
-
     //draw them
-    simConfig->simEntityManager->drawVertices();
-
-    //finish up with the shadow mapping
-    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    simConfig->simEntityManager->drawVertices();*/
 
 
     //activate 3D shader
@@ -122,34 +113,8 @@ bool renderer::initialize()
 {
     GLuint programID = simConfig->simShaderManager->activeProgram;
 
-    simConfig->simShaderManager->activateShader("Depth");
-
-    glGetUniformLocation(programID, "depthMVP");
-
-    simConfig->simShaderManager->activateShader("PerFragmentLighting");
-    DepthBiasID = glGetUniformLocation(programID, "DepthBiasMVP");
-
-    simConfig->simShaderManager->activateShader("PerFragmentLighting");
-    ShadowMapID = glGetUniformLocation(programID, "shadowMap");
-
-
 	flatRenderModule.initialize();
 	depthRenderModule.initialize();
-
-	// The depth buffer
-	if ( !GLEW_ARB_framebuffer_object ){ // OpenGL 2.1 doesn't require this, 3.1+ does
-		printf("Your GPU does not provide framebuffer objects. Use a texture instead.");
-		return false;
-	}
-	glGenRenderbuffers(1, &depthrenderbuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, simConfig->getWindowWidth(), simConfig->getWindowHeight());
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
-
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
-
-	GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
 
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -157,23 +122,6 @@ bool renderer::initialize()
 
     //create static interfaces
     flatRenderModule.spriteModule.addSprite(simConfig, 0, 0, 1280, 800, "interface/airhockeyinterface.png", true);
-
-
-    //prep the depth lighting
-    glGenFramebuffers(1, &fbo_depth);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_depth);
-
-     glGenTextures(1, &depthTexture);
-     glBindTexture(GL_TEXTURE_2D, depthTexture);
-     glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 1024, 1024, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-     
-     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
-     
-     glDrawBuffer(GL_NONE); // No color buffer is drawn to.
      
      // Always check that our framebuffer is ok
      if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

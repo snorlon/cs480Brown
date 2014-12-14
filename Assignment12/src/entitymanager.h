@@ -44,8 +44,7 @@ class entityManager
         void prerender();//for shadows and shit
         void render();
         void cleanup();
-        void uploadVertices();//JUST upload all of the vertices, this may not work well
-        void drawVertices();//again, may not work well
+        void depthRender();
 
     private:
 };

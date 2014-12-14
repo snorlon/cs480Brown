@@ -21,14 +21,6 @@ class renderer
     public:
         config* simConfig;
 
-        GLuint depthMatrixID;//for the depth matrix
-        GLuint DepthBiasID;
-        GLuint ShadowMapID;
-
-        GLuint fbo_depth;
-        GLuint depthTexture;
-        GLuint depthrenderbuffer;
-
         //rendering modules
         flatRenderer flatRenderModule;
         depthRenderer depthRenderModule;

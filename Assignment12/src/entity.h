@@ -30,7 +30,8 @@ class entity
         entity* next;
         glm::mat4 model;
         config* simConfig;
-        GLuint vbo_geometry[shaderMax];// Vertex Buffer Object for the entire object
+        GLuint vbo_fragment;// Vertex Buffer Object for the entire object in fragment shader
+        GLuint vbo_depth;// Vertex Buffer Object for the entire object in fragment shader
         GLint loc_texture[shaderMax];
         GLint loc_normal[shaderMax];
         GLint loc_position[shaderMax];
@@ -89,8 +90,9 @@ class entity
 
         void prerender();
         void render();
-        void uploadVertices();
-        void drawVertices();
+        void uploadVertices(int index, bool enable=true);
+        void drawVertices(int index);
+        void depthRender();
 
     private:
 };

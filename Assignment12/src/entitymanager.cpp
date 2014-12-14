@@ -449,26 +449,14 @@ void entityManager::cleanup()
     }
 }
 
-void entityManager::uploadVertices()
+void entityManager::depthRender()
 {
     entity* iterator = head;
 
     //draw each entity, let them figure out what they want done
     while(iterator!=NULL)
     {
-        iterator->uploadVertices();
-        iterator = iterator->next;
-    }
-}
-
-void entityManager::drawVertices()
-{
-    entity* iterator = head;
-
-    //draw each entity, let them figure out what they want done
-    while(iterator!=NULL)
-    {
-        iterator->drawVertices();
+        iterator->depthRender();
         iterator = iterator->next;
     }
 }

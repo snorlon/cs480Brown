@@ -24,7 +24,7 @@ void main()
 {
     float visibility = texture( shadowMap, vec3(ShadowCoord.xy, (ShadowCoord.z)/ShadowCoord.w) );  
      
-    gl_FragColor = /*(visibility+0.3) **/ texture2D( gSampler, gl_TexCoord[0].st );
+    gl_FragColor = (visibility+0.3) * texture2D( gSampler, gl_TexCoord[0].st );
     if(gl_FragColor.x>1)
         gl_FragColor.x = 1;
     if(gl_FragColor.y>1)

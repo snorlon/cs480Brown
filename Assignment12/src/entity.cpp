@@ -86,6 +86,9 @@ void entity::init()
     glGenBuffers(1, &vbo_fragment);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_fragment);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+
+    textureShaderPos = glGetAttribLocation(simConfig->simShaderManager->activeProgram, "v_tex");
+
     simConfig->simShaderManager->activateShader("Depth");
     glGenBuffers(1, &vbo_depth);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_depth);
@@ -96,18 +99,12 @@ void entity::init()
     {
         simConfig->simShaderManager->activateShader(i);
         GLint activeProgram = simConfig->simShaderManager->activeProgram;
-        glGenBuffers(1, &vbo_geometry[i]);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry[i]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
         //Now we set the locations of the attributes and uniforms
         //this allows us to access them easily while rendering
         loc_position[i] = glGetAttribLocation(activeProgram, "v_position");
 
         loc_normal[i] = glGetAttribLocation(activeProgram, "v_normal");
-
-        loc_texture[i] = glGetAttribLocation(activeProgram, "v_tex");
 
         //renderer stuff
         loc_mvpmat[i] = glGetUniformLocation(activeProgram, "mvpMatrix");
@@ -213,7 +210,11 @@ void entity::prerender()
 
 void entity::render()
 {
-    /*//abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
+    //abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
+    if(!visible || objPhysics.objRB == NULL)
+        return;
+
+    //abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
     int shaderIndex = simConfig->simShaderManager->activeShader;
 
     //premultiply the matrix for this example
@@ -225,12 +226,43 @@ void entity::render()
     glBindTexture(GL_TEXTURE_2D, texID[shaderIndex]);
     glUniform1i(texID[shaderIndex], 0);
 
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, simConfig->simRenderer->depthRenderModule.depthTexture);
+    glUniform1i(simConfig->simRenderer->depthRenderModule.ShadowMapID, 1);
 
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, simConfig->simRenderer->depthRenderModule.depthTexture);
     glUniform1i(simConfig->simRenderer->depthRenderModule.ShadowMapID, 1);
     glUniformMatrix4fv(loc_mvpmat[shaderIndex], 1, GL_FALSE, glm::value_ptr(mvp));
+
+
+
+
+
+    glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
+
+    // Compute the MVP matrix from the light's point of view
+    glm::mat4 depthProjectionMatrix = glm::ortho<float>(-50,50,-50,50,-50,100);
+    glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
+
+    glm::mat4 depthModelMatrix = glm::mat4(1.0);
+    glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+
+    glm::mat4 biasMatrix(
+                        0.5, 0.0, 0.0, 0.0, 
+                        0.0, 0.5, 0.0, 0.0,
+                        0.0, 0.0, 0.5, 0.0,
+                        0.5, 0.5, 0.5, 1.0
+                );
+
+    glm::mat4 depthBiasMVP = biasMatrix*depthMVP;
+
+    glUniformMatrix4fv(simConfig->simRenderer->depthRenderModule.DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
+
+
+
+
     glUniformMatrix4fv(loc_model[shaderIndex], 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(loc_view[shaderIndex], 1, GL_FALSE, glm::value_ptr(simConfig->view));
 
@@ -252,8 +284,8 @@ void entity::render()
                            sizeof(Vertex),
                             (void*)offsetof(Vertex,normal));//offset
 
-    glEnableVertexAttribArray(loc_texture[shaderIndex]);
-    glVertexAttribPointer( loc_texture[shaderIndex],
+    glEnableVertexAttribArray(textureShaderPos);
+    glVertexAttribPointer( textureShaderPos,
                            2,
                            GL_FLOAT,
                            GL_FALSE,
@@ -273,72 +305,7 @@ void entity::render()
     //clean up
     glDisableVertexAttribArray(loc_position[shaderIndex]);
     glDisableVertexAttribArray(loc_normal[shaderIndex]);
-    glDisableVertexAttribArray(loc_texture[shaderIndex]);
-
-    //unbind buffer
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
-
-    //abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
-    if(!visible || objPhysics.objRB == NULL)
-        return;
-
-    int shaderIndex = simConfig->simShaderManager->activeShader;
-
-    //premultiply the matrix for this example
-    mvp = simConfig->projection * simConfig->view * model;
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry[shaderIndex]);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texID[shaderIndex]);
-
-    //upload the matrix to the shader
-    glUniformMatrix4fv(loc_mvpmat[shaderIndex], 1, GL_FALSE, glm::value_ptr(mvp));
-    glUniformMatrix4fv(loc_model[shaderIndex], 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(loc_view[shaderIndex], 1, GL_FALSE, glm::value_ptr(simConfig->view));
-
-    //set up the Vertex Buffer Object so it can be drawn
-    glEnableVertexAttribArray(loc_position[shaderIndex]);
-    //set pointers into the vbo for each of the attributes(position and color)
-    glVertexAttribPointer( loc_position[shaderIndex],//location of attribute
-                           3,//number of elements
-                           GL_FLOAT,//type
-                           GL_FALSE,//normalized?
-                           sizeof(Vertex),//stride
-                           0);//offset
-
-    glEnableVertexAttribArray(loc_normal[shaderIndex]);
-    glVertexAttribPointer( loc_normal[shaderIndex],//location of attribute
-                           3,//number of elements
-                           GL_FLOAT,//type
-                           GL_FALSE,//normalized?
-                           sizeof(Vertex),
-                            (void*)offsetof(Vertex,normal));//offset
-
-    glEnableVertexAttribArray(loc_texture[shaderIndex]);
-    glVertexAttribPointer( loc_texture[shaderIndex],
-                           2,
-                           GL_FLOAT,
-                           GL_FALSE,
-                           sizeof(Vertex),
-                            (void*)offsetof(Vertex,uv));
-
-    //enable config stuff
-    //glEnableVertexAttribArray(simConfig->loc_eyeVector);
-    glUniform3f(simConfig->loc_eyeVector[shaderIndex], simConfig->currentFocalCamera->x, simConfig->currentFocalCamera->y, simConfig->currentFocalCamera->z);
-    glUniform3f(loc_objMatAmbient[shaderIndex], objLight.materialAmbient[0], objLight.materialAmbient[1], objLight.materialAmbient[2]);
-    glUniform3f(loc_objMatDiffuse[shaderIndex], objLight.materialDiffuse[0], objLight.materialDiffuse[1], objLight.materialDiffuse[2]);
-    glUniform3f(loc_objMatSpecular[shaderIndex], objLight.materialSpecular[0], objLight.materialSpecular[1], objLight.materialSpecular[2]);
-    glUniform1f(loc_objShine[shaderIndex], objLight.shine);
-
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount);//mode, starting index, count
-
-    //clean up
-    glDisableVertexAttribArray(loc_position[shaderIndex]);
-    glDisableVertexAttribArray(loc_normal[shaderIndex]);
-    glDisableVertexAttribArray(loc_texture[shaderIndex]);
-    //glDisableVertexAttribArray(simConfig->loc_eyeVector);
+    glDisableVertexAttribArray(textureShaderPos);
 
     //unbind buffer
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -367,10 +334,12 @@ void entity::drawVertices(int index)
 
 void entity::depthRender()
 {
+    //abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
+    int shaderIndex = simConfig->simShaderManager->activeShader;
     glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
 
     // Compute the MVP matrix from the light's point of view
-    glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-10,20);
+    glm::mat4 depthProjectionMatrix = glm::ortho<float>(-50,50,-50,50,-50,100);
     glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
     // or, for spot light :
     //glm::vec3 lightPos(5, 20, 20);
@@ -385,9 +354,9 @@ void entity::depthRender()
     glUniformMatrix4fv(simConfig->simRenderer->depthRenderModule.depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
 
     // 1rst attribute buffer : vertices
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(loc_position[shaderIndex]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_depth);
-    uploadVertices(0, false);
+    uploadVertices(loc_position[shaderIndex], false);
 
     drawVertices(0);
 

@@ -37,8 +37,8 @@ void depthRenderer::render()
     // We don't use bias in the shader, but instead we draw back faces, 
     // which are already separated from the front faces by a small distance 
     // (if your geometry is made this way)
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
 
     // Clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -101,6 +101,9 @@ bool depthRenderer::initialize()
         return false;
     }
 
+    //enable depth testing
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
     return true;
 }

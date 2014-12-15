@@ -32,8 +32,7 @@ class entity
         config* simConfig;
         GLuint vbo_fragment;// Vertex Buffer Object for the entire object in fragment shader
         GLuint vbo_depth;// Vertex Buffer Object for the entire object in fragment shader
-        GLuint vbo_geometry[shaderMax];// Vertex Buffer Object
-        GLint loc_texture[shaderMax];
+        GLint textureShaderPos;
         GLint loc_normal[shaderMax];
         GLint loc_position[shaderMax];
 

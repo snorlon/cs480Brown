@@ -1,5 +1,11 @@
 #version 130
 
+float rand(vec2 n)
+{
+  return 0.5 + 0.5 * 
+     fract(sin(dot(n.xy, vec2(12.9898, 78.233)))* 43758.5453);
+}
 void main(){
     gl_FragColor.z = gl_FragCoord.z;
+    gl_FragColor.z = rand(vec2(gl_FragCoord.z,gl_FragCoord.z));
 }

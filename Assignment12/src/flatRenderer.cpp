@@ -35,9 +35,9 @@ void flatRenderer::render()
 
 
     //render the 2d images
-    //spriteModule.render(  );
+    spriteModule.render(  );
 
-
+/*
     // Bind our texture in Texture Unit 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, renderedTexture);
@@ -69,7 +69,7 @@ void flatRenderer::render()
 
     //clean up
     glDisableVertexAttribArray(flatRenderSprite->loc_position);
-    glDisableVertexAttribArray(flatRenderSprite->loc_texture);
+    glDisableVertexAttribArray(flatRenderSprite->loc_texture);*/
 }
 
 bool flatRenderer::initialize()

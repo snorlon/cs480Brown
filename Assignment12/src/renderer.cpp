@@ -27,15 +27,19 @@ bool renderer::giveLinks(config* configData)
 
 void renderer::render()
 {
-/*
+
     depthRenderModule.render();
 
     //switch buffer
-    glBindFramebuffer(GL_FRAMEBUFFER, flatRenderModule.fbo_drawn);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
 
     //activate 3D shader
     simConfig->simShaderManager->activateShader("PerFragmentLighting");
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
+
     //clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -46,60 +50,16 @@ void renderer::render()
     //render game objects
     simConfig->gameData.render();
 
-
+/*
     //Will the real frame buffer please stand up
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
     //glClearColor(0.5, 0.5, 0.9, 1.0);
     glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
 
     //glBindBuffer(GL_ARRAY_BUFFER, outputSprite->vbo_sprite);
-    flatRenderModule.render();
-
-    //unbind buffer
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-                           
-    //swap the buffers
-    glutSwapBuffers();
-
-    //forces to operate in a finite time
-    glFlush();*/
-
-
-    //--Render the scene
-    glBindFramebuffer(GL_FRAMEBUFFER, flatRenderModule.fbo_drawn);
-    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
-
-    //activate 3D shader
-    if(simConfig->lightPerVertex)
-        simConfig->simShaderManager->activateShader("PerVertexLighting");
-    else
-        simConfig->simShaderManager->activateShader("PerFragmentLighting");
-
-    //clear the screen
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    //perform pre-rendering
-    simConfig->simEntityManager->prerender();
-
-    //throw in entity manager rendering
-    simConfig->simEntityManager->render();
-
-    //render game objects
-    simConfig->gameData.render();
-
-
-    //Will the real frame buffer please stand up
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-    //glClearColor(0.5, 0.5, 0.9, 1.0);
-    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     flatRenderModule.render();
 
     //unbind buffer
@@ -129,10 +89,8 @@ void renderer::tick()
     flatRenderModule.spriteModule.generateText(simConfig, ""+to_string(int(floor(simConfig->gameData.currentGame.currScore))), 0.5, 425, 740);
 
     //render GAMEOVER if game is not active
-    if(simConfig->gameData.gameState==2)
-        flatRenderModule.spriteModule.generateText(simConfig, "YOU WIN!", 1.0, 410, 440, 30);
-    else if(simConfig->gameData.gameState==1)
-        flatRenderModule.spriteModule.generateText(simConfig, "YOU LOSE!", 1.0, 410, 440, 30);
+    //if(simConfig->gameData.gameState==2)
+        //flatRenderModule.spriteModule.generateText(simConfig, "YOU WIN!", 1.0, 410, 440, 30);
 
     //draw highscores
     for(int i=0; i<10; i++)
@@ -147,15 +105,8 @@ void renderer::tick()
 
 bool renderer::initialize()
 {
-
-    GLuint programID = simConfig->simShaderManager->activeProgram;
-
 	flatRenderModule.initialize();
 	depthRenderModule.initialize();
-
-    //enable depth testing
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
      
      // Always check that our framebuffer is ok
      if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

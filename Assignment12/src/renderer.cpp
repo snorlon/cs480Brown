@@ -4,6 +4,7 @@
 
 renderer::renderer()
 {
+    simConfig = NULL;
 }
 
 bool renderer::giveLinks(config* configData)
@@ -26,22 +27,11 @@ bool renderer::giveLinks(config* configData)
 
 void renderer::render()
 {
+/*
     depthRenderModule.render();
 
     //switch buffer
     glBindFramebuffer(GL_FRAMEBUFFER, flatRenderModule.fbo_drawn);
-
-    /*simConfig->simShaderManager->activateShader("Depth");
-
-    //lights render
-    simConfig->worldLights->render();
-
-    //upload models
-    simConfig->simEntityManager->uploadVertices();
-
-    //draw them
-    simConfig->simEntityManager->drawVertices();*/
-
 
     //activate 3D shader
     simConfig->simShaderManager->activateShader("PerFragmentLighting");
@@ -66,6 +56,50 @@ void renderer::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //glBindBuffer(GL_ARRAY_BUFFER, outputSprite->vbo_sprite);
+    flatRenderModule.render();
+
+    //unbind buffer
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                           
+    //swap the buffers
+    glutSwapBuffers();
+
+    //forces to operate in a finite time
+    glFlush();*/
+
+
+    //--Render the scene
+    glBindFramebuffer(GL_FRAMEBUFFER, flatRenderModule.fbo_drawn);
+    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
+
+    //activate 3D shader
+    if(simConfig->lightPerVertex)
+        simConfig->simShaderManager->activateShader("PerVertexLighting");
+    else
+        simConfig->simShaderManager->activateShader("PerFragmentLighting");
+
+    //clear the screen
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //perform pre-rendering
+    simConfig->simEntityManager->prerender();
+
+    //throw in entity manager rendering
+    simConfig->simEntityManager->render();
+
+    //render game objects
+    simConfig->gameData.render();
+
+
+    //Will the real frame buffer please stand up
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+    //glClearColor(0.5, 0.5, 0.9, 1.0);
+    glViewport(0,0,simConfig->getWindowWidth(),simConfig->getWindowHeight());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     flatRenderModule.render();
 
     //unbind buffer
@@ -113,6 +147,7 @@ void renderer::tick()
 
 bool renderer::initialize()
 {
+
     GLuint programID = simConfig->simShaderManager->activeProgram;
 
 	flatRenderModule.initialize();
@@ -121,9 +156,6 @@ bool renderer::initialize()
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
-    //create static interfaces
-    flatRenderModule.spriteModule.addSprite(simConfig, 0, 0, 1280, 800, "interface/airhockeyinterface.png", true);
      
      // Always check that our framebuffer is ok
      if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

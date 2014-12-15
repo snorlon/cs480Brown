@@ -13,6 +13,7 @@ class flatRenderer
         GLuint texID;
         GLuint fbo_drawn;
         GLuint renderedTexture;
+        GLuint depthrenderbuffer;
 
         sprite* flatRenderSprite;
 

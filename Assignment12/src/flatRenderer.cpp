@@ -35,7 +35,7 @@ void flatRenderer::render()
 
 
     //render the 2d images
-    spriteModule.render(  );
+    //spriteModule.render(  );
 
 
     // Bind our texture in Texture Unit 0
@@ -74,9 +74,9 @@ void flatRenderer::render()
 
 bool flatRenderer::initialize()
 {
-    GLuint programID = simConfig->simShaderManager->activeProgram;
-
     simConfig->simShaderManager->activateShader("2D");
+
+    GLuint programID = simConfig->simShaderManager->activeProgram;
 
     // create the fbo
     glGenFramebuffers(1, &fbo_drawn);
@@ -84,10 +84,7 @@ bool flatRenderer::initialize()
 
 	texID = glGetUniformLocation(programID, "gSampler");
 
-    //create a sprite to render
-    flatRenderSprite = new sprite(0, 0, simConfig->getWindowWidth(), simConfig->getWindowHeight(), 1.0, 1.0);
-    flatRenderSprite->load(simConfig,"interface/airhockeyinterface.png");
-    flatRenderSprite->init(simConfig);
+
 
     // The texture we're going to render to
 	glGenTextures(1, &renderedTexture);
@@ -102,10 +99,28 @@ bool flatRenderer::initialize()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
 
+    
+	glGenRenderbuffers(1, &depthrenderbuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, simConfig->getWindowWidth(), simConfig->getWindowHeight());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
 
 
+    //create a sprite to render
+    flatRenderSprite = new sprite(0, 0, simConfig->getWindowWidth(), simConfig->getWindowHeight(), 1.0, 1.0);
+    flatRenderSprite->load(simConfig,"interface/airhockeyinterface.png");
+    flatRenderSprite->init(simConfig);
+
+    //enable depth testing
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     spriteModule.init(simConfig);
+
+    //create static interfaces
+    spriteModule.addSprite(simConfig, 0, 0, 1280, 800, "interface/airhockeyinterface.png", true);
 
 
     return true;//just give it what it wants, please!

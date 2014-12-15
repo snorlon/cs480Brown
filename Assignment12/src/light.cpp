@@ -102,7 +102,7 @@ void lightSource::off()
 
 void lightSource::render()
 {
-    GLuint depthMatrixID = lights->simConfig->simRenderer->depthMatrixID;
+    /*GLuint depthMatrixID = lights->simConfig->simRenderer->depthMatrixID;
 
     //do nothing
     glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
@@ -115,7 +115,7 @@ void lightSource::render()
 
     // Send our transformation to the currently bound shader,
     // in the "MVP" uniform
-    glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
+    glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);*/
 }
 
 lightArray::lightArray()

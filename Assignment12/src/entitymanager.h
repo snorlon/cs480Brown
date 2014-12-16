@@ -42,7 +42,7 @@ class entityManager
         void loadData( string loadlistFileName );
         entity* loadEntity(string fileName);
         void prerender();//for shadows and shit
-        void render();
+        void render(int renderMode = 0);
         void cleanup();
 
     private:

@@ -59,7 +59,7 @@ class game
         void resetScore();
         void init();//for initing the game-specific components
         void tick(double dt);
-        void render();
+        void render(int renderMode = 0);
         void moveBat(double xAmount, double yAmount);
         void startGame(int nmode = 0);
 

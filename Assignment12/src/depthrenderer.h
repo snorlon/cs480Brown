@@ -20,8 +20,23 @@ class depthrenderer
         config* simConfig;
         renderer* simRenderer;
 
+        GLuint depthTexture;
+
+        GLuint programID;
+
+        GLuint DepthBiasID;
+	    GLuint ShadowMapID;
+
+        //GLuint quad_vertexbuffer;
+
+        // Get a handle for our buffers
+        GLuint depth_vertexPosition_modelspaceID;
+
         depthrenderer();
         ~depthrenderer();
+
+        void init();
+        void render();
 
     private:
 };

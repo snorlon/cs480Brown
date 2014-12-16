@@ -114,6 +114,7 @@ void flatrenderer::render()
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+	//glBindTexture(GL_TEXTURE_2D, simRenderer->depthModule.depthTexture);
 	// Set our "renderedTexture" sampler to user Texture Unit 0
 	glUniform1i(texID, 0);
 

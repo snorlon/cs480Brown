@@ -40,6 +40,8 @@ class entity
         GLint loc_model[shaderMax];
         GLint loc_view[shaderMax];
 
+        GLuint depthMatrixID;
+
         GLint loc_lightPosition[shaderMax][10];
         GLint loc_lightDiffuse[shaderMax][10];
         GLint loc_lightSpecular[shaderMax][10];
@@ -94,7 +96,7 @@ class entity
         float getZ();
 
         void prerender();
-        void render();
+        void render(int renderMode = 0);
 
     private:
 };

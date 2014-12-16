@@ -22,7 +22,9 @@ class renderer
         flatrenderer flatModule;
         depthrenderer depthModule;
 
-        GLuint fbo_main;
+        GLuint fbo_main;//render to texture
+        GLuint FramebufferName;//render to shadow map, replace with fbo_main?
+        glm::mat4 depthMVP;
 
         config* simConfig;
 

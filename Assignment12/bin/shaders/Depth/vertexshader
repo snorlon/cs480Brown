@@ -1,21 +1,14 @@
 #version 130
-in vec2 v_tex;
-in vec3 v_normal;
-in vec3 v_position;
 
-out vec3 normal;
-out vec3 position;
+// Input vertex data, different for all executions of this shader.
+attribute vec3 v_position;
 
+// Values that stay constant for the whole mesh.
+uniform mat4 depthMVP;
 uniform mat4 mvpMatrix;
 uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
 
-void main()
-{
-    gl_Position = mvpMatrix * vec4(v_position, 1.0);
-    gl_TexCoord[0].st = v_tex;
-
-    normal = normalize((modelMatrix * vec4(v_normal, 0)).rgb);
-    position = (modelMatrix * vec4(v_position, 1)).rgb;
-
+void main(){
+	gl_Position = depthMVP * vec4(v_position,1);
 }
+

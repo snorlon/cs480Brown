@@ -114,6 +114,18 @@ int main(int argc, char **argv)
         return -1;
     }
 
+	// Dark blue background
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	// Enable depth test
+	glEnable(GL_DEPTH_TEST);
+
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS); 
+
+	// Cull triangles which normal is not towards the camera
+	glEnable(GL_CULL_FACE);
+
     // Set all of the callbacks to GLUT that we need
     //glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF); //disable key spamming for now
     glutDisplayFunc(render);// Called when its time to display
@@ -454,16 +466,12 @@ void keyboardPlus(int key, int x_pos, int y_pos)
         simConfig.altitudeAngle += rate;
 
         //artificial altitude cap, purely for airhockey, no need for more than 85
-        if(simConfig.altitudeAngle>85)
-            simConfig.altitudeAngle = 85;
     }
     else if(key == GLUT_KEY_DOWN)
     {
         simConfig.altitudeAngle -= rate;
 
         //artificial altitude cap, purely for airhockey, no need for more than 85
-        if(simConfig.altitudeAngle<1)
-            simConfig.altitudeAngle = 1;
     }
     else if(key == GLUT_KEY_LEFT)
     {
@@ -483,9 +491,6 @@ void keyboardPlus(int key, int x_pos, int y_pos)
     else if(key == GLUT_KEY_PAGE_DOWN)
     {
         simConfig.viewDistance += 1.0;
-
-        if(simConfig.viewDistance>95)
-            simConfig.viewDistance = 95;
     }
 }
 

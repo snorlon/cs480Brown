@@ -79,6 +79,11 @@ void entity::init()
     objPhysics.init( me );//init our bullet physics
 
     // Create a Vertex Buffer object to store this vertex info on the GPU
+
+
+    simConfig->simShaderManager->activateShader("Depth");
+    GLuint depthProgramID = simConfig->simShaderManager->activeProgram;
+    depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
     
     //upload to every shader if possible
     for(int i=0; i<simConfig->simShaderManager->shaderCount-1; i++)
@@ -170,15 +175,6 @@ void entity::tick(double dt)
 
         model = glm::scale( model, glm::vec3(scale, scale, scale));
     }
-
-    /*entity* iterator = children;
-
-    //tick each child
-    while(iterator!=NULL)
-    {
-        iterator->tick(dt);
-        iterator = iterator->next;
-    }*/
 }
 
 float entity::getX()
@@ -216,7 +212,7 @@ void entity::prerender()
 
 }
 
-void entity::render()
+void entity::render(int renderMode)
 {
     //abort if we aren't visible, we shouldn't be drawing! Same goes for if we lack a rigid body!
     if(!visible || objPhysics.objRB == NULL)
@@ -228,6 +224,7 @@ void entity::render()
     mvp = simConfig->projection * simConfig->view * model;
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry[shaderIndex]);
+
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texID[shaderIndex]);
@@ -247,22 +244,46 @@ void entity::render()
                            sizeof(Vertex),//stride
                            0);//offset
 
-    glEnableVertexAttribArray(loc_normal[shaderIndex]);
-    glVertexAttribPointer( loc_normal[shaderIndex],//location of attribute
-                           3,//number of elements
-                           GL_FLOAT,//type
-                           GL_FALSE,//normalized?
-                           sizeof(Vertex),
-                            (void*)offsetof(Vertex,normal));//offset
 
-    glEnableVertexAttribArray(loc_texture[shaderIndex]);
-    glVertexAttribPointer( loc_texture[shaderIndex],
-                           2,
-                           GL_FLOAT,
-                           GL_FALSE,
-                           sizeof(Vertex),
-                            (void*)offsetof(Vertex,uv));
+    if(renderMode == 0)
+    {
+        glEnableVertexAttribArray(loc_normal[shaderIndex]);
+        glVertexAttribPointer( loc_normal[shaderIndex],//location of attribute
+                               3,//number of elements
+                               GL_FLOAT,//type
+                               GL_FALSE,//normalized?
+                               sizeof(Vertex),
+                                (void*)offsetof(Vertex,normal));//offset
 
+        glEnableVertexAttribArray(loc_texture[shaderIndex]);
+        glVertexAttribPointer( loc_texture[shaderIndex],
+                               2,
+                               GL_FLOAT,
+                               GL_FALSE,
+                               sizeof(Vertex),
+                                (void*)offsetof(Vertex,uv));
+    }
+
+
+    if(renderMode == 1)
+    {
+		glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
+
+		// Compute the MVP matrix from the light's point of view
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-5,10);
+		glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
+		// or, for spot light :
+		//glm::vec3 lightPos(5, 20, 20);
+		//glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 2.0f, 50.0f);
+		//glm::mat4 depthViewMatrix = glm::lookAt(lightPos, lightPos-lightInvDir, glm::vec3(0,1,0));
+
+		glm::mat4 depthModelMatrix = glm::mat4(1.0);
+		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+
+		// Send our transformation to the currently bound shader, 
+		// in the "MVP" uniform
+		glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
+    }
 
     lightSource* iterator = simConfig->worldLights->head;
     for(int i=0; i<10; i++)

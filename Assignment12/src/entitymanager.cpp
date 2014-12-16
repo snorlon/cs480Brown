@@ -426,14 +426,14 @@ void entityManager::prerender()
     }
 }
 
-void entityManager::render()
+void entityManager::render(int renderMode)
 {
     entity* iterator = head;
 
     //draw each entity, let them figure out what they want done
     while(iterator!=NULL)
     {
-        iterator->render();
+        iterator->render(renderMode);
         iterator = iterator->next;
     }
 }

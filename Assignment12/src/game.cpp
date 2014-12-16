@@ -216,23 +216,23 @@ void game::tick(double dt)
     }
 }
 
-void game::render()
+void game::render(int renderMode)
 {
     //render the game objects if they are set
     if(table!=NULL)
     {
-        table->render();
+        table->render(renderMode);
     }
     if(bat!=NULL)
     {
-        bat->render();
+        bat->render(renderMode);
     }
     if(ball1!=NULL)
     {
-        ball1->render();
+        ball1->render(renderMode);
     }
     if(ball2!=NULL && mode == 1)
-        ball2->render();
+        ball2->render(renderMode);
 }
 
 void game::moveBat(double xAmount, double yAmount)

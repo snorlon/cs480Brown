@@ -40,7 +40,9 @@ class entity
         GLint loc_model[shaderMax];
         GLint loc_view[shaderMax];
 
-        GLuint depthMatrixID;
+        GLuint DepthBiasID[shaderMax];
+        GLuint depthMatrixID[shaderMax];
+        GLuint ShadowMapID[shaderMax];
 
         GLint loc_lightPosition[shaderMax][10];
         GLint loc_lightDiffuse[shaderMax][10];

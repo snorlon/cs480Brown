@@ -5,6 +5,7 @@
 
 
 #include "light.h"
+#include "renderer.h"
 
 #define pi 3.14159265
 
@@ -12,6 +13,8 @@ config::config()
 {    
     objectCount = 1;
     texCount = 0;
+
+    renderModule = NULL;
 
     physicsEnvironment = new physics();
 

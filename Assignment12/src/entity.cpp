@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <vector>
 #include "shaderloader.h"
+#include "renderer.h"
 
 using namespace std;
 
@@ -79,14 +80,9 @@ void entity::init()
     objPhysics.init( me );//init our bullet physics
 
     // Create a Vertex Buffer object to store this vertex info on the GPU
-
-
-    simConfig->simShaderManager->activateShader("Depth");
-    GLuint depthProgramID = simConfig->simShaderManager->activeProgram;
-    depthMatrixID = glGetUniformLocation(depthProgramID, "depthMVP");
     
     //upload to every shader if possible
-    for(int i=0; i<simConfig->simShaderManager->shaderCount-1; i++)
+    for(int i=0; i<simConfig->simShaderManager->shaderCount; i++)
     {
         simConfig->simShaderManager->activateShader(i);
         GLint activeProgram = simConfig->simShaderManager->activeProgram;
@@ -95,11 +91,13 @@ void entity::init()
         glBindBuffer(GL_ARRAY_BUFFER, vbo_geometry[i]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
+        DepthBiasID[i] = glGetUniformLocation(activeProgram, "DepthBiasMVP");
+        depthMatrixID[i] = glGetUniformLocation(activeProgram, "depthMVP");
+        ShadowMapID[i] = glGetUniformLocation(activeProgram, "shadowMap");
+
         //Now we set the locations of the attributes and uniforms
         //this allows us to access them easily while rendering
         loc_position[i] = glGetAttribLocation(activeProgram, "v_position");
-        if(loc_position[i] == -1)
-            std::cerr << "[F] VPOSITION NOT FOUND" << std::endl;
 
         loc_normal[i] = glGetAttribLocation(activeProgram, "v_normal");
 
@@ -229,6 +227,13 @@ void entity::render(int renderMode)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texID[shaderIndex]);
 
+    if(renderMode==0)
+    {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, simConfig->renderModule->depthModule.depthTexture);
+        glUniform1i(ShadowMapID[shaderIndex], 1);
+    }
+
     //upload the matrix to the shader
     glUniformMatrix4fv(loc_mvpmat[shaderIndex], 1, GL_FALSE, glm::value_ptr(mvp));
     glUniformMatrix4fv(loc_model[shaderIndex], 1, GL_FALSE, glm::value_ptr(model));
@@ -244,46 +249,49 @@ void entity::render(int renderMode)
                            sizeof(Vertex),//stride
                            0);//offset
 
+    glEnableVertexAttribArray(loc_normal[shaderIndex]);
+    glVertexAttribPointer( loc_normal[shaderIndex],//location of attribute
+                           3,//number of elements
+                           GL_FLOAT,//type
+                           GL_FALSE,//normalized?
+                           sizeof(Vertex),
+                            (void*)offsetof(Vertex,normal));//offset
 
-    if(renderMode == 0)
-    {
-        glEnableVertexAttribArray(loc_normal[shaderIndex]);
-        glVertexAttribPointer( loc_normal[shaderIndex],//location of attribute
-                               3,//number of elements
-                               GL_FLOAT,//type
-                               GL_FALSE,//normalized?
-                               sizeof(Vertex),
-                                (void*)offsetof(Vertex,normal));//offset
-
-        glEnableVertexAttribArray(loc_texture[shaderIndex]);
-        glVertexAttribPointer( loc_texture[shaderIndex],
-                               2,
-                               GL_FLOAT,
-                               GL_FALSE,
-                               sizeof(Vertex),
-                                (void*)offsetof(Vertex,uv));
-    }
+    glEnableVertexAttribArray(loc_texture[shaderIndex]);
+    glVertexAttribPointer( loc_texture[shaderIndex],
+                           2,
+                           GL_FLOAT,
+                           GL_FALSE,
+                           sizeof(Vertex),
+                            (void*)offsetof(Vertex,uv));
 
 
-    if(renderMode == 1)
-    {
-		glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
+	//glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
+	// Compute the MVP matrix from the light's point of view
+	glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-10,20);
+	//glm::mat4 depthProjectionMatrix = glm::perspective(90.0f, float(1024)/float(800), 0.001f, 10000.0f);
+	//glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(0.5f,2,2), glm::vec3(0,0,0), glm::vec3(0,1,0));
+	glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(0.1f,30,0), glm::vec3(0,0,0), glm::vec3(0,1,0));
+	//glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(0,45,0), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
-		// Compute the MVP matrix from the light's point of view
-		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-5,10);
-		glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
-		// or, for spot light :
-		//glm::vec3 lightPos(5, 20, 20);
-		//glm::mat4 depthProjectionMatrix = glm::perspective<float>(45.0f, 1.0f, 2.0f, 50.0f);
-		//glm::mat4 depthViewMatrix = glm::lookAt(lightPos, lightPos-lightInvDir, glm::vec3(0,1,0));
+	glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * model;
 
-		glm::mat4 depthModelMatrix = glm::mat4(1.0);
-		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+    //throw in entity manager rendering
+		
+	glm::mat4 biasMatrix(
+		0.5, 0.0, 0.0, 0.0, 
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0
+	);
 
-		// Send our transformation to the currently bound shader, 
-		// in the "MVP" uniform
-		glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
-    }
+	glm::mat4 depthBiasMVP = biasMatrix*depthMVP;
+	glUniformMatrix4fv(DepthBiasID[shaderIndex], 1, GL_FALSE, &depthBiasMVP[0][0]);
+
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform
+	glUniformMatrix4fv(depthMatrixID[shaderIndex], 1, GL_FALSE, &depthMVP[0][0]);
+
 
     lightSource* iterator = simConfig->worldLights->head;
     for(int i=0; i<10; i++)

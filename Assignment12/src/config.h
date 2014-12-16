@@ -16,6 +16,7 @@
 
 const int shaderMaxC = 500;
 
+class renderer;
 class lightArray;
 //This object will define the attributes of a vertex(position, color, etc...)
 struct Vertex
@@ -63,6 +64,7 @@ class config
         //module pointers available to one and all like the filthy things they are
         shaderManager* simShaderManager;
         entityManager* simEntityManager;
+        renderer* renderModule;
         physics* physicsEnvironment;
 
         game gameData;

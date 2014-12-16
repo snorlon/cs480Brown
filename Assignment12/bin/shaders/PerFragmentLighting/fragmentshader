@@ -67,17 +67,7 @@ void main()
         LightTotal += lightParts[i];
     }  
 	
-	float visibility=1.0;
-
-	// Fixed bias, or...
-	float bias = 0.005;
-
-	// Sample the shadow map 4 times
-	for (int i=0;i<4;i++){
-		int index = i;
-		
-		visibility -= 0.2*(1.0-shadow2D( shadowMap, vec3(ShadowCoord.xy ,  (ShadowCoord.z-bias)/ShadowCoord.w )).r);
-	}
+	float visibility=0.2+shadow2D( shadowMap, vec3(ShadowCoord.xy, (ShadowCoord.z)/ShadowCoord.w) ).r;
      
     gl_FragColor = visibility * vec4( LightTotal, 1 ) * texture2D( gSampler, gl_TexCoord[0].st );
     if(gl_FragColor.x>1)

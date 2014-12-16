@@ -40,9 +40,9 @@ void renderer::render()
 
 
     //throw in entity manager rendering
+    simConfig->gameData.render(1);
     simConfig->simEntityManager->render(1);
     //render game objects
-    simConfig->gameData.render(1);
 
 
 
@@ -56,22 +56,6 @@ void renderer::render()
 
     glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-
-    //throw in entity manager rendering
-		
-	glm::mat4 biasMatrix(
-		0.5, 0.0, 0.0, 0.0, 
-		0.0, 0.5, 0.0, 0.0,
-		0.0, 0.0, 0.5, 0.0,
-		0.5, 0.5, 0.5, 1.0
-	);
-
-	glm::mat4 depthBiasMVP = biasMatrix*depthMVP;
-	glUniformMatrix4fv(depthModule.DepthBiasID, 1, GL_FALSE, &depthBiasMVP[0][0]);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, depthModule.depthTexture);
-    glUniform1i(depthModule.ShadowMapID, 1);
 
     simConfig->simEntityManager->render();
 

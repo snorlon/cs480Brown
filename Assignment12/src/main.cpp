@@ -498,6 +498,8 @@ bool initialize()
 {
     bool returnVal = true;
 
+    simConfig.renderModule = &simRenderer;
+
     //initialize stuff
     //shader needs config for program stuff to setup our shaders
     returnVal = returnVal && simShaderManager.giveLinks(&simConfig);

@@ -1,7 +1,7 @@
 #version 130
 
 // Input vertex data, different for all executions of this shader.
-attribute vec3 v_position;
+in vec3 v_position;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 depthMVP;

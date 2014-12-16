@@ -347,8 +347,8 @@ entity* entityManager::loadEntity(string fileName)
                         cout<<"Dib failed to load! Are your file paths set up properly?? "<<newname<<endl;
                         good = false;
                     }
-
                     bits = FreeImage_GetBits(dib);
+
                     //get the image width and height
                     newObj->texWidth = FreeImage_GetWidth(dib);
                     newObj->texHeight = FreeImage_GetHeight(dib);
@@ -357,7 +357,7 @@ entity* entityManager::loadEntity(string fileName)
 
                     //generate an OpenGL texture ID for this texture
                     //generate texture for each shader
-                    for(int i=0; i<simConfig->simShaderManager->shaderCount; i++)
+                    for(int i=0; i<simConfig->simShaderManager->shaderCount-2; i++)
                     {
                         simConfig->simShaderManager->activateShader(i);
 
@@ -366,9 +366,12 @@ entity* entityManager::loadEntity(string fileName)
 
                         glBindTexture( GL_TEXTURE_2D, newObj->texID[i]);
 
+
                         //store the texture data for OpenGL use
                         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
                         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, newObj->texWidth, newObj->texHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, bits);
+
                     }
 
                     simConfig->texCount++;
@@ -446,17 +449,5 @@ void entityManager::cleanup()
         temp->cleanup();
 
         delete temp;
-    }
-}
-
-void entityManager::depthRender()
-{
-    entity* iterator = head;
-
-    //draw each entity, let them figure out what they want done
-    while(iterator!=NULL)
-    {
-        iterator->depthRender();
-        iterator = iterator->next;
     }
 }

@@ -35,7 +35,8 @@ game::game()
     for(int i=0; i<10; i++)
         highscores[i] = NULL;
 
-    ball = NULL;
+    ball1 = NULL;
+    ball2 = NULL;
     bat = NULL;
     table = NULL;
 
@@ -46,9 +47,6 @@ game::game()
     int i = 0;
     string input;
     int scoreIn = 0;
-
-    ai1Enabled = false;
-    ai2Enabled = false;
 
     gameState=1;
 
@@ -136,11 +134,13 @@ void game::resetScore()
 void game::init()
 {
     //load in theme
-    ball = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Ball");
+    ball1 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Ball");
+    ball2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Ball2");
     bat = simConfig->simEntityManager->loadEntity("../bin/data/Objects/ToLoveRu/bat");
     table = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Props/Labrynth");
 
-    ball->init();
+    ball1->init();
+    ball2->init();
     bat->init();
     table->init();
 
@@ -158,9 +158,6 @@ void game::tick(double dt)
     //abort if dt is 0
     if(dt==0)
         return;
-    //do our rolls up here so that they go even if they aren't used
-    double roll1 = ((rand() % 21)-10)/10;
-    double roll2 = ((rand() % 21)-10)/10;
 
     //render the game objects if they are set
     if(table!=NULL)
@@ -171,12 +168,13 @@ void game::tick(double dt)
     {
         bat->tick(dt);
     }
-    if(ball!=NULL)
+    if(ball1!=NULL)
     {
-        ball->tick(dt);
-        //check if the puck is out of bounds
+        ball1->tick(dt);
+        ball2->tick(dt);
+        //check if the ball is out of bounds
         //if so reset it
-        if(ball->absolutePosition.y < 10)
+        if(ball1->absolutePosition.y < 10)
         {
             //player lost if they fell in
             gameState=1;
@@ -184,56 +182,23 @@ void game::tick(double dt)
             resetBall();
         }
         //check for win
-        else if(ball->absolutePosition.z <= -14.6 && gameState==0)
+        else if(ball1->absolutePosition.z <= -14.6 && gameState==0 && (ball2->absolutePosition.z <= -14.6 || mode!=1))
         {
             //player lost if they fell in
             gameState=2;
+            mode = 1;//switch the mode
 
             resetBall();
         }
-    }
-    //do ai things
-    if(ai2Enabled||ai1Enabled)
-    {
-        double timeStep = 0.5;
-        double moveCap = 0.5;
 
-
-        //predict where puck should be
-        btVector3  forceAddedVel = ball->objPhysics.objRB->getLinearVelocity();
-
-         //the predicted position is the balls position plus these two terms
-        btTransform pucktrans;
-        ball->objPhysics.objRB->getMotionState()->getWorldTransform(pucktrans);
-
-        btTransform bat1trans;
-
-        if(ai1Enabled)
+        //check if the ball is out of bounds
+        //if so reset it
+        else if(ball2->absolutePosition.y < 10 && mode==1)
         {
-            bat->objPhysics.objRB->getMotionState()->getWorldTransform(bat1trans);
-        }
+            //player lost if they fell in
+            gameState=1;
 
-        //update position
-        btVector3 FuturePosition=pucktrans.getOrigin() + (forceAddedVel) * timeStep;
-
-        //add a small factor to try to get behind
-        //also add a small amount of error
-        if(ai1Enabled)
-        {
-            double xDifference = FuturePosition.getX()-bat1trans.getOrigin().getX()-0.5+(roll1/100);
-            double zDifference = FuturePosition.getZ()-bat1trans.getOrigin().getZ()+0.5+(roll2/10);
-
-            if(xDifference > moveCap)
-                xDifference = moveCap;
-            if(xDifference < -moveCap)
-                xDifference = -moveCap;
-            if(zDifference > moveCap)
-                zDifference = moveCap;
-            if(zDifference < -moveCap)
-                zDifference = -moveCap;
-
-            //attempt to move towards it
-            moveBat(1, -zDifference, xDifference, true);
+            resetBall();
         }
     }
 
@@ -262,21 +227,19 @@ void game::render()
     {
         bat->render();
     }
-    if(ball!=NULL)
+    if(ball1!=NULL)
     {
-        ball->render();
+        ball1->render();
     }
+    if(ball2!=NULL && mode == 1)
+        ball2->render();
 }
 
-void game::moveBat(int cbat, double xAmount, double yAmount, bool aiControlled)
+void game::moveBat(double xAmount, double yAmount)
 {
     //ditch controls if game not active
     if(gameState!=0)
         return;
-
-    //check if we aren't supposed to be able to control this bat
-    if(!aiControlled && cbat==1 && ai1Enabled)
-        return;//abort, we can't touch this
 
     entity* currentBat = NULL;
 
@@ -324,23 +287,39 @@ void game::moveBat(int cbat, double xAmount, double yAmount, bool aiControlled)
 
 void game::resetBall()
 {
-    if(ball!=NULL)
+    if(ball1!=NULL)
     {
         //reset our position
-        ball->absolutePosition.x = 14.2;
-        ball->absolutePosition.y = 16;
-        ball->absolutePosition.z = -14.2;
+        ball1->absolutePosition.x = 14.2;
+        ball1->absolutePosition.y = 16;
+        ball1->absolutePosition.z = -14.2;
+        if(mode==1)
+        {
+            ball2->absolutePosition.x = 13.4;
+            ball2->absolutePosition.y = 16;
+            ball2->absolutePosition.z = -14.1;
+        }
+        else
+        {
+            ball2->absolutePosition.x = 0;
+            ball2->absolutePosition.y = 0;
+            ball2->absolutePosition.z = 0;
+        }
 
         //remove the HEATHEN!
-        simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( ball->objPhysics.objRB );
+        simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( ball1->objPhysics.objRB );
+        simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( ball2->objPhysics.objRB );
 
         //and re-add them PURIFIED
-        ball->objPhysics.init( ball );
+        ball1->objPhysics.init( ball1 );
+        ball2->objPhysics.init( ball2 );
     }
 }
 
-void game::startGame()
+void game::startGame(int nmode)
 {
+    mode = nmode;
+    
     //to start the game we MUST
     //reset the score
     resetScore();

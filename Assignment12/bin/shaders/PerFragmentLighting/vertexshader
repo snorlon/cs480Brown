@@ -5,13 +5,10 @@ in vec3 v_position;
 
 out vec3 normal;
 out vec3 position;
-out vec4 ShadowCoord;
 
 uniform mat4 mvpMatrix;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
-
-uniform mat4 DepthBiasMVP;
 
 void main()
 {
@@ -20,7 +17,5 @@ void main()
 
     normal = normalize((modelMatrix * vec4(v_normal, 0)).rgb);
     position = (modelMatrix * vec4(v_position, 1)).rgb;
-
-    ShadowCoord = DepthBiasMVP * vec4(v_position,1);
 
 }

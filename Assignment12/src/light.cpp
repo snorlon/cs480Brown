@@ -1,15 +1,5 @@
 #include "light.h"
 #include "config.h"
-#include "renderer.h"
-
-#include <GL/glew.h> // glew must be included before the main gl libs
-#include <GL/glut.h> // doing otherwise causes compiler shouting
-
-#define GLM_FORCE_RADIANS
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
 
 lightSource::lightSource( lightArray* l, entity* p )
 {
@@ -100,24 +90,6 @@ void lightSource::off()
     stateOn = false;
 }
 
-void lightSource::render()
-{
-    /*GLuint depthMatrixID = lights->simConfig->simRenderer->depthMatrixID;
-
-    //do nothing
-    glm::vec3 lightInvDir = glm::vec3(0.5f,2,2);
-
-    // Compute the MVP matrix from the light's point of view
-    glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10,10,-10,10,-10,20);
-    glm::mat4 depthViewMatrix = glm::lookAt(lightInvDir, glm::vec3(0,0,0), glm::vec3(0,1,0));
-    glm::mat4 depthModelMatrix = glm::mat4(1.0);
-    glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
-
-    // Send our transformation to the currently bound shader,
-    // in the "MVP" uniform
-    glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);*/
-}
-
 lightArray::lightArray()
 {
     head = NULL;
@@ -153,6 +125,44 @@ bool lightArray::addLight(double pos[4], double ambient[4], double diffuse[4], d
     return true;
 }
 
+void lightArray::tick(float dt)
+{
+
+    dt = dt+1;
+
+    lightSource* l1 = getLight(0);
+    if(l1!=NULL && (rand() % 10 == 0))
+    {
+        l1->sourceDiffuse[0] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[1] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[2] = ((rand() % 40)/100.0)+0.2;
+    }
+
+    l1 = getLight(1);
+    if(l1!=NULL && (rand() % 10 == 0))
+    {
+        l1->sourceDiffuse[0] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[1] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[2] = ((rand() % 40)/100.0)+0.2;
+    }
+
+    l1 = getLight(2);
+    if(l1!=NULL && (rand() % 10 == 0))
+    {
+        l1->sourceDiffuse[0] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[1] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[2] = ((rand() % 40)/100.0)+0.2;
+    }
+
+    l1 = getLight(3);
+    if(l1!=NULL && (rand() % 10 == 0))
+    {
+        l1->sourceDiffuse[0] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[1] = ((rand() % 40)/100.0)+0.2;
+        l1->sourceDiffuse[2] = ((rand() % 40)/100.0)+0.2;
+    }
+}
+
 void lightArray::init()
 {
 }
@@ -179,17 +189,16 @@ void lightArray::off()
     }
 }
 
-void lightArray::render()
+lightSource* lightArray::getLight(int index)
 {
-    simConfig->simShaderManager->activateShader("Depth");
-
-
     lightSource* iterator = head;
-    while(iterator!=NULL)
+    while(iterator!=NULL && index>0)
     {
-        iterator->render();
+        iterator->off();
         iterator = iterator->next;
+        index--;
     }
+    return iterator;
 }
 
 entityLightNode::entityLightNode( lightSource* newL)

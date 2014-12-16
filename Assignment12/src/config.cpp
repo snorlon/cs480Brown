@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include "entity.h"
-#include "renderer.h"
 
 
 #include "light.h"
@@ -44,7 +43,7 @@ config::config()
 
     //create a new camera for each of the eye positions
     Camera* newCam = new Camera();//center of table
-    newCam->Position(0.0,18.0,0.0);
+    newCam->Position(0.0,19.0,0.0);
     newCam->Rotate(180,1,25);
     newCam->next = presetCameras;
     presetCameras = newCam;
@@ -146,19 +145,16 @@ config::~config()
 }
 
 
-bool config::giveLinks(shaderManager* shaderMgr, entityManager* entMgr, renderer* srender)
+bool config::giveLinks(shaderManager* shaderMgr, entityManager* entMgr)
 {
     //abort if any provided links are bogus, we NEED them
     if(shaderMgr == NULL)
         return false;
     if(entMgr == NULL)
         return false;
-    if(srender == NULL)
-        return false;
 
     simShaderManager = shaderMgr;
     simEntityManager = entMgr;
-    simRenderer = srender;
 
     std::cout<<"Config loaded!"<<std::endl;
 
@@ -226,6 +222,8 @@ void config::tick(float dt)
 
     eyeCamera.tick(dt);
     targetCamera.tick(dt);
+
+    worldLights->tick(dt);
 
     Camera* iterator = presetCameras;
     while(iterator!=NULL)

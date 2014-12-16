@@ -1,11 +1,74 @@
 #version 130
 
-float rand(vec2 n)
+uniform sampler2D gSampler;
+
+uniform vec3 eyeVector;
+
+struct Light{
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    vec3 spotdirection;
+    float spotcutoff;
+};
+
+struct LightMaterial{
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shine;
+};
+
+uniform Light lights[10];
+uniform LightMaterial lightMat;
+
+in vec3 normal;
+in vec3 position;
+
+
+
+void main()
 {
-  return 0.5 + 0.5 * 
-     fract(sin(dot(n.xy, vec2(12.9898, 78.233)))* 43758.5453);
-}
-void main(){
-    gl_FragColor.z = gl_FragCoord.z;
-    gl_FragColor.z = rand(vec2(gl_FragCoord.z,gl_FragCoord.z));
+    vec3 LightTotal = vec3(0.0,0.0,0.0);
+    vec3 lightParts[10];
+
+    for(int j=0;j<10;j++)
+    {
+        lightParts[j] = lightMat.ambient * lights[j].ambient;
+    }
+
+    vec3 V = normalize( eyeVector - position );
+
+    for(int i=0;i<10;i++)
+    {
+        // Compute the diffuse term.
+        vec3 L = normalize( lights[i].position - position );
+        float NdotL = max( dot( normal, L ), 0 );
+
+        //calculate spotlight
+        /* compute the dot product between normal and ldir */
+
+        float spotEffect = dot(lights[i].spotdirection, -L);
+
+        if (spotEffect > radians(lights[i].spotcutoff))
+        {
+            lightParts[i] +=  NdotL * lights[i].diffuse * lightMat.diffuse;
+             
+            // Compute the specular term.
+            vec3 H = normalize( L + V );
+            float RdotV = max( dot( normal, H ), 0 );
+            lightParts[i] += pow( RdotV, lightMat.shine ) * lights[i].specular * lightMat.specular;
+        }
+
+        LightTotal += lightParts[i];
+    }  
+     
+    gl_FragColor = vec4( LightTotal, 1 ) * texture2D( gSampler, gl_TexCoord[0].st );
+    if(gl_FragColor.x>1)
+        gl_FragColor.x = 1;
+    if(gl_FragColor.y>1)
+        gl_FragColor.y = 1;
+    if(gl_FragColor.z>1)
+        gl_FragColor.z = 1;
 }

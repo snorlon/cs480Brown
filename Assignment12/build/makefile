@@ -35,15 +35,15 @@ SPRITE = ../src/sprite.cpp
 SPRITEH = ../src/sprite.h
 GAME = ../src/game.cpp
 GAMEH = ../src/game.h
-FLATRENDERER = ../src/flatRenderer.cpp
-FLATRENDERERH = ../src/flatRenderer.h
-DEPTHRENDERER = ../src/depthRenderer.cpp
-DEPTHRENDERERH = ../src/depthRenderer.h
+FLATRENDERER = ../src/flatrenderer.cpp
+FLATRENDERERH = ../src/flatrenderer.h
+DEPTHRENDERER = ../src/depthrenderer.cpp
+DEPTHRENDERERH = ../src/depthrenderer.h
 
 all: main
 
-main: main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o game.o flatRenderer.o depthRenderer.o
-	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o game.o flatRenderer.o depthRenderer.o $(LIBS)
+main: main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o game.o depthrenderer.o flatrenderer.o
+	$(CC) $(CXXFLAGS) -o $(OUTPUT) main.o config.o entity.o entitymanager.o shaderloader.o camera.o renderer.o entityphysics.o physics.o light.o sprite.o game.o depthrenderer.o flatrenderer.o $(LIBS)
 
 main.o: $(MAIN) $(CONFIGH) $(SHADERLOADERH) $(RENDERERH) $(ENTITYH) $(ENTITYMANAGERH)
 	$(CC) $(CXXFLAGS) -c $(MAIN) $(LIBS)
@@ -54,7 +54,7 @@ entitymanager.o: $(ENTITYMANAGER) $(ENTITYMANAGERH) $(CONFIGH) $(ENTITYH)
 game.o: $(ENTITY) $(GAME) $(GAMEH) $(ENTITYH) $(CONFIGH) $(PHYSICSH)
 	$(CC) $(CXXFLAGS) -c $(GAME) $(LIBS)
 
-entity.o: $(ENTITY) $(ENTITYH) $(CONFIGH) $(ENTPHYSICSH) $(LIGHTH) $(RENDERERH)
+entity.o: $(ENTITY) $(ENTITYH) $(CONFIGH) $(ENTPHYSICSH) $(LIGHTH)
 	$(CC) $(CXXFLAGS) -c $(ENTITY) $(LIBS)
 
 entityphysics.o: $(ENTPHYSICS) $(ENTPHYSICSH) $(PHYSICSH) $(ENTITYH)
@@ -66,10 +66,10 @@ physics.o: $(PHYSICS) $(PHYSICSH)
 shaderloader.o: $(SHADERLOADER) $(SHADERLOADERH) $(CONFIGH)
 	$(CC) $(CXXFLAGS) -c $(SHADERLOADER) $(LIBS)
 
-config.o: $(CONFIG) $(CONFIGH) $(ENTITYMANAGERH) $(SHADERLOADERH) $(CAMERAH) $(PHYSICSH) $(LIGHTH) $(GAMEH) $(RENDERERH)
+config.o: $(CONFIG) $(CONFIGH) $(ENTITYMANAGERH) $(SHADERLOADERH) $(CAMERAH) $(PHYSICSH) $(LIGHTH) $(GAMEH)
 	$(CC) $(CXXFLAGS) -c $(CONFIG) $(LIBS)
 
-renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(ENTITYH) $(CONFIGH) $(SPRITEH) $(FLATRENDERERH)
+renderer.o: $(RENDERER) $(RENDERERH) $(SHADERLOADERH) $(ENTITYH) $(CONFIGH) $(SPRITEH) $(DEPTHRENDERERH) $(FLATRENDERERH)
 	$(CC) $(CXXFLAGS) -c $(RENDERER) $(LIBS)
 
 camera.o: $(CAMERA) $(CAMERAH) $(ENTITYH)
@@ -81,11 +81,11 @@ light.o: $(LIGHT) $(LIGHTH) $(CONFIGH)
 sprite.o: $(SPRITE) $(SPRITEH) $(CONFIGH)
 	$(CC) $(CXXFLAGS) -c $(SPRITE) $(LIBS)
 
-flatRenderer.o: $(FLATRENDERER) $(FLATRENDERERH) $(RENDERER) $(CONFIG) $(SPRITE)
-	$(CC) $(CXXFLAGS) -c $(FLATRENDERER) $(LIBS)
-
-depthRenderer.o: $(DEPTHRENDERER) $(DEPTHRENDERERH) $(RENDERER) $(CONFIG)
+depthrenderer.o: $(DEPTHRENDERER) $(DEPTHRENDERERH) $(CONFIGH) $(RENDERERH)
 	$(CC) $(CXXFLAGS) -c $(DEPTHRENDERER) $(LIBS)
+
+flatrenderer.o: $(FLATRENDERER) $(FLATRENDERERH) $(CONFIGH) $(RENDERERH) $(SPRITEH)
+	$(CC) $(CXXFLAGS) -c $(FLATRENDERER) $(LIBS)
 
 clean:
 	rm ../bin/Project *.o

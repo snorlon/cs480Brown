@@ -1,6 +1,6 @@
 Name:       RoofPlane
 Model:      Roof/ Barrier
-Shape:      Cube
+Shape:      Custom
 Mass:       0.0
 Scale:      150
 Location:   0, 100.0, 0
@@ -12,3 +12,4 @@ Ambient:    0.1,0.1,0.1,0
 Diffuse:    0.6,0.6,0.6,0
 Specular:   0.8,0.8,0.8,0
 Shine:      150
+Orientation: 0,0,0,1

@@ -16,7 +16,6 @@
 
 const int shaderMaxC = 500;
 
-class renderer;
 class lightArray;
 //This object will define the attributes of a vertex(position, color, etc...)
 struct Vertex
@@ -65,7 +64,6 @@ class config
         shaderManager* simShaderManager;
         entityManager* simEntityManager;
         physics* physicsEnvironment;
-        renderer* simRenderer;
 
         game gameData;
 
@@ -110,7 +108,7 @@ class config
         config();
         ~config();
         
-        bool giveLinks(shaderManager* shaderMgr, entityManager* entMgr, renderer* srender);
+        bool giveLinks(shaderManager* shaderMgr, entityManager* entMgr);
         void recalcCamera();
 
         Camera* switchCamera(int camID);

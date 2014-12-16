@@ -1,13 +1,13 @@
 Name:       Wall
 Model:      Wall/ wall
-Shape:      Cube
+Shape:      Custom
 Mass:       0.0
 Scale:      50
 Location:   150, 49, 0
 Velocity:   0, 0.0, 0
 Type:       Static
 Size:       50, 10, 50
-Orientation: 0,-1,0,1
+Orientation: 0,-1.57,-1.57,0
 Emissive:   0,0,0,0
 Ambient:    0.1,0.1,0.1,0
 Diffuse:    0.6,0.6,0.6,0

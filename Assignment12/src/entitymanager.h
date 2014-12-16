@@ -44,7 +44,6 @@ class entityManager
         void prerender();//for shadows and shit
         void render();
         void cleanup();
-        void depthRender();
 
     private:
 };

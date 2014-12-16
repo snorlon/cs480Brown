@@ -53,7 +53,6 @@ class lightSource
 
         void on();
         void off();
-        void render();
 
     private:
 };
@@ -70,12 +69,13 @@ class lightArray
         lightArray();
         ~lightArray();
 
+        lightSource* getLight(int index);
         bool addLight(double pos[4], double ambient[4], double diffuse[4], double specular[4], double spotdir[4], double spotcut, entity* parent = NULL);
+        void tick(float dt);
 
         void init();
         void on();
         void off();
-        void render();
 
     private:
 };

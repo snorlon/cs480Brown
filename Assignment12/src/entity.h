@@ -30,17 +30,22 @@ class entity
         entity* next;
         glm::mat4 model;
         config* simConfig;
-        GLuint vbo_fragment;// Vertex Buffer Object for the entire object in fragment shader
-        GLuint vbo_depth;// Vertex Buffer Object for the entire object in fragment shader
-        GLint textureShaderPos;
+        GLuint vbo_geometry[shaderMax];// Vertex Buffer Object for the entire object
+        GLint loc_texture[shaderMax];
         GLint loc_normal[shaderMax];
         GLint loc_position[shaderMax];
 
-        GLint loc_biasmvp[shaderMax];
         GLint loc_mvpmat[shaderMax];
 
         GLint loc_model[shaderMax];
         GLint loc_view[shaderMax];
+
+        GLint loc_lightPosition[shaderMax][10];
+        GLint loc_lightDiffuse[shaderMax][10];
+        GLint loc_lightSpecular[shaderMax][10];
+        GLint loc_lightAmbient[shaderMax][10];
+        GLint loc_lightSpotDir[shaderMax][10];
+        GLint loc_lightSpotCutoff[shaderMax][10];
 
         GLint loc_objMatAmbient[shaderMax];
         GLint loc_objMatDiffuse[shaderMax];
@@ -90,9 +95,6 @@ class entity
 
         void prerender();
         void render();
-        void uploadVertices(int index, bool enable=true);
-        void drawVertices(int index);
-        void depthRender();
 
     private:
 };

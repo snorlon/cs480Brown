@@ -41,17 +41,17 @@ class game
 
         config* simConfig;
 
+        int mode;
+
         //store game-specific materials via the game class
-        entity* ball;
+        entity* ball1;
+        entity* ball2;
         entity* bat;
         entity* table;
 
         double time;
 
         int gameState;
-
-        bool ai1Enabled;
-        bool ai2Enabled;
 
         game();
         ~game();
@@ -60,8 +60,8 @@ class game
         void init();//for initing the game-specific components
         void tick(double dt);
         void render();
-        void moveBat(int bat, double xAmount, double yAmount, bool aiControlled);
-        void startGame();
+        void moveBat(double xAmount, double yAmount);
+        void startGame(int nmode = 0);
 
         //game-specific functions
         void resetBall();

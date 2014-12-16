@@ -1,6 +1,5 @@
-#ifndef DEPTHRENDERH
-#define DEPTHRENDERH
-
+#ifndef FLATRENDERERH
+#define FLATRENDERERH
 #include <GL/glew.h> // glew must be included before the main gl libs
 #include <GL/glut.h> // doing otherwise causes compiler shouting
 #include <iostream>
@@ -12,32 +11,40 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> //Makes passing matrices to shaders easier
+#include "sprite.h"
 
-class config;
 class renderer;
-class depthRenderer
+class config;
+class flatrenderer
 {
     public:
         config* simConfig;
-        renderer* renderModule;
+        renderer* simRenderer;
 
-        GLuint depthFrameBuffer;
 
-        GLuint depthTexture;
-        GLuint depthMatrixID;//for the depth matrix
+        
+        spriteManager sprites;//holds all 2d image data
 
-        GLuint TextureID;
+        GLuint renderedTexture;
+        GLuint depthrenderbuffer;
+        GLuint texID;
 
-        GLuint DepthBiasID;
-        GLuint ShadowMapID;
+        sprite* outputSprite;
 
-        depthRenderer();
-        ~depthRenderer();
+
+
+
+
+        flatrenderer();
+        ~flatrenderer();
+
+        void init();
+        void tick();
         void render();
-        bool initialize();
 
     private:
 };
 
-
 #endif
+
+

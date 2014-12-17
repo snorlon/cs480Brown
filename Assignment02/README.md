@@ -33,7 +33,7 @@ How to run:
 
     Example is shown in screenshot.png
 
-    Entering custom vertex and fragment shaders is optional, and will use the pre-existing ones if they are not provided
+    Entering custom vertex and fragment shaders is MANDATORY
 
     If you enter a bad filename, it will ignore it and move on.
     If the file name is good, it will say in the terminal that the corresponding shader has been loaded.

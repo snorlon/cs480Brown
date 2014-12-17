@@ -3,7 +3,7 @@ Model:      ToLoveRu/Bat1/ bat
 Shape:      Custom
 Mass:       0
 Scale:      1.0
-Location:   0, 9.5, 7
+Location:   0, 0, 7
 Type:       Kinematic
 Emissive:   0,0,0,0
 Ambient:    0.8,0.8,0.8,0

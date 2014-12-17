@@ -35,10 +35,7 @@ game::game()
     for(int i=0; i<10; i++)
         highscores[i] = NULL;
 
-    ball1 = NULL;
-    ball2 = NULL;
     bat = NULL;
-    table = NULL;
 
     simConfig = NULL;
 
@@ -50,7 +47,7 @@ game::game()
 
     gameState=1;
 
-    srand (0);
+	objectScore.currScore = 0.0;
 
     fin>>scoreIn;
     while(i<10 && fin.good())
@@ -119,38 +116,31 @@ void game::addScore(score* s)
 void game::resetScore()
 {
     //only add successful scores
-    if(currentGame.currScore>0 && gameState==2)
+    if(objectScore.currScore>0 && gameState==2)
     {
-        addScore(new score(&currentGame));
+        addScore(new score(&objectScore));
     }
     gameState=0;
 
     //reset the score and players
     currentGame.currScore = 120;
 
-    time = 0;//reset our timer
+    time = 15;//reset our timer
 }
 
 void game::init()
 {
     //load in theme
-    ball1 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Ball");
-    ball2 = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Ball2");
     bat = simConfig->simEntityManager->loadEntity("../bin/data/Objects/ToLoveRu/bat");
-    table = simConfig->simEntityManager->loadEntity("../bin/data/Objects/Props/Labrynth");
 
-    ball1->init();
-    ball2->init();
     bat->init();
-    table->init();
+
+    cout<<bat->absolutePosition.x<<"|"<<bat->absolutePosition.y<<"|"<<bat->absolutePosition.z<<endl;
+
+    simConfig->presetCameras->target = bat;
 
     //reset the score
     resetScore();
-
-    //TEMPORARY
-    //toggle ai on
-    //enableAI(1);
-    //enableAI(2);
 }
 
 void game::tick(double dt)
@@ -160,79 +150,30 @@ void game::tick(double dt)
         return;
 
     //render the game objects if they are set
-    if(table!=NULL)
-    {
-        table->tick(dt);
-    }
     if(bat!=NULL)
     {
         bat->tick(dt);
-    }
-    if(ball1!=NULL)
-    {
-        ball1->tick(dt);
-        ball2->tick(dt);
-        //check if the ball is out of bounds
-        //if so reset it
-        if(ball1->absolutePosition.y < 10)
-        {
-            //player lost if they fell in
-            gameState=1;
-
-            resetBall();
-        }
-        //check for win
-        else if(ball1->absolutePosition.z <= -14.6 && gameState==0 && (ball2->absolutePosition.z <= -14.6 || mode!=1))
-        {
-            //player lost if they fell in
-            gameState=2;
-            mode = 1;//switch the mode
-
-            resetBall();
-        }
-
-        //check if the ball is out of bounds
-        //if so reset it
-        else if(ball2->absolutePosition.y < 10 && mode==1)
-        {
-            //player lost if they fell in
-            gameState=1;
-
-            resetBall();
-        }
     }
 
     //do not tick if game is not running
     if(gameState==0)
     {
-        time+=dt;
-        //also change our score
-        if(currentGame.currScore>0)
-        {
-            currentGame.currScore-=dt;
-        }
-        if(currentGame.currScore<0)
-            currentGame.currScore=0;
+        time-=dt;
     }
+
+	if(time<=0)
+	{
+		resetScore();
+	}
 }
 
 void game::render(int renderMode)
 {
     //render the game objects if they are set
-    if(table!=NULL)
-    {
-        table->render(renderMode);
-    }
     if(bat!=NULL)
     {
         bat->render(renderMode);
     }
-    if(ball1!=NULL)
-    {
-        ball1->render(renderMode);
-    }
-    if(ball2!=NULL && mode == 1)
-        ball2->render(renderMode);
 }
 
 void game::moveBat(double xAmount, double yAmount)
@@ -241,79 +182,57 @@ void game::moveBat(double xAmount, double yAmount)
     if(gameState!=0)
         return;
 
-    entity* currentBat = NULL;
-
-    //decide what bat to move based on the parameter
-    currentBat = bat;
+    //restrict amount
+    double threshold = 0.4;
+    if(xAmount>threshold)
+        xAmount = threshold;
+    if(xAmount<-threshold)
+        xAmount = -threshold;
+    if(yAmount>threshold)
+        yAmount = threshold;
+    if(yAmount<-threshold)
+        yAmount = -threshold;
 
     //move it accordingly to the amounts provided
-    if(currentBat!=NULL)
+    if(bat!=NULL)
     {
-        currentBat->absolutePosition.x += xAmount;
-        currentBat->absolutePosition.z += yAmount;
+        bat->absolutePosition.x += xAmount;
+        bat->absolutePosition.y = 2;
+        bat->absolutePosition.z += yAmount;
 
         //guard the bounds for the left and right of the board
-        double xLimit = 3.2;
-        double yLimit = 9.5;
-        if( currentBat->absolutePosition.x < -xLimit )
-            currentBat->absolutePosition.x = -xLimit;
-        else if( currentBat->absolutePosition.x > xLimit )
-            currentBat->absolutePosition.x = xLimit;
+        double xLimit = 100;
+        double zLimit = 100;
+        if( bat->absolutePosition.x < -xLimit )
+            bat->absolutePosition.x = -xLimit;
+        else if( bat->absolutePosition.x > xLimit )
+            bat->absolutePosition.x = xLimit;
 
-        //maintain a barrier in the center and prevent going too far behind the stage
-        if( currentBat->absolutePosition.z < 1.0 )
-            currentBat->absolutePosition.z = 1.0;
-        else if( currentBat->absolutePosition.z > yLimit )
-            currentBat->absolutePosition.z = yLimit;
-
+        if( bat->absolutePosition.z < -zLimit )
+            bat->absolutePosition.z = -zLimit;
+        else if( bat->absolutePosition.z > zLimit )
+            bat->absolutePosition.z = zLimit;
         
-        btVector3 MyNewPosition( currentBat->absolutePosition.x, currentBat->absolutePosition.y, currentBat->absolutePosition.z );
+        btVector3 MyNewPosition( bat->absolutePosition.x, bat->absolutePosition.y, bat->absolutePosition.z );
         btVector3 vNewPos = MyNewPosition;
         btTransform btt;
         btt.setIdentity();
-        currentBat->objPhysics.objRB->getMotionState()->getWorldTransform(btt);
+        bat->objPhysics.objRB->getMotionState()->getWorldTransform(btt);
         btQuaternion cOri = btt.getRotation();
         btt.setOrigin(vNewPos);
         btt.setRotation(cOri);
-        currentBat->objPhysics.objRB->getMotionState()->setWorldTransform(btt);
+        bat->objPhysics.objRB->getMotionState()->setWorldTransform(btt);
 
         //remove the bat and readd it to the stage
-        //simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( currentBat->objPhysics.objRB );
+        simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( bat->objPhysics.objRB );
 
         //and re-add them PURIFIED
-        //currentBat->objPhysics.init( currentBat );
+        bat->objPhysics.init( bat );
     }
 }
 
 void game::resetBall()
 {
-    if(ball1!=NULL)
-    {
-        //reset our position
-        ball1->absolutePosition.x = 14.2;
-        ball1->absolutePosition.y = 16;
-        ball1->absolutePosition.z = -14.2;
-        if(mode==1)
-        {
-            ball2->absolutePosition.x = 13.4;
-            ball2->absolutePosition.y = 16;
-            ball2->absolutePosition.z = -14.1;
-        }
-        else
-        {
-            ball2->absolutePosition.x = 0;
-            ball2->absolutePosition.y = 0;
-            ball2->absolutePosition.z = 0;
-        }
-
-        //remove the HEATHEN!
-        simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( ball1->objPhysics.objRB );
-        simConfig->physicsEnvironment->dynamicsWorld->removeCollisionObject( ball2->objPhysics.objRB );
-
-        //and re-add them PURIFIED
-        ball1->objPhysics.init( ball1 );
-        ball2->objPhysics.init( ball2 );
-    }
 }
 
 void game::startGame(int nmode)

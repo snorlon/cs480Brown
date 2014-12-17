@@ -75,7 +75,7 @@ void flatrenderer::tick()
     sprites.generateText(simConfig, "Version 1.0.0", 0.4, 985, 740);
 
     //scoreboard stuff
-    sprites.generateText(simConfig, ""+to_string(int(floor(simConfig->gameData.currentGame.currScore))), 0.5, 425, 740);
+    sprites.generateText(simConfig, ""+to_string(int(floor(simConfig->gameData.objectScore.currScore))), 0.5, 425, 740);
 
     //render GAMEOVER if game is not active
     if(simConfig->gameData.gameState==2)

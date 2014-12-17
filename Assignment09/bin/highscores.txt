@@ -1,10 +1,10 @@
 Erin|20
+Lala|12
 Momo|8
 Momo|6
-Momo|5
 Molly|5
 Lala|5
 Momo|5
+Momo|5
+Red|4
 Momo|3
-Lala|2
-Alex|1

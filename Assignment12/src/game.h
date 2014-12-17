@@ -36,6 +36,7 @@ class game
     public:
         score* highscores[10];
         score currentGame;
+		score objectScore;
 
         theme currentTheme;
 
@@ -44,10 +45,7 @@ class game
         int mode;
 
         //store game-specific materials via the game class
-        entity* ball1;
-        entity* ball2;
         entity* bat;
-        entity* table;
 
         double time;
 

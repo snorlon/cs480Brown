@@ -31,10 +31,6 @@ class flatrenderer
 
         sprite* outputSprite;
 
-
-
-
-
         flatrenderer();
         ~flatrenderer();
 

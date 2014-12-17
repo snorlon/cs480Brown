@@ -1,0 +1,14 @@
+Name:       Building1
+Model:      Building1/ building1
+Shape:      Custom
+Mass:       3.0
+Scale:      9.0
+Location:   50, 0, 50
+Velocity:   0, 0, 0
+Type:       Moveable
+Orientation: 0,0,0,1
+Size:       1, 1, 1
+Ambient:    0.1,0.1,0.1,0
+Diffuse:    0.4,0.4,0.4,0
+Specular:   0.0,0.0,0.0,0
+Shine:      150

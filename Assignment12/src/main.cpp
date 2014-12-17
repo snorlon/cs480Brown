@@ -34,6 +34,7 @@
 #include <bullet/LinearMath/btVector3.h>
 #include <bullet/btBulletDynamicsCommon.h>
 
+
 //--Data types
 
 //uniform locations
@@ -103,6 +104,9 @@ int main(int argc, char **argv)
     // Name and create the Window
     glutCreateWindow("Air Hockey");
     //glutFullScreen();
+
+	
+
 
     // Now that the window is created the GL context is fully set up
     // Because of that we can now initialize GLEW to prepare work with shaders
@@ -265,7 +269,7 @@ void update()
         consecutivePresses[7]-=rate;
 
     //cap how fast it may get
-    double cap = 3.0;
+    double cap = 1.0;
     if(consecutivePresses[0]>cap)
         consecutivePresses[0]=cap;
     if(consecutivePresses[1]>cap)
@@ -416,14 +420,9 @@ void keyUp (unsigned char key, int x, int y)
 
 void keyboard()
 {
-    float baseMovementMult = 3;
-    float xGShift = -0.1;
-    float zGShift = -0.1;
-
-    if(rand()%2 == 0)
-        xGShift+=0.2;
-    if(rand()%2 == 0)
-        zGShift+=0.2;
+    float baseMovementMult = 1;
+    double xGShift = 0;
+    double zGShift = 0;
 
     //movement for bat 2(if AI not enabled)
     if(keyStates['w'])
@@ -448,11 +447,10 @@ void keyboard()
     }
 
     //update the bat positions IF time is passing
-    if(!recentlyPaused)
+    if(!recentlyPaused && (xGShift!=0 || zGShift !=0))
     {
-        simConfig.gameData.moveBat(consecutivePresses[6]*baseMovementMult - consecutivePresses[7]*baseMovementMult, consecutivePresses[4]*baseMovementMult - consecutivePresses[5]*baseMovementMult);
+        simConfig.gameData.moveBat(xGShift, zGShift);
     }
-    simConfig.physicsEnvironment->shiftGravity(xGShift,zGShift);
 }
 
 void keyboardPlus(int key, int x_pos, int y_pos)
@@ -603,31 +601,6 @@ void mouseChange(int x, int y)
             //artificial altitude cap, purely for airhockey, no need for more than 85
             if(simConfig.altitudeAngle>85)
                 simConfig.altitudeAngle = 85;
-        }
-    }
-    else //passive mouse controls
-    {
-
-        //movement for bat 2(if AI not enabled)
-        if(yDir==1)
-        {
-            //up the key counter to factor in holding button for speed
-            consecutivePresses[4]+=1;
-        }
-        if(yDir==-1)
-        {
-            //up the key counter to factor in holding button for speed
-            consecutivePresses[5]+=1;
-        }
-        if(xDir==1)
-        {
-            //up the key counter to factor in holding button for speed
-            consecutivePresses[6]+=1;
-        }
-        if(xDir==-1)
-        {
-            //up the key counter to factor in holding button for speed
-            consecutivePresses[7]+=1;
         }
     }
 }

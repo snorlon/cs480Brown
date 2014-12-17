@@ -51,12 +51,6 @@ config::config()
     newCam->next = presetCameras;
     presetCameras = newCam;
 
-    newCam = new Camera();//center of table
-    newCam->Position(50.0,7.0,0.0);
-    newCam->Rotate(180,1,25);
-    newCam->next = presetCameras;
-    presetCameras = newCam;
-
     currentFocalCamera = newCam;
 
     //--Init the view (camera)

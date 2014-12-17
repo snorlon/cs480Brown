@@ -1,4 +1,4 @@
-GROUP PROJECT's Assignment 11
+GROUP PROJECT's Assignment 12
 
 Chad Brown
 Alexander Falconi
@@ -8,9 +8,9 @@ Molly Headland
 
 Assignment explanation:
 
-    The purpose of this assignment is to produce a 3D simulation of the Labyrinth game that is as realistic to the actual game as possible, yet still being a playable and an enjoyable experience for the end user.
-
-    -Labyrinth
+    Final project.
+    You are a present bumping into buildings to move them to score points.
+    Includes buggy shadow mapping.
 
 ========================================
 
@@ -59,17 +59,11 @@ Commands:
             Pg Up & Pg Down OR
             End - Reset zoom
 
-        WASD - control balls
+        WASD - control present
 
         R - reset the balls position
 
         + and - : controlling speed of program
-
-        1 - Game camera
-        2 - Table camera
-
-        5 - Start 1-ball game
-        6 - Start 2-ball game
 
         Enter - Start match with prior ball count
 
@@ -85,8 +79,7 @@ Commands:
 ========================================
 
 Extra Credit: 
-    Multiple Balls
-    High Scores
+    N/A
 
 ========================================
 

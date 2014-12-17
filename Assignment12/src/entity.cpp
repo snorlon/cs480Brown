@@ -15,6 +15,7 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <cmath>
 #include "shaderloader.h"
 #include "renderer.h"
 
@@ -72,7 +73,8 @@ void entity::cleanup()
 }
 
 void entity::init()
-{
+{	
+
     //save how much stuff is in the buffer for future rendering purposes
     vertexCount = vertices.size();
     entity* me = this;
@@ -148,9 +150,20 @@ void entity::tick(double dt)
         objPhysics.objRB->getMotionState()->getWorldTransform(trans);
 
         //update position
+		float displacement = abs(trans.getOrigin().getX() - absolutePosition.x) + abs(trans.getOrigin().getZ() - absolutePosition.z);
+		if( displacement > 0.05 )
+		{
+			// calculate score
+			simConfig->gameData.objectScore.currScore += displacement;
+			//cout << "Score: " << simConfig->gameData.objectScore.currScore << endl;
+		}
+		
         absolutePosition.x = trans.getOrigin().getX();
         absolutePosition.y = trans.getOrigin().getY();
         absolutePosition.z = trans.getOrigin().getZ();
+
+		// calculate score
+		
 
         if(shape!="Plane")
 	    {

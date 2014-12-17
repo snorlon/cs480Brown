@@ -31,7 +31,7 @@ How to run:
         All that matters is that file name follows the -f or -v command
 
     For loading models from file, enter './../bin/Project -m filename'
-        There is no limit to the number of models able to be loaded this way, but they are not moved as a result
+        Only enter one model at a time!
 
     Example terminal command:
         ./../bin/Project -f ../bin/shaders/fragmentshader -v ../bin/shaders/vertexshader -m ../bin/models/board.obj

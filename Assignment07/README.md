@@ -1,6 +1,6 @@
 GROUP PROJECT's Assignment 07
 
-Chad Brown
+Erin Brown
 Alexander Falconi
 Molly Headland
 

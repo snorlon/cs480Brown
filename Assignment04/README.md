@@ -1,4 +1,4 @@
-Chad Brown's Assignment 04
+Erin Brown's Assignment 04
 
 ========================================
 
@@ -70,9 +70,3 @@ Commands:
 
 Extra Credit: NONE
     I don't imagine making everything glittery counts as texturing.
-
-========================================
-
-CS480 Graphics Class
-
-Programming Assignments by Chad Brown

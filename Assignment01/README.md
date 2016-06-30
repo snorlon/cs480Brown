@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-Chad Brown's Assignment 01
+Erin Brown's Assignment 01
 ========================================
 
 Terminal commands in ''s
@@ -22,7 +22,3 @@ How to run:
     If you enter a bad filename, it will ignore it and move on.
     If the file name is good, it will say in the terminal that the corresponding shader has been loaded.
 =======
-CS480 Graphics Class
-
-Programming Assignments by Chad Brown
->>>>>>> ca378b2c5f83713c481faafa2b77deedce5eb57e

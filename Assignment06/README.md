@@ -1,4 +1,4 @@
-Chad Brown's Assignment 06
+Erin Brown's Assignment 06
 
 ========================================
 
@@ -79,9 +79,3 @@ Commands:
 ========================================
 
 Extra Credit: NONE
-
-========================================
-
-CS480 Graphics Class
-
-Programming Assignments by Chad Brown

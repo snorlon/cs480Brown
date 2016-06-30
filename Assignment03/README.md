@@ -1,4 +1,4 @@
-Chad Brown's Assignment 03
+Erin Brown's Assignment 03
 
 ========================================
 
@@ -67,9 +67,3 @@ Extra Credit: COMPLETED
 Add text to indicate which direction the planet is rotating. This should change when the direction changes.
 
 I've done this and it should be obvious on the screen when you start it up. I lightened the background color so that it could be read easier.
-
-========================================
-
-CS480 Graphics Class
-
-Programming Assignments by Chad Brown
